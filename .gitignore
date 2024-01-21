@@ -29,3 +29,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+wavesurfer.js-7.6.1
+vue-element-plus-admin

@@ -1,9 +1,9 @@
-<script setup>
-import TheWelcome from '../components/TheWelcome.vue'
-</script>
-
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div>
+    <h1>这是首页</h1>
+  </div>
 </template>
+
+<script setup>
+import HelloWorld from '../components/HelloWorld.vue'
+</script>
