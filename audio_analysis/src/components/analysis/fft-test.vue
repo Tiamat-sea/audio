@@ -4,11 +4,10 @@
         <div ref="spectrogram"></div>
     </div>
 </template>
-  
+
 <script>
-import WaveSurfer from 'wavesurfer.js';
-// import 'wavesurfer.js/dist/plugin/wavesurfer.spectrogram.min.js'; // 导入频谱图插件
-import Spectrogram from 'wavesurfer.js/dist/plugins/spectrogram.js'
+import WaveForm from '@/waveform/waveform';
+// import Spectrogram from 'wavesurfer.js/dist/plugins/spectrogram.js'
 
 export default {
     data() {
@@ -28,7 +27,7 @@ export default {
                 // 在此添加任何其他配置选项
             });
 
-            
+
 
             // 添加频谱图插件
             this.wavesurfer.initSpectrogram({
@@ -44,8 +43,7 @@ export default {
     }
 };
 </script>
-  
+
 <style>
 /* 在此添加样式，定义波形图和频谱图的外观 */
 </style>
-  

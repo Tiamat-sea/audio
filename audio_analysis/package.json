@@ -9,11 +9,9 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@types/wavesurfer.js": "^6.0.12",
         "element-plus": "^2.4.4",
         "vue": "^3.3.11",
-        "vue-router": "^4.2.5",
-        "wavesurfer.js": "^7.6.0"
+        "vue-router": "^4.2.5"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^6.18.1",

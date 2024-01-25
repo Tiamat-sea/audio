@@ -38,11 +38,10 @@ el-header {
 
 <script setup>
 import { onMounted } from 'vue'
-import WaveSurfer from 'wavesurfer.js'
 import 'element-plus/dist/index.css'
-import Options from '../components/Options.vue'
-import FFTTransfer from '../components/FFTTransfer.vue'
-import ffttest from '../components/fft-test.vue'
+import Options from '@/components/analysis/Options.vue'
+import FFTTransfer from '@/components/analysis/FFTTransfer.vue'
+import ffttest from '@/components/analysis/fft-test.vue'
 
 // onMounted(() => {
 //     const wavesurfer = WaveSurfer.create({
