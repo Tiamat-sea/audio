@@ -1,19 +1,19 @@
 {
-    "extends": "@tsconfig/node20/tsconfig.json",
-    "include": [
-        "vite.config.*",
+    "extends": "@tsconfig/node20/tsconfig.json", // 扩展基础配置文件
+    "include": [ // 包含需要编译的文件或目录
+        "vite.config.*", // Vite、Vitest、Cypress、Nightwatch 和 Playwright 的配置文件
         "vitest.config.*",
         "cypress.config.*",
         "nightwatch.conf.*",
         "playwright.config.*"
     ],
-    "compilerOptions": {
-        "composite": true,
-        "noEmit": true,
-        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
-        "types": [
+    "compilerOptions": { // TypeScript 编译器的配置选项
+        "composite": true, // 启用组合编译，提高增量编译的性能
+        "noEmit": true, // 禁止生成任何输出文件，仅进行类型检查
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo", // TypeScript 构建信息文件的位置
+        "module": "ESNext", // 生成的 JavaScript 模块格式为 ESNext
+        "moduleResolution": "Bundler", // 使用捆绑器进行模块解析
+        "types": [ // 包含的默认类型声明文件，只包含了 node 类型
             "node"
         ]
     }

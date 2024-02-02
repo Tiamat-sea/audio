@@ -1,19 +1,19 @@
 {
-    "extends": "@vue/tsconfig/tsconfig.dom.json",
-    "include": [
-        "env.d.ts",
-        "src/**/*",
-        "src/**/*.vue"
+    "extends": "@vue/tsconfig/tsconfig.dom.json", // 继承自 Vue.js 官方提供的用于 DOM 环境的 TypeScript 配置文件
+    "include": [ // 包含的文件列表
+        "env.d.ts", // 包含环境类型定义文件
+        "src/**/*", // 包含 src 目录下的所有文件和子目录中的文件
+        "src/**/*.vue" // 包含 src 目录下所有 .vue 文件及其子目录中的 .vue 文件
     ],
-    "exclude": [
-        "src/**/__tests__/*"
+    "exclude": [ // 排除的文件列表
+        "src/**/__tests__/*" // 排除 src 目录下所有 __tests__ 子目录中的文件
     ],
-    "compilerOptions": {
-        "composite": true,
-        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-        "baseUrl": ".",
-        "paths": {
-            "@/*": [
+    "compilerOptions": { // TypeScript 编译选项
+        "composite": true, // 启用项目引用，以便在构建大型项目时进行增量编译
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo", // 指定 TypeScript 构建信息文件的路径
+        "baseUrl": ".", // 设置模块解析的基本路径
+        "paths": { // 配置模块解析的路径映射，可以使用别名来简化导入路径
+            "@/*": [ // 将所有以 @/ 开头的导入路径映射到 src/ 目录下
                 "./src/*"
             ]
         }

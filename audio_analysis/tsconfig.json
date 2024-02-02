@@ -1,14 +1,14 @@
 {
-    "files": [],
-    "references": [
+    "files": [], // 不包含任何特定文件
+    "references": [ // 引用其他 TypeScript 配置文件
         {
-            "path": "./tsconfig.node.json"
+            "path": "./tsconfig.node.json" // 引用位于当前目录下的 tsconfig.node.json 文件
         },
         {
-            "path": "./tsconfig.app.json"
+            "path": "./tsconfig.app.json" // 引用位于当前目录下的 tsconfig.app.json 文件
         },
         {
-            "path": "./tsconfig.vitest.json"
+            "path": "./tsconfig.vitest.json" // 引用位于当前目录下的 tsconfig.vitest.json 文件
         }
     ]
 }
