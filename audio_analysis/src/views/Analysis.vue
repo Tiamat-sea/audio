@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import FFTTransfer from '@/components/analysis/FFTTransfer.vue'
+import Options from '@/components/analysis/Options.vue'
+import { ref, onMounted } from 'vue'
+
+const num = ref(0)
+function increment() {
+    num.value++
+}
+
+onMounted(() => {
+    console.log(`The initial number is ${num.value}.`)
+})
+</script>
+
 <template>
     <lay-layout class="example">
         <lay-header>
@@ -19,22 +34,6 @@
     </lay-layout>
 </template>
 
-<script setup lang="ts">
-import FFTTransfer from '@/components/analysis/FFTTransfer.vue'
-import Options from '@/components/analysis/Options.vue'
-import { ref, onMounted } from 'vue'
-
-const num = ref(0)
-function increment() {
-    num.value++
-}
-
-onMounted(() => {
-    console.log(`The initial number is ${num.value}.`)
-})
-
-</script>
-
 <style scoped>
 .example .layui-header {
     line-height: 60px;
@@ -49,6 +48,7 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     color: white;
+    min-width: 200px;
 }
 
 .example .layui-body {
@@ -57,6 +57,6 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     color: white;
-    height: 100%;
+    min-height: calc(100vh - 60px);
 }
 </style>

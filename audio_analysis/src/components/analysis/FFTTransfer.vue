@@ -8,8 +8,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref, setBlockTracking } from 'vue'
-// import Spectrogram from 'wavesurfer.js/dist/plugins/spectrogram.js'
 import WaveForm from '@/waveform/waveform'
+import SpectrogramPlugin from '@/waveform/plugins/spectrogram';
 
 onMounted(() => {
     const sampleRateVal = 44100;
@@ -17,13 +17,18 @@ onMounted(() => {
     // Create an instance of WaveSurfer
     const waveform = WaveForm.create({
         container: '#waveform',
-        waveColor: 'rgb(200, 0, 200)',
+        // waveColor: 'rgb(200, 0, 200)',
         progressColor: 'rgb(100, 0, 100)',
         url: '/example-normal.wav',
         sampleRate: sampleRateVal,
         normalize: true,
         waveColor: ['black'],
         minPxPerSec: 3,
+        plugins: [
+            SpectrogramPlugin.create({
+                labels: true
+            })
+        ]
     });
 
     // Initialize the Spectrogram plugin

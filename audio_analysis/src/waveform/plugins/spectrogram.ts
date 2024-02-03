@@ -390,7 +390,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
             },
             this.wrapper,
         )
-        this.spectrCc = this.createCanvas.getContext('2d')
+        this.spectrCc = this.canvas.getContext('2d')
     }
 
     private render() {
@@ -495,7 +495,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         let noverlap = this.noverlap
         if (!noverlap) {
             const uniqueSamplesPerPx = buffer.length / this.canvas.width
-            noverlap = Math.max(0, Math.round(fftSamples = uniqueSamplesPerPx))
+            noverlap = Math.max(0, Math.round(fftSamples - uniqueSamplesPerPx))
         }
 
         const fft = new FFT(fftSamples, sampleRate, this.windownFunc, this.alpha)

@@ -35,13 +35,13 @@ export type ZoomPluginOptions = {
      * 缩放波形之前，轮子或触控板需要移动的量。
      * 将该值设置为 0 可实现完全流畅的缩放（这会导致很高的 CPU 成本）
      * 
-     * @default 5
+     * @default 0
      */
     deltaThreshold?: number
 }
 const defaultOptions = {
     scale: 0.5,
-    deltaThreshold: 5,
+    deltaThreshold: 0,
 }
 
 export type ZoomPluginEvents = BasePluginEvents
