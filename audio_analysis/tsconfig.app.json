@@ -1,7 +1,7 @@
 {
     "extends": "@vue/tsconfig/tsconfig.dom.json", // 继承自 Vue.js 官方提供的用于 DOM 环境的 TypeScript 配置文件
     "include": [ // 包含的文件列表
-        "env.d.ts", // 包含环境类型定义文件
+        "types/*", // 包含环境类型定义文件
         "src/**/*", // 包含 src 目录下的所有文件和子目录中的文件
         "src/**/*.vue" // 包含 src 目录下所有 .vue 文件及其子目录中的 .vue 文件
     ],

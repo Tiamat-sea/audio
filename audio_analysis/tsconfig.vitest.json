@@ -7,7 +7,8 @@
         "lib": [], // 指定要包含的库文件，这里为空数组，表示不包含任何库文件
         "types": [ // 指定要包含的类型声明文件
             "node", // 包含 Node.js 的类型声明文件
-            "jsdom" // 包含 JSDOM 的类型声明文件
+            "jsdom", // 包含 JSDOM 的类型声明文件
+            "@layui/layui-vue/types/components"
         ]
     }
 }

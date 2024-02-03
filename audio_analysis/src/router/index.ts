@@ -12,9 +12,9 @@ const router = createRouter({
         {
             path: '/about',
             name: 'about',
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
+            //路由级代码拆分
+            //这将为此路由生成一个单独的chunk（About.[hash].js）
+            //当访问该路线时，其是惰性加载的。
             component: () => import('../views/AboutView.vue')
         }
     ]

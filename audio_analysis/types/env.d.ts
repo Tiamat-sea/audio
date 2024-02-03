@@ -7,5 +7,3 @@ declare module "*.vue" {    // 声明一个模块，表示导入以 .vue 结尾�
 
     export default vueComponent;    // 导出 vueComponent，使得其他模块可以正确导入 Vue 组件
 }
-
-declare module "@rushstack/eslint-patch/modern-module-resolution" { }
