@@ -1,59 +1,62 @@
 <template>
-    <div class="common-layout">
-        <el-container>
-            <el-header> <!--header-->
-                <!-- <div id="waveform"></div> -->
-            </el-header>
-
-            <el-container>
-                <el-main>
+    <lay-layout class="example">
+        <lay-header>
+            Header 用于显示时间轴的缩小版
+            <!-- <button @click="increment">number is: {{ num }}</button> -->
+        </lay-header>
+        <lay-body>
+            <lay-layout>
+                <lay-body>
+                    <!-- Content 频谱图展示区域 -->
                     <FFTTransfer></FFTTransfer>
-                </el-main> <!--main-->
-
-                <el-aside width="200px">
+                </lay-body>
+                <lay-side>
+                    Right 选项卡区域
                     <Options></Options>
-                </el-aside> <!--aside-->
-            </el-container>
-
-        </el-container>
-    </div>
+                </lay-side>
+            </lay-layout>
+        </lay-body>
+    </lay-layout>
 </template>
 
-<style scoped>
-#waveform {
-    position: adsolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-}
-
-el-header {
-    position: relative;
-    height: 0;
-    padding-top: 56.25%;
-    overflow: hidden;
-}
-</style>
-
-<script setup>
-import { onMounted } from 'vue'
-import 'element-plus/dist/index.css'
-import Options from '@/components/analysis/Options.vue'
+<script setup lang="ts">
 import FFTTransfer from '@/components/analysis/FFTTransfer.vue'
+import Options from '@/components/analysis/Options.vue'
+import { ref, onMounted } from 'vue'
 
-// onMounted(() => {
-//     const wavesurfer = WaveSurfer.create({
-//         container: '#waveform',
-//         waveColor: 'rgb(200, 0, 200)',
-//         progressColor: 'rgb(100, 0, 100)',
-//         url: '/example.mp3',
-//     });
+const num = ref(0)
+function increment() {
+    num.value++
+}
 
-//     wavesurfer.on('click', () => {
-//         wavesurfer.play();
-//     });
-// });
+onMounted(() => {
+    console.log(`The initial number is ${num.value}.`)
+})
+
 </script>
 
+<style scoped>
+.example .layui-header {
+    line-height: 60px;
+    text-align: center;
+    background: #87ca9a;
+    color: black;
+}
 
+.example .layui-side {
+    display: block;
+    background: #77c38c;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.example .layui-body {
+    display: block;
+    background: #5FB878;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    height: 100%;
+}
+</style>

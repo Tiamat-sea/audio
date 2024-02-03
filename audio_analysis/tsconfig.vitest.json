@@ -8,7 +8,7 @@
         "types": [ // 指定要包含的类型声明文件
             "node", // 包含 Node.js 的类型声明文件
             "jsdom", // 包含 JSDOM 的类型声明文件
-            "@layui/layui-vue/types/components"
+            "@layui/layui-vue/types/components" // layui-vue Volar 配置，指定全局组件类型
         ]
     }
 }

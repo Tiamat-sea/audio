@@ -6,7 +6,7 @@
     <button>play/pause</button>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, setBlockTracking } from 'vue'
 // import Spectrogram from 'wavesurfer.js/dist/plugins/spectrogram.js'
 import WaveForm from '@/waveform/waveform'
@@ -19,7 +19,7 @@ onMounted(() => {
         container: '#waveform',
         waveColor: 'rgb(200, 0, 200)',
         progressColor: 'rgb(100, 0, 100)',
-        url: '/example.mp3',
+        url: '/example-normal.wav',
         sampleRate: sampleRateVal,
         normalize: true,
         waveColor: ['black'],
