@@ -323,7 +323,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         this.subscriptions.push(this.waveform.on('redraw', () => this.render()))
     }
 
-    public destory() {
+    public destroy() {
         this.unAll()
         this.waveform.un('ready', this._onReady)
         this.waveform?.un('redraw', this._onRender)
@@ -334,7 +334,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
             this.wrapper.remove()
             this.wrapper = null
         }
-        super.destory()
+        super.destroy()
     }
 
     public async loadFrequenciesData(url: string | URL) {

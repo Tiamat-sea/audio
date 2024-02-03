@@ -498,7 +498,7 @@ class WaveForm extends Player<WaveFormEvents>{
     /** 取消挂载 waveform */
     public destroy() {
         this.emit('destroy')
-        this.plugins.forEach((plugin) => plugin.destory())
+        this.plugins.forEach((plugin) => plugin.destroy())
         this.subscriptions.forEach((unsubscribe) => unsubscribe())
         this.unsubscribePlayerEvents()
         this.timer.destroy()

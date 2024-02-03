@@ -31,7 +31,7 @@ export class BasePlugin<EventTypes extends BasePluginEvents, Options> extends Ev
     }
 
     /** 销毁插件并注销所有事件 */
-    public destory() {
+    public destroy() {
         this.emit('destroy')
         this.subscriptions.forEach((unsubscribe) => unsubscribe())
     }
