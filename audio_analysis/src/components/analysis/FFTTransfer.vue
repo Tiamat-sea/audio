@@ -26,7 +26,8 @@ onMounted(() => {
         minPxPerSec: 3,
         plugins: [
             SpectrogramPlugin.create({
-                labels: true
+                labels: true,
+                labelsColor: 'black'
             })
         ]
     });
