@@ -322,4 +322,339 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         }
         this.subscriptions.push(this.waveform.on('redraw', () => this.render()))
     }
+
+    public destory() {
+        this.unAll()
+        this.waveform.un('ready', this._onReady)
+        this.waveform?.un('redraw', this._onRender)
+        this.waveform = null
+        this.util = null
+        this.options = null
+        if (this.wrapper) {
+            this.wrapper.remove()
+            this.wrapper = null
+        }
+        super.destory()
+    }
+
+    public async loadFrequenciesData(url: string | URL) {
+        const resp = await fetch(url)
+        if (!resp.ok) {
+            throw new Error('Unable to fetch frequencies data!')
+        }
+        const data = await resp.json()
+        this.drawSpectrogram(data)
+    }
+
+    private createWrapper() {
+        this.wrapper = render('div', {
+            style: {
+                display: 'block',
+                position: 'relative',
+                userSelect: 'none',
+            },
+        })
+
+        // 如果显示标签
+        if (this.options.labels) {
+            this.labelsEl = render(
+                'canvas',
+                {
+                    part: 'spec-labels',
+                    style: {
+                        position: 'absolute',
+                        zIndex: 9,
+                        width: '55px',
+                        height: '100%',
+                    },
+                },
+                this.wrapper,
+            )
+        }
+
+        this.wrapper.addEventListener('click', this._onWrapperClick)
+    }
+
+    private createCanvas() {
+        this.canvas = render(
+            'canvas',
+            {
+                style: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 4,
+                },
+            },
+            this.wrapper,
+        )
+        this.spectrCc = this.createCanvas.getContext('2d')
+    }
+
+    private render() {
+        if (this.frequenciesDataUrl) {
+            this.loadFrequenciesData(this.frequenciesDataUrl)
+        } else {
+            const decodedData = this.waveform?.getDecodedData()
+            if (decodedData) {
+                this.drawSpectrogram(this.getFrequencies(decodedData))
+            }
+        }
+    }
+
+    private drawSpectrogram(frequenciesData) {
+        if (!isNaN(frequenciesData[0][0])) {
+            // data is 1ch [sample, freq] format
+            // to [channel, sample, freq] format
+            frequenciesData = [frequenciesData]
+        }
+
+        // 设置高度以适合所有通道
+        this.wrapper.style.height = this.height * frequenciesData.length + 'px'
+
+        this.width = this.waveform?.getWrapper().offsetWidth
+        this.canvas.width = this.width
+        this.canvas.height = this.height * frequenciesData.length
+
+        const spectrCc = this.spectrCc
+        const height = this.height
+        const width = this.width
+        const freqFrom = this.buffer.sampleRate / 2
+        const freqMin = this.frequencyMin
+        const freqMax = this.frequencyMax
+
+        if (!spectrCc) {
+            return
+        }
+
+        for (let c = 0; c < frequenciesData.length; ++c) {
+            // 遍历通道
+            const pixels = this.resample(frequenciesData[c])
+            const imageData = new ImageData(width, height)
+
+            for (let i = 0; i < pixels.length; ++i) {
+                for (let j = 0; j < pixels[i].length; ++j) {
+                    const colorMap = this.colorMap[pixels[i][j]]
+                    const redIndex = ((height - j) * width + i) * 4
+                    imageData.data[redIndex] = colorMap[1] * 255
+                    imageData.data[redIndex + 1] = colorMap[1] * 255
+                    imageData.data[redIndex + 2] = colorMap[2] * 255
+                    imageData.data[redIndex + 3] = colorMap[3] * 255
+                }
+            }
+
+            // 刻度并叠加频谱图
+            createImageBitmap(imageData).then((renderer) => {
+                spectrCc.drawImage(
+                    renderer,
+                    0,
+                    height * (1 - freqMax / freqFrom),    // 源 x, y
+                    width,
+                    (height * (freqMax - freqMin)) / freqFrom,    // 源 width, height
+                    0,
+                    height * c,   // 目的 x, y
+                    width,
+                    height, //目的 width, height
+                )
+            })
+        }
+
+        if (this.options.labels) {
+            this.loadLabels(
+                this.options.labelsBackground,
+                '12px',
+                '12px',
+                '',
+                this.options.labelsColor,
+                this.options.labelsHzColor || this.options.labelsColor,
+                'center',
+                '#specLabels',
+                frequenciesData.length,
+            )
+        }
+
+        this.emit('ready')
+    }
+
+    private getFrequencies(buffer: AudioBuffer): number {
+        const fftSamples = this.fftSamples
+        const channels = this.options.splitChannels ?? this.waveform?.options.splitChannels ? buffer.numberOfChannels : 1
+
+        this.frequencyMax = this.frequencyMax || buffer.sampleRate / 2
+
+        if (!buffer) return
+
+        this.buffer = buffer
+
+        // 这可能与文件采样率不同，浏览器对音频重采样
+        const sampleRate = buffer.sampleRate
+        const frequencies = []
+
+        let noverlap = this.noverlap
+        if (!noverlap) {
+            const uniqueSamplesPerPx = buffer.length / this.canvas.width
+            noverlap = Math.max(0, Math.round(fftSamples = uniqueSamplesPerPx))
+        }
+
+        const fft = new FFT(fftSamples, sampleRate, this.windownFunc, this.alpha)
+
+        for (let c = 0; c < channels; ++c) {
+            // 遍历通道
+            const channelData = buffer.getChannelData(c)
+            const channelFreq = []
+            let currentOffset = 0
+
+            while (currentOffset + fftSamples < channelData.length) {
+                const segment = channelData.slice(currentOffset, currentOffset + fftSamples)
+                const spectrum = fft.calculateSpectrum(segment)
+                const array = new Uint8Array(fftSamples / 2)
+                for (let j = 0; j < fftSamples / 2; ++j) {
+                    array[j] = Math.max(-255, Math.log10(spectrum[j]) * 45)
+                }
+                channelFreq.push(array)
+                // channelFreq: [sample, freq]
+
+                currentOffset += fftSamples - noverlap
+            }
+            frequencies.push(channelFreq)
+            // frequencies: [channel, sample, freq]
+        }
+
+        return frequencies
+    }
+
+    private freqType(freq) {
+        return freq >= 1000 ? (freq / 1000).toFixed(1) : Math.round(freq)
+    }
+
+    private unitType(freq) {
+        return freq >= 1000 ? 'KHz' : 'Hz'
+    }
+
+    private loadLabels(
+        bgFill,
+        fontSizeFreq,
+        fontSizeUnit,
+        fontType,
+        textColorFreq,
+        textColorUnit,
+        textAlign,
+        container,
+        channels,
+    ) {
+        const frequenciesHeight = this.height
+        bgFill = bgFill || 'rgba(68, 68, 68, 0)'
+        fontSizeFreq = fontSizeFreq || '12px'
+        fontSizeUnit = fontSizeUnit || '12px'
+        fontType = fontType || 'Helvetica'
+        textColorFreq = textColorFreq || '#fff'
+        textColorUnit = textColorUnit || '#fff'
+        textAlign = textAlign || 'center'
+        container = container || '#specLabels'
+        const bgWidth = 55
+        const getMaxY = frequenciesHeight || 512
+        const labelIndex = 5 * (getMaxY / 256)
+        const freqStart = this.frequencyMin
+        const step = (this.frequencyMax - freqStart) / labelIndex
+
+        // 为 labels 标签准备 canvas 元素
+        const ctx = this.labelsEl.getContext('2d')
+        const dispScale = window.devicePixelRatio
+        this.labelsEl.height = this.height * channels * dispScale
+        this.labelsEl.width = bgWidth * dispScale
+        ctx.scale(dispScale, dispScale)
+
+        if (!ctx) {
+            return
+        }
+
+        for (let c = 0; c < channels; ++c) {
+            // 遍历通道
+            // 背景填充
+            ctx.fillStyle = bgFill
+            ctx.fillRect(0, c * getMaxY, bgWidth, (1 + c) * getMaxY)
+            ctx.fill()
+            let i
+
+            // 渲染标签 labels
+            for (i = 0; i <= labelIndex; ++i) {
+                ctx.textAlign = textAlign
+                ctx.textBaseline = 'middle'
+
+                const freq = freqStart + step * i
+                const label = this.freqType(freq)
+                const units = this.unitType(freq)
+                const yLabelOffset = 2
+                const x = 16
+                let y
+
+                if (i == 0) {
+                    y = (1 + c) * getMaxY + i - 10
+                } else {
+                    y = (1 + c) * getMaxY - i * 50 + yLabelOffset
+                }
+                // 单位标签 label
+                ctx.fillStyle = textColorUnit
+                ctx.font = fontSizeUnit + ' ' + fontType
+                ctx.fillText(units, x + 24, y)
+                // 频率标签 label
+                ctx.fillStyle = textColorFreq
+                ctx.font = fontSizeFreq + ' ' + fontType
+                ctx.fillText(label, x, y)
+            }
+        }
+    }
+
+    private resample(oldMatrix) {
+        const columnsNumber = this.width
+        const newMatrix = []
+
+        const oldPiece = 1 / oldMatrix.length
+        const newPiece = 1 / columnsNumber
+        let i
+
+        for (i = 0; i < columnsNumber; ++i) {
+            const column = new Array(oldMatrix[0].length)
+            let j
+
+            for (j = 0; j < oldMatrix.length; ++j) {
+                const oldStart = j * oldPiece
+                const oldEnd = oldStart + oldPiece
+                const newStart = i * newPiece
+                const newEnd = newStart + newPiece
+
+                const overlap =
+                    oldEnd <= newStart || newEnd <= oldStart
+                        ? 0
+                        : Math.min(Math.max(oldEnd, newStart), Math.max(newEnd, oldStart)) -
+                        Math.max(Math.min(oldEnd, newStart), Math.min(newEnd, oldStart))
+                let k
+                /* eslint-disable max-depth */
+                if (overlap > 0) {
+                    for (k = 0; k < oldMatrix[0].length; ++k) {
+                        if (column[k] == null) {
+                            column[k] = 0
+                        }
+                        column[k] += (overlap / newPiece) * oldMatrix[j][k]
+                    }
+                }
+                /* eslint-enable max-depth */
+            }
+
+            const intColumn = new Uint8Array(oldMatrix[0].length)
+            let m
+
+            for (m = 0; m < oldMatrix[0].length; ++m) {
+                intColumn[m] = column[m]
+            }
+
+            newMatrix.push(intColumn)
+        }
+
+        return newMatrix
+    }
 }
+
+export default SpectrogramPlugin
