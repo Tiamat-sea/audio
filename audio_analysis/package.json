@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite --host local.tiamat.cnm --port 1888",
+        "dev": "vite --host 192.168.137.21 --port 1888",
         "build": "run-p type-check \"build-only {@}\" --",
         "preview": "vite preview",
         "test:unit": "vitest",
