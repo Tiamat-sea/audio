@@ -17,7 +17,7 @@ onMounted(() => {
     <lay-layout class="example">
         <lay-header>
             Header 用于显示时间轴的缩小版
-            <!-- <button @click="increment">number is: {{ num }}</button> 123 continue test-->
+            <!-- <button @click="increment">number is: {{ num }}</button> 123 continue test again-->
         </lay-header>
         <lay-body>
             <lay-layout>
