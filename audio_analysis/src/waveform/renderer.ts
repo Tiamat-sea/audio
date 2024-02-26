@@ -470,7 +470,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer
         const len = channelData[0].length
         const scale = len / scrollWidth
-        console.log('scale:', scale, 'scrollLeft:', scrollLeft, 'clientWidth:', clientWidth, 'scrollWidth:', scrollWidth)
+        // console.log('scale:', scale, 'scrollLeft:', scrollLeft, 'clientWidth:', clientWidth, 'scrollWidth:', scrollWidth)
 
         let viewportWidth = Math.min(Renderer.MAX_CANVAS_WIDTH, clientWidth)
 
@@ -529,6 +529,7 @@ class Renderer extends EventEmitter<RendererEvents> {
     }
 
     render(audioData: AudioBuffer) {
+        // console.log('audioData:', audioData.getChannelData.toString())
         // 清除先前的超时设定
         this.timeouts.forEach((context) => context.timeout && clearTimeout(context.timeout))
         this.timeouts = []

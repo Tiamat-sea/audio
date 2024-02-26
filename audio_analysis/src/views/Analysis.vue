@@ -23,7 +23,7 @@ onMounted(() => {
         <lay-body>
             <lay-layout>
                 <lay-body>
-                    <!-- Content 频谱图展示区域 -->
+                    Content 频谱图展示区域
                     <FFTTransfer></FFTTransfer>
                 </lay-body>
                 <lay-side>
@@ -49,7 +49,7 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     color: white;
-    min-width: 200px;
+    min-width: 100px;
 }
 
 .example .layui-body {

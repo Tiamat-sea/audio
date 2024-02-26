@@ -7,7 +7,7 @@ type TreeNode = { [key: string]: string | number | boolean | CSSStyleDeclaration
 
 function renderNode(tagName: string, content: TreeNode): HTMLElement | SVGElement {
     const element = content.xmlns
-        ? (document.createElementNS(content.xmlns, tagName) as SVGAElement)
+        ? (document.createElementNS(content.xmlns, tagName) as SVGElement)
         : (document.createElement(tagName) as HTMLElement)
 
     for (const [key, value] of Object.entries(content)) {

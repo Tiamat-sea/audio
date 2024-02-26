@@ -22,11 +22,12 @@ onMounted(() => {
     const waveform = WaveForm.create({
         container: '#waveform',
         progressColor: 'rgba(0, 0, 0, 0.5)',
-        url: '/example.wav',
+        url: '/example.mp3',
         sampleRate: sampleRateVal,
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
         minPxPerSec: 100,
+        mediaControls: true,
         plugins: [
             SpectrogramPlugin.create({
                 labels: true,
