@@ -1,17 +1,9 @@
-<template>
-    <div ref="minimapContainer"></div>
-    <div id="waveform"></div>
-    <label>
-        缩放: <input type="range" min="10" max="1000" value="100" />
-    </label>
-    <button>播放/暂停</button>
-</template>
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import WaveForm from '@/waveform/waveform'
 import SpectrogramPlugin from '@/waveform/plugins/spectrogram'
 import Minimap from '@/waveform/plugins/minimap'
+import HoverPlugin from '@/waveform/plugins/hover'
 
 const minimapContainer = ref(null)
 
@@ -39,6 +31,9 @@ onMounted(() => {
                 waveColor: '#ddd',
                 progressColor: '#999',
             }),
+            HoverPlugin.create({
+
+            })
         ]
     });
 
@@ -56,3 +51,35 @@ onMounted(() => {
     })
 });
 </script>
+
+<template>
+    <div id="waveform"></div>
+    <label>
+        缩放: <input type="range" min="10" max="1000" value="100" />
+    </label>
+    <button>播放/暂停</button>
+</template>
+
+<style scoped>
+#waveformc::part(wrapper) {
+    height: 200px;
+    width: 100%;
+    background: #000000;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+    -webkit-user-modify: none;
+    -webkit-highlight: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+</style>

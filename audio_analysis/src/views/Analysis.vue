@@ -15,21 +15,19 @@ onMounted(() => {
 
 <template>
     <lay-layout class="example">
-        <!-- <lay-header>
-            Header 用于显示时间轴的缩小版
-            <div ref="minimapContainer"></div>
-           
-        </lay-header> -->
+        <lay-header>
+            <h3>音频频谱分析(此部分存放选项卡)</h3>
+        </lay-header>
         <lay-body>
             <lay-layout>
                 <lay-body>
                     Content 频谱图展示区域
                     <FFTTransfer></FFTTransfer>
                 </lay-body>
-                <lay-side>
+                <!-- <lay-side>
                     Right 选项卡区域
                     <Options></Options>
-                </lay-side>
+                </lay-side> -->
             </lay-layout>
         </lay-body>
     </lay-layout>
