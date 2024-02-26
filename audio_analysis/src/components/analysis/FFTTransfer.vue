@@ -1,58 +1,55 @@
 <template>
+    <div ref="minimapContainer"></div>
     <div id="waveform"></div>
     <label>
-        Zoom: <input type="range" min="10" max="1000" value="100" />
+        缩放: <input type="range" min="10" max="1000" value="100" />
     </label>
-    <button>play/pause</button>
+    <button>播放/暂停</button>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, setBlockTracking } from 'vue'
+import { onMounted, ref } from 'vue'
 import WaveForm from '@/waveform/waveform'
-import SpectrogramPlugin from '@/waveform/plugins/spectrogram';
+import SpectrogramPlugin from '@/waveform/plugins/spectrogram'
+import Minimap from '@/waveform/plugins/minimap'
+
+const minimapContainer = ref(null)
 
 onMounted(() => {
     const sampleRateVal = 44100;
 
-    // Create an instance of WaveSurfer
+    // 创建一个 waveform 实例
     const waveform = WaveForm.create({
         container: '#waveform',
-        // waveColor: 'rgb(200, 0, 200)',
-        progressColor: 'rgb(100, 0, 100)',
-        url: '/example-normal.wav',
+        progressColor: 'rgba(0, 0, 0, 0.5)',
+        url: '/example.wav',
         sampleRate: sampleRateVal,
         normalize: true,
-        waveColor: ['black'],
-        minPxPerSec: 3,
+        waveColor: ['black', 'yellow', 'red'],
+        minPxPerSec: 100,
         plugins: [
             SpectrogramPlugin.create({
                 labels: true,
                 labelsColor: 'black'
-            })
+            }),
+            Minimap.create({
+                height: 60,
+                insertPosition: 'beforebegin',
+                waveColor: '#ddd',
+                progressColor: '#999',
+            }),
         ]
     });
-
-    // Initialize the Spectrogram plugin
-    // ws.registerPlugin(
-    //     Spectrogram.create({
-    //         alpha: 0.5,
-    //         labels: true,
-    //         height: 300,
-    //         splitChannels: false,
-    //         fftSamples: 512,
-    //         labelsColor: 'black',
-    //     })
-    // );
 
     waveform.once('decode', () => {
         const slider = document.querySelector('input[type="range"]')
 
-        slider.addEventListener('input', (e) => {
-            const minPxPerSec = e.target.valueAsNumber
-            waveform.zoom(minPxPerSec)
+        slider?.addEventListener('input', (e) => {
+            const zoomLevel = Number((e.target as HTMLInputElement).value)
+            waveform.zoom(zoomLevel)
         })
 
-        document.querySelector('button').addEventListener('click', () => {
+        document.querySelector('button')?.addEventListener('click', () => {
             waveform.playPause()
         })
     })

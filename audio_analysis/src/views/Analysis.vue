@@ -15,10 +15,11 @@ onMounted(() => {
 
 <template>
     <lay-layout class="example">
-        <lay-header>
+        <!-- <lay-header>
             Header 用于显示时间轴的缩小版
-            <!-- <button @click="increment">number is: {{ num }}</button> -->
-        </lay-header>
+            <div ref="minimapContainer"></div>
+           
+        </lay-header> -->
         <lay-body>
             <lay-layout>
                 <lay-body>

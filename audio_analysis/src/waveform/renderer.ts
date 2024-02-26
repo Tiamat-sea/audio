@@ -470,6 +470,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer
         const len = channelData[0].length
         const scale = len / scrollWidth
+        console.log('scale:', scale, 'scrollLeft:', scrollLeft, 'clientWidth:', clientWidth, 'scrollWidth:', scrollWidth)
 
         let viewportWidth = Math.min(Renderer.MAX_CANVAS_WIDTH, clientWidth)
 
@@ -570,7 +571,7 @@ class Renderer extends EventEmitter<RendererEvents> {
                 this.renderChannel([audioData.getChannelData(i)], options, width)
             }
         } else {
-            // 为前两个通道渲染单独的波形（左右通道）
+            // 为前两个通道渲染一个的波形（通常是左右声道），即将两个通道渲染在一个波形图中
             const channels = [audioData.getChannelData(0)]
             if (audioData.numberOfChannels > 1) channels.push(audioData.getChannelData(1))
             this.renderChannel(channels, this.options, width)
