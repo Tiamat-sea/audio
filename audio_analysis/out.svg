@@ -1,0 +1,1037 @@
+<svg version="1.1" baseProfile="full" width="7019.3" height="2057.0" viewbox="0 0 7019.25 2057" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+[BasePlugin&lt;EventTypes,Options&gt;|+waveform?: WaveForm;+subscriptions: (() =&gt; void)\[\];+options: Options|+onInit(): void;\#_init(): void;\#destroy(): void]
+[&lt;type&gt;BasePluginEvents|+destroy: \[\]|]
+[EventEmitter&lt;EventTypes&gt;]&lt;:-[BasePlugin&lt;EventTypes,Options&gt;]
+[EventEmitter&lt;EventTypes&gt;|+listeners: EventMap&lt;EventTypes&gt;|\#on(): () =&gt; void;\#un(): void;\#once(): () =&gt; void;\#unAll(): void;+emit(): void]
+[&lt;type&gt;GeneralEventTypes||]
+[Player&lt;T&gt;|+media: HTMLMediaElement;+isExternalMedia: boolean|+onMediaEvent(): () =&gt; void;+onceMediaEvent(): () =&gt; void;+getSrc(): string;+revokeSrc(): void;+setSrc(): void;+destroy(): void;+setMediaElement(): void;\#play(): Promise&lt;void&gt;;\#pause(): void;\#isPlaying(): boolean;\#setTime(): void;\#getDuration(): number;\#getCurrentTime(): number;\#getVolume(): number;\#setVolume(): void;\#getMuted(): boolean;\#setMuted(): void;\#getPlaybackRate(): number;\#setPlaybackRate(): void;\#getMediaElement(): HTMLMediaElement;\#setSinkId(): Promise&lt;void&gt;]
+[&lt;type&gt;PlayerOptions|+media?: HTMLMediaElement;+mediaControls?: boolean;+autoplay?: boolean;+playbackRate?: number|]
+[EventEmitter&lt;EventTypes&gt;]&lt;:-[Player&lt;T&gt;]
+[Renderer|+MAX_CANVAS_WIDTH: number;+options: WaveFormOptions;+parent: HTMLElement;+container: HTMLElement;+scrollContainer: HTMLElement;+wrapper: HTMLElement;+canvasWrapper: HTMLElement;+progressWrapper: HTMLElement;+cursor: HTMLElement;+timeouts: { timeout?: Timeout; }\[\];+isScrollable: boolean;+audioData: AudioBuffer;+resizeObserver: ResizeObserver;+lastContainerWidth: number;+isDragging: boolean|+parentFromOptionsContainer(): any;+initEvents(): void;+onContainerResize(): void;+initDrag(): void;+getHeight(): number;+initHTML(): \[HTMLElement, ShadowRoot\];+setOptions(): void;+getWrapper(): HTMLElement;+getScroll(): number;+destroy(): void;+createDelay(): (fn: () =&gt; void) =&gt; void;+convertColorValues(): string \| CanvasGradient;+renderBarWaveform(): void;+renderLineWaveForm(): void;+renderWaveform(): void;+renderSingleCanvas(): void;+renderChannel(): void;+render(): void;+reRender(): void;+zoom(): void;+scrollIntoView(): void;+renderProgress(): void;+exportImage(): Promise&lt;string\[\] \| Blob\[\]&gt;]
+[&lt;type&gt;RendererEvents|+click: \[relativeX: number, relativeY: number\];+dblclick: \[relativeX: number, relativeY: number\];+drag: \[relativeX: number\];+scroll: \[relativeStart: number, relativeEnd: number\];+render: \[\]|]
+[EventEmitter&lt;EventTypes&gt;]&lt;:-[Renderer]
+[Timer|+unsubscribe: () =&gt; void|+start(): void;+stop(): void;+destroy(): void]
+[&lt;type&gt;TimerEvents|+tick: \[\]|]
+[EventEmitter&lt;EventTypes&gt;]&lt;:-[Timer]
+[WaveForm|\#options: WaveFormOptions &amp; { waveColor: string; progressColor: string; cursorWidth: number; minPxPerSec: number; fillParent: boolean; interact: boolean; dragToSeek: boolean; autoScroll: boolean; autoCenter: boolean; sampleRate: number; };+renderer: Renderer;+timer: Timer;+plugins: GenericPlugin\[\];+decodedData: AudioBuffer;+subscriptions: (() =&gt; void)\[\];+mediaSubscriptions: (() =&gt; void)\[\]|\#create(): WaveForm;+initTimerEvents(): void;+initPlayerEvents(): void;+initRendererEvents(): void;+initPlugins(): void;+unsubscribePlayerEvents(): void;\#setOptions(): void;\#registerPlugin(): T;\#getWrapper(): HTMLElement;\#getScroll(): number;\#getActivePlugins(): GenericPlugin\[\];+loadAudio(): Promise&lt;void&gt;;\#load(): Promise&lt;void&gt;;\#loadBlob(): Promise&lt;void&gt;;\#zoom(): void;\#getDecodedData(): AudioBuffer;\#exportPeaks(): number\[\]\[\];\#getDuration(): number;\#toggleInteraction(): void;\#seekTo(): void;\#playPause(): Promise&lt;void&gt;;\#stop(): void;\#skip(): void;\#empty(): void;\#setMediaElement(): void;\#exportImage(): Promise&lt;string\[\] \| Blob\[\]&gt;;\#destroy(): void]
+[&lt;type&gt;WaveFormOptions|+container: string \| HTMLElement;+height?: number \| &quot;auto&quot;;+width?: string \| number;+waveColor?: string \| CanvasGradient \| string\[\];+progressColor?: string \| CanvasGradient \| string\[\];+cursorColor?: string;+cursorWidth?: number;+barWidth?: number;+barGap?: number;+barRadius?: number;+barHeight?: number;+barAlign?: &quot;top&quot; \| &quot;bottom&quot;;+minPxPerSec?: number;+fillParent?: boolean;+url?: string;+peaks?: (number\[\] \| Float32Array)\[\];+duration?: number;+media?: HTMLMediaElement;+mediaControls?: boolean;+autoplay?: boolean;+interact?: boolean;+dragToSeek?: boolean;+hideScrollbar?: boolean;+audioRate?: number;+autoScroll?: boolean;+autoCenter?: boolean;+sampleRate?: number;+splitChannels?: Partial&lt;WaveFormOptions&gt;\[\];+normalize?: boolean;+plugins?: GenericPlugin\[\];+renderFunction?: (peaks: (number\[\] \| Float32Array)\[\], ctx: CanvasRenderingContext2D) =&gt; void;+fetchParams?: RequestInit;+backend?: &quot;WebAudio&quot; \| &quot;MediaElement&quot;|]
+[&lt;type&gt;WaveFormEvents|+init: \[\];+load: \[url: string\];+loading: \[percent: number\];+decode: \[duration: number\];+ready: \[duration: number\];+redraw: \[\];+play: \[\];+pause: \[\];+finish: \[\];+timeupdate: \[currentTime: number\];+audioprocess: \[currentTime: number\];+seeking: \[currentTime: number\];+interaction: \[newTime: number\];+click: \[relativeX: number, relativeY: number\];+dbclick: \[relativeX: number, relativeY: number\];+drag: \[relativeX: number\];+scroll: \[visibleStartTime: number, visibleEndTime: number\];+zoom: \[minPxPerSec: number\];+destroy: \[\]|]
+[Player&lt;T&gt;]&lt;:-[WaveForm]
+[WebAudioPlayer|+audioContext: AudioContext;+gainNode: GainNode;+bufferNode: AudioBufferSourceNode;+autoplay: boolean;+playStartTime: number;+playedDuration: number;+_muted: boolean;+buffer: AudioBuffer;\#currentSrc: string;\#paused: boolean;\#crossOrigin: string;+addEventListener: &lt;EventName extends keyof WebAudioPlayerEvents&gt;(event: EventName, listener: EventListener&lt;WebAudioPlayerEvents, EventName&gt;, options?: { ...; }) =&gt; () =&gt; void;+removeEventListener: &lt;EventName extends keyof WebAudioPlayerEvents&gt;(event: EventName, listener: EventListener&lt;WebAudioPlayerEvents, EventName&gt;) =&gt; void|+load(): Promise&lt;void&gt;;+_play(): void;+_pause(): void;+play(): Promise&lt;void&gt;;+pause(): void;+stopAt(): void;+setSinkId(): Promise&lt;void&gt;;\#getGainNode(): GainNode;\#getChannelData(): Float32Array\[\]]
+[&lt;type&gt;WebAudioPlayerEvents|+loadedmetadata: \[\];+canplay: \[\];+play: \[\];+pause: \[\];+seeking: \[\];+timeupdate: \[\];+volumechange: \[\];+empited: \[\];+ended: \[\]|]
+[EventEmitter&lt;EventTypes&gt;]&lt;:-[WebAudioPlayer]
+[HoverPlugin|+options: HoverPluginOptions &amp; { lineWidth: number; labelSize: number; };+wrapper: HTMLElement;+label: HTMLElement;+unsubscribe: () =&gt; void;+onPointerMove: (e: PointerEvent \| WheelEvent) =&gt; void;+onPointerLeave: () =&gt; void|\#create(): HoverPlugin;+addUnits(): string;+onInit(): void;+formatTime(): string;\#destroy(): void]
+[&lt;type&gt;HoverPluginOptions|+lineColor?: string;+lineWidth?: string \| number;+labelColor?: string;+labelSize?: string \| number;+labelBackground?: string|]
+[BasePlugin&lt;EventTypes,Options&gt;]&lt;:-[HoverPlugin]
+[MinimapPlugin|+options: { overlayColor?: string; insertPosition?: InsertPosition; } &amp; Partial&lt;WaveFormOptions&gt; &amp; { height: number; overlayColor: string; insertPosition: string; };+minimapWrapper: HTMLElement;+miniWaveForm: WaveForm;+overlay: HTMLElement;+container: HTMLElement|\#create(): MinimapPlugin;+onInit(): void;+initMinimapWrapper(): HTMLElement;+initOverlay(): HTMLElement;+initMinimap(): void;+getOverlayWidth(): number;+onRedraw(): void;+onScroll(): void;+initWaveFormEvents(): void;\#destroy(): void]
+[BasePlugin&lt;EventTypes,Options&gt;]&lt;:-[MinimapPlugin]
+[SingleRegion|\#element: HTMLElement;\#id: string;\#start: number;\#end: number;\#drag: boolean;\#resize: boolean;\#color: string;\#content?: HTMLElement;\#minLength: number;\#maxLength: number;\#channelIndex: number;\#contentEditable: boolean;+totalDuration: number;+numberOfChannels: number|+clampPosition(): number;+setPart(): void;+addResizeHandles(): void;+removeResizeHandles(): void;+initElement(): HTMLElement;+renderPosition(): void;+toggleCursor(): void;+initMouseEvents(): void;\#_onUpdate(): void;+onMove(): void;+onResize(): void;+onEndResizing(): void;+onContentClick(): void;\#onContentBlur(): void;\#_setTotalDuration(): void;\#play(): void;\#setContent(): void;\#setOptions(): void;\#remove(): void]
+[RegionsPlugin|+regions: SingleRegion\[\];+regionsContainer: HTMLElement|\#create(): RegionsPlugin;+onInit(): void;+initRegionsContainer(): HTMLElement;\#getRegions(): SingleRegion\[\];+avoidOverlapping(): void;+adjustScroll(): void;+saveRegion(): void;\#addRegion(): SingleRegion;\#enableDragSelection(): () =&gt; void;\#clearRegions(): void;\#destroy(): void]
+[&lt;type&gt;RegionEvents|+remove: \[\];+update: \[side?: &quot;start&quot; \| &quot;end&quot;\];+update-end: \[\];+play: \[\];+click: \[event: MouseEvent\];+dblclick: \[event: MouseEvent\];+over: \[event: MouseEvent\];+leave: \[event: MouseEvent\]|]
+[&lt;type&gt;RegionParams|+id?: string;+start: number;+end?: number;+drag?: boolean;+resize?: boolean;+color?: string;+content?: string \| HTMLElement;+minLength?: number;+maxLength?: number;+channelIndex?: number;+contentEditable?: boolean|]
+[EventEmitter&lt;EventTypes&gt;]&lt;:-[SingleRegion]
+[BasePlugin&lt;EventTypes,Options&gt;]&lt;:-[RegionsPlugin]
+[SpectrogramPlugin||+create(): SpectrogramPlugin;+onInit(): void;\#destroy(): void;\#loadFrequenciesData(): Promise&lt;void&gt;;+createWrapper(): void;+createCanvas(): void;+render(): void;+drawSpectrogram(): void;+getFrequencies(): number;+freqType(): string \| number;+unitType(): &quot;KHz&quot; \| &quot;Hz&quot;;+loadLabels(): void;+resample(): any\[\]]
+[&lt;type&gt;SpectrogramPluginOptions|+container?: string \| HTMLElement;+fftSamples?: number;+height?: number;+labels?: boolean;+labelsBackground?: string;+labelsColor?: string;+labelsHzColor?: string;+noverlap?: number;+windowFunc?: &quot;bartlett&quot; \| &quot;bartlettHann&quot; \| &quot;blackman&quot; \| &quot;cosine&quot; \| &quot;gauss&quot; \| &quot;hamming&quot; \| &quot;hann&quot; \| &quot;lanczoz&quot; \| &quot;rectangular&quot; \| &quot;triangular&quot;;+alpha?: number;+frequencyMin?: number;+frequencyMax?: number;+colorMap?: number\[\]\[\];+splitChannels?: boolean|]
+[BasePlugin&lt;EventTypes,Options&gt;]&lt;:-[SpectrogramPlugin]
+[ZoomPlugin|+options: ZoomPluginOptions &amp; { scale: number; deltaThreshold: number; };+wrapper: HTMLElement;+container: HTMLElement;+accumulatedDelta: number;+onWheel: (e: WheelEvent) =&gt; void;+calculateNewZoom: (oldZoom: number, delta: number) =&gt; number|\#create(): ZoomPlugin;+onInit(): void;+destroy(): void]
+[&lt;type&gt;ZoomPluginOptions|+scale?: number;+maxZoom?: number;+deltaThreshold?: number|]
+[BasePlugin&lt;EventTypes,Options&gt;]&lt;:-[ZoomPlugin]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="transparent">
+<rect x="0.0" y="0.0" height="2057.0" width="7019.3" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M1699.4 319.8 L805 570 L805 837.5 L805.0 837.5 " fill="none"></path>
+<path d="M1700.8 325.0 L1699.4 319.8 L1698.0 314.7 L1712.3 316.3 Z"></path>
+<path d="M2019.3 351.3 L2476.5 570 L2476.5 710 L2476.5 710.0 " fill="none"></path>
+<path d="M2021.6 346.5 L2019.3 351.3 L2017.0 356.1 L2007.3 345.6 Z"></path>
+<path d="M2020.1 321.2 L2883 570 L2883 590 L2883.0 590.0 " fill="none"></path>
+<path d="M2021.5 316.1 L2020.1 321.2 L2018.6 326.3 L2007.3 317.5 Z"></path>
+<path d="M2020.3 309.8 L3222 570 L3222 852.5 L3222.0 852.5 " fill="none"></path>
+<path d="M2021.4 304.6 L2020.3 309.8 L2019.2 315.0 L2007.3 306.9 Z"></path>
+<path d="M2476.5 1131.3 L2476.5 1258 L2476.5 1278 L2476.5 1278.0 " fill="none"></path>
+<path d="M2481.8 1131.3 L2476.5 1131.3 L2471.2 1131.3 L2476.5 1118.0 Z"></path>
+<path d="M2020.5 296.7 L4041 570 L4041 710 L4041.0 710.0 " fill="none"></path>
+<path d="M2021.2 291.5 L2020.5 296.7 L2019.7 302.0 L2007.3 294.9 Z"></path>
+<path d="M665.8 997.3 L230.5 1258 L230.5 1510.5 L230.5 1510.5 " fill="none"></path>
+<path d="M668.5 1001.9 L665.8 997.3 L663.1 992.8 L677.2 990.5 Z"></path>
+<path d="M779.3 1003.3 L706 1258 L706 1458 L706.0 1458.0 " fill="none"></path>
+<path d="M784.4 1004.8 L779.3 1003.3 L774.2 1001.8 L783.0 990.5 Z"></path>
+<path d="M2020.5 290.7 L4885.5 570 L4885.5 635 L4885.5 635.0 " fill="none"></path>
+<path d="M2021.0 285.4 L2020.5 290.7 L2020.0 296.0 L2007.3 289.4 Z"></path>
+<path d="M882.3 1000.4 L1112.5 1258 L1112.5 1510.5 L1112.5 1510.5 " fill="none"></path>
+<path d="M886.2 996.9 L882.3 1000.4 L878.3 1004.0 L873.4 990.5 Z"></path>
+<path d="M958.9 992.3 L1481 1258 L1481 1514.5 L1481.0 1514.5 " fill="none"></path>
+<path d="M961.3 987.6 L958.9 992.3 L956.5 997.1 L947.0 986.3 Z"></path>
+<path d="M959.8 960.1 L1960 1258 L1960 1525.5 L1960.0 1525.5 " fill="none"></path>
+<path d="M961.3 955.0 L959.8 960.1 L958.3 965.2 L947.0 956.3 Z"></path>
+<g data-name="BasePlugin&lt;EventTypes,Options&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="BasePlugin&lt;EventTypes,Options&gt;">
+<rect x="663.0" y="837.5" height="153.0" width="284.0" data-name="BasePlugin&lt;EventTypes,Options&gt;"></rect>
+<path d="M663.0 868.5 L947.0 868.5" fill="none" data-name="BasePlugin&lt;EventTypes,Options&gt;"></path>
+<path d="M663.0 929.5 L947.0 929.5" fill="none" data-name="BasePlugin&lt;EventTypes,Options&gt;"></path>
+</g>
+<g transform="translate(663, 837.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BasePlugin&lt;EventTypes,Options&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BasePlugin&lt;EventTypes,Options&gt;">
+<a id="src/waveform/base-plugin.ts.BasePlugin&lt;EventTypes,Options&gt;" xlink:href="src/waveform/base-plugin.ts"><text x="134.0" y="13.5" stroke="none" text-anchor="middle" data-name="BasePlugin&lt;EventTypes,Options&gt;">BasePlugin&lt;EventTypes,Options&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(663, 868.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BasePlugin&lt;EventTypes,Options&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BasePlugin&lt;EventTypes,Options&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="BasePlugin&lt;EventTypes,Options&gt;">+waveform?: WaveForm</text>
+<text x="0.0" y="28.5" stroke="none" data-name="BasePlugin&lt;EventTypes,Options&gt;">+subscriptions: (() =&gt; void)[]</text>
+<text x="0.0" y="43.5" stroke="none" data-name="BasePlugin&lt;EventTypes,Options&gt;">+options: Options</text>
+
+</g>
+</g>
+<g transform="translate(663, 929.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BasePlugin&lt;EventTypes,Options&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BasePlugin&lt;EventTypes,Options&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="BasePlugin&lt;EventTypes,Options&gt;">+onInit(): void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="BasePlugin&lt;EventTypes,Options&gt;">#_init(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="BasePlugin&lt;EventTypes,Options&gt;">#destroy(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="BasePluginEvents">
+<g fill="lightgray" stroke="#33322E" data-name="BasePluginEvents">
+<rect x="1513.3" y="240.0" height="70.0" width="159.0" data-name="BasePluginEvents"></rect>
+<path d="M1513.3 271.0 L1672.3 271.0" fill="none" data-name="BasePluginEvents"></path>
+<path d="M1513.3 302.0 L1672.3 302.0" fill="none" data-name="BasePluginEvents"></path>
+</g>
+<g transform="translate(1513.25, 240)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BasePluginEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BasePluginEvents">
+<a id="src/waveform/base-plugin.ts.BasePluginEvents" xlink:href="src/waveform/base-plugin.ts"><text x="71.5" y="13.5" stroke="none" text-anchor="middle" data-name="BasePluginEvents">BasePluginEvents</text></a>
+
+</g>
+</g>
+<g transform="translate(1513.25, 271)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BasePluginEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BasePluginEvents">
+<text x="0.0" y="13.5" stroke="none" data-name="BasePluginEvents">+destroy: []</text>
+
+</g>
+</g>
+<g transform="translate(1513.25, 302)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BasePluginEvents">
+<g transform="translate(8, 8)" fill="#33322E" data-name="BasePluginEvents">
+
+</g>
+</g>
+</g>
+<g data-name="EventEmitter&lt;EventTypes&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="EventEmitter&lt;EventTypes&gt;">
+<rect x="1712.3" y="198.5" height="153.0" width="295.0" data-name="EventEmitter&lt;EventTypes&gt;"></rect>
+<path d="M1712.3 229.5 L2007.3 229.5" fill="none" data-name="EventEmitter&lt;EventTypes&gt;"></path>
+<path d="M1712.3 260.5 L2007.3 260.5" fill="none" data-name="EventEmitter&lt;EventTypes&gt;"></path>
+</g>
+<g transform="translate(1712.25, 198.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EventEmitter&lt;EventTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EventEmitter&lt;EventTypes&gt;">
+<a id="src/waveform/event-emitter.ts.EventEmitter&lt;EventTypes&gt;" xlink:href="src/waveform/event-emitter.ts"><text x="139.5" y="13.5" stroke="none" text-anchor="middle" data-name="EventEmitter&lt;EventTypes&gt;">EventEmitter&lt;EventTypes&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(1712.25, 229.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EventEmitter&lt;EventTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EventEmitter&lt;EventTypes&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="EventEmitter&lt;EventTypes&gt;">+listeners: EventMap&lt;EventTypes&gt;</text>
+
+</g>
+</g>
+<g transform="translate(1712.25, 260.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EventEmitter&lt;EventTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EventEmitter&lt;EventTypes&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="EventEmitter&lt;EventTypes&gt;">#on(): () =&gt; void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="EventEmitter&lt;EventTypes&gt;">#un(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="EventEmitter&lt;EventTypes&gt;">#once(): () =&gt; void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="EventEmitter&lt;EventTypes&gt;">#unAll(): void</text>
+<text x="0.0" y="73.5" stroke="none" data-name="EventEmitter&lt;EventTypes&gt;">+emit(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="GeneralEventTypes">
+<g fill="lightgray" stroke="#33322E" data-name="GeneralEventTypes">
+<rect x="2047.3" y="251.5" height="47.0" width="172.0" data-name="GeneralEventTypes"></rect>
+<path d="M2047.3 282.5 L2219.3 282.5" fill="none" data-name="GeneralEventTypes"></path>
+<path d="M2047.3 290.5 L2219.3 290.5" fill="none" data-name="GeneralEventTypes"></path>
+</g>
+<g transform="translate(2047.25, 251.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GeneralEventTypes">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GeneralEventTypes">
+<a id="src/waveform/event-emitter.ts.GeneralEventTypes" xlink:href="src/waveform/event-emitter.ts"><text x="78.0" y="13.5" stroke="none" text-anchor="middle" data-name="GeneralEventTypes">GeneralEventTypes</text></a>
+
+</g>
+</g>
+<g transform="translate(2047.25, 282.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GeneralEventTypes">
+<g transform="translate(8, 8)" fill="#33322E" data-name="GeneralEventTypes">
+
+</g>
+</g>
+<g transform="translate(2047.25, 290.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GeneralEventTypes">
+<g transform="translate(8, 8)" fill="#33322E" data-name="GeneralEventTypes">
+
+</g>
+</g>
+</g>
+<g data-name="Player&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="Player&lt;T&gt;">
+<rect x="2305.0" y="710.0" height="408.0" width="343.0" data-name="Player&lt;T&gt;"></rect>
+<path d="M2305.0 741.0 L2648.0 741.0" fill="none" data-name="Player&lt;T&gt;"></path>
+<path d="M2305.0 787.0 L2648.0 787.0" fill="none" data-name="Player&lt;T&gt;"></path>
+</g>
+<g transform="translate(2305, 710)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Player&lt;T&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Player&lt;T&gt;">
+<a id="src/waveform/player.ts.Player&lt;T&gt;" xlink:href="src/waveform/player.ts"><text x="163.5" y="13.5" stroke="none" text-anchor="middle" data-name="Player&lt;T&gt;">Player&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(2305, 741)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Player&lt;T&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Player&lt;T&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="Player&lt;T&gt;">+media: HTMLMediaElement</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Player&lt;T&gt;">+isExternalMedia: boolean</text>
+
+</g>
+</g>
+<g transform="translate(2305, 787)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Player&lt;T&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Player&lt;T&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="Player&lt;T&gt;">+onMediaEvent(): () =&gt; void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Player&lt;T&gt;">+onceMediaEvent(): () =&gt; void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Player&lt;T&gt;">+getSrc(): string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Player&lt;T&gt;">+revokeSrc(): void</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Player&lt;T&gt;">+setSrc(): void</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Player&lt;T&gt;">+destroy(): void</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Player&lt;T&gt;">+setMediaElement(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Player&lt;T&gt;">#play(): Promise&lt;void&gt;</text>
+<text x="0.0" y="133.5" stroke="none" data-name="Player&lt;T&gt;">#pause(): void</text>
+<text x="0.0" y="148.5" stroke="none" data-name="Player&lt;T&gt;">#isPlaying(): boolean</text>
+<text x="0.0" y="163.5" stroke="none" data-name="Player&lt;T&gt;">#setTime(): void</text>
+<text x="0.0" y="178.5" stroke="none" data-name="Player&lt;T&gt;">#getDuration(): number</text>
+<text x="0.0" y="193.5" stroke="none" data-name="Player&lt;T&gt;">#getCurrentTime(): number</text>
+<text x="0.0" y="208.5" stroke="none" data-name="Player&lt;T&gt;">#getVolume(): number</text>
+<text x="0.0" y="223.5" stroke="none" data-name="Player&lt;T&gt;">#setVolume(): void</text>
+<text x="0.0" y="238.5" stroke="none" data-name="Player&lt;T&gt;">#getMuted(): boolean</text>
+<text x="0.0" y="253.5" stroke="none" data-name="Player&lt;T&gt;">#setMuted(): void</text>
+<text x="0.0" y="268.5" stroke="none" data-name="Player&lt;T&gt;">#getPlaybackRate(): number</text>
+<text x="0.0" y="283.5" stroke="none" data-name="Player&lt;T&gt;">#setPlaybackRate(): void</text>
+<text x="0.0" y="298.5" stroke="none" data-name="Player&lt;T&gt;">#getMediaElement(): HTMLMediaElement</text>
+<text x="0.0" y="313.5" stroke="none" data-name="Player&lt;T&gt;">#setSinkId(): Promise&lt;void&gt;</text>
+
+</g>
+</g>
+</g>
+<g data-name="PlayerOptions">
+<g fill="lightgray" stroke="#33322E" data-name="PlayerOptions">
+<rect x="2259.3" y="217.5" height="115.0" width="252.0" data-name="PlayerOptions"></rect>
+<path d="M2259.3 248.5 L2511.3 248.5" fill="none" data-name="PlayerOptions"></path>
+<path d="M2259.3 324.5 L2511.3 324.5" fill="none" data-name="PlayerOptions"></path>
+</g>
+<g transform="translate(2259.25, 217.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PlayerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PlayerOptions">
+<a id="src/waveform/player.ts.PlayerOptions" xlink:href="src/waveform/player.ts"><text x="118.0" y="13.5" stroke="none" text-anchor="middle" data-name="PlayerOptions">PlayerOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(2259.25, 248.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PlayerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PlayerOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="PlayerOptions">+media?: HTMLMediaElement</text>
+<text x="0.0" y="28.5" stroke="none" data-name="PlayerOptions">+mediaControls?: boolean</text>
+<text x="0.0" y="43.5" stroke="none" data-name="PlayerOptions">+autoplay?: boolean</text>
+<text x="0.0" y="58.5" stroke="none" data-name="PlayerOptions">+playbackRate?: number</text>
+
+</g>
+</g>
+<g transform="translate(2259.25, 324.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PlayerOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="PlayerOptions">
+
+</g>
+</g>
+</g>
+<g data-name="Renderer">
+<g fill="#eee8d5" stroke="#33322E" data-name="Renderer">
+<rect x="2688.0" y="590.0" height="648.0" width="390.0" data-name="Renderer"></rect>
+<path d="M2688.0 621.0 L3078.0 621.0" fill="none" data-name="Renderer"></path>
+<path d="M2688.0 877.0 L3078.0 877.0" fill="none" data-name="Renderer"></path>
+</g>
+<g transform="translate(2688, 590)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Renderer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Renderer">
+<a id="src/waveform/renderer.ts.Renderer" xlink:href="src/waveform/renderer.ts"><text x="187.0" y="13.5" stroke="none" text-anchor="middle" data-name="Renderer">Renderer</text></a>
+
+</g>
+</g>
+<g transform="translate(2688, 621)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Renderer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Renderer">
+<text x="0.0" y="13.5" stroke="none" data-name="Renderer">+MAX_CANVAS_WIDTH: number</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Renderer">+options: WaveFormOptions</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Renderer">+parent: HTMLElement</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Renderer">+container: HTMLElement</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Renderer">+scrollContainer: HTMLElement</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Renderer">+wrapper: HTMLElement</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Renderer">+canvasWrapper: HTMLElement</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Renderer">+progressWrapper: HTMLElement</text>
+<text x="0.0" y="133.5" stroke="none" data-name="Renderer">+cursor: HTMLElement</text>
+<text x="0.0" y="148.5" stroke="none" data-name="Renderer">+timeouts: { timeout?: Timeout</text>
+<text x="0.0" y="163.5" stroke="none" data-name="Renderer">}[]</text>
+<text x="0.0" y="178.5" stroke="none" data-name="Renderer">+isScrollable: boolean</text>
+<text x="0.0" y="193.5" stroke="none" data-name="Renderer">+audioData: AudioBuffer</text>
+<text x="0.0" y="208.5" stroke="none" data-name="Renderer">+resizeObserver: ResizeObserver</text>
+<text x="0.0" y="223.5" stroke="none" data-name="Renderer">+lastContainerWidth: number</text>
+<text x="0.0" y="238.5" stroke="none" data-name="Renderer">+isDragging: boolean</text>
+
+</g>
+</g>
+<g transform="translate(2688, 877)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Renderer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Renderer">
+<text x="0.0" y="13.5" stroke="none" data-name="Renderer">+parentFromOptionsContainer(): any</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Renderer">+initEvents(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Renderer">+onContainerResize(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Renderer">+initDrag(): void</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Renderer">+getHeight(): number</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Renderer">+initHTML(): [HTMLElement, ShadowRoot]</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Renderer">+setOptions(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Renderer">+getWrapper(): HTMLElement</text>
+<text x="0.0" y="133.5" stroke="none" data-name="Renderer">+getScroll(): number</text>
+<text x="0.0" y="148.5" stroke="none" data-name="Renderer">+destroy(): void</text>
+<text x="0.0" y="163.5" stroke="none" data-name="Renderer">+createDelay(): (fn: () =&gt; void) =&gt; void</text>
+<text x="0.0" y="178.5" stroke="none" data-name="Renderer">+convertColorValues(): string | CanvasGradient</text>
+<text x="0.0" y="193.5" stroke="none" data-name="Renderer">+renderBarWaveform(): void</text>
+<text x="0.0" y="208.5" stroke="none" data-name="Renderer">+renderLineWaveForm(): void</text>
+<text x="0.0" y="223.5" stroke="none" data-name="Renderer">+renderWaveform(): void</text>
+<text x="0.0" y="238.5" stroke="none" data-name="Renderer">+renderSingleCanvas(): void</text>
+<text x="0.0" y="253.5" stroke="none" data-name="Renderer">+renderChannel(): void</text>
+<text x="0.0" y="268.5" stroke="none" data-name="Renderer">+render(): void</text>
+<text x="0.0" y="283.5" stroke="none" data-name="Renderer">+reRender(): void</text>
+<text x="0.0" y="298.5" stroke="none" data-name="Renderer">+zoom(): void</text>
+<text x="0.0" y="313.5" stroke="none" data-name="Renderer">+scrollIntoView(): void</text>
+<text x="0.0" y="328.5" stroke="none" data-name="Renderer">+renderProgress(): void</text>
+<text x="0.0" y="343.5" stroke="none" data-name="Renderer">+exportImage(): Promise&lt;string[] | Blob[]&gt;</text>
+
+</g>
+</g>
+</g>
+<g data-name="RendererEvents">
+<g fill="lightgray" stroke="#33322E" data-name="RendererEvents">
+<rect x="2551.3" y="210.0" height="130.0" width="422.0" data-name="RendererEvents"></rect>
+<path d="M2551.3 241.0 L2973.3 241.0" fill="none" data-name="RendererEvents"></path>
+<path d="M2551.3 332.0 L2973.3 332.0" fill="none" data-name="RendererEvents"></path>
+</g>
+<g transform="translate(2551.25, 210)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RendererEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RendererEvents">
+<a id="src/waveform/renderer.ts.RendererEvents" xlink:href="src/waveform/renderer.ts"><text x="203.0" y="13.5" stroke="none" text-anchor="middle" data-name="RendererEvents">RendererEvents</text></a>
+
+</g>
+</g>
+<g transform="translate(2551.25, 241)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RendererEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RendererEvents">
+<text x="0.0" y="13.5" stroke="none" data-name="RendererEvents">+click: [relativeX: number, relativeY: number]</text>
+<text x="0.0" y="28.5" stroke="none" data-name="RendererEvents">+dblclick: [relativeX: number, relativeY: number]</text>
+<text x="0.0" y="43.5" stroke="none" data-name="RendererEvents">+drag: [relativeX: number]</text>
+<text x="0.0" y="58.5" stroke="none" data-name="RendererEvents">+scroll: [relativeStart: number, relativeEnd: number]</text>
+<text x="0.0" y="73.5" stroke="none" data-name="RendererEvents">+render: []</text>
+
+</g>
+</g>
+<g transform="translate(2551.25, 332)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RendererEvents">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RendererEvents">
+
+</g>
+</g>
+</g>
+<g data-name="Timer">
+<g fill="#eee8d5" stroke="#33322E" data-name="Timer">
+<rect x="3118.0" y="852.5" height="123.0" width="208.0" data-name="Timer"></rect>
+<path d="M3118.0 883.5 L3326.0 883.5" fill="none" data-name="Timer"></path>
+<path d="M3118.0 914.5 L3326.0 914.5" fill="none" data-name="Timer"></path>
+</g>
+<g transform="translate(3118, 852.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Timer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Timer">
+<a id="src/waveform/timer.ts.Timer" xlink:href="src/waveform/timer.ts"><text x="96.0" y="13.5" stroke="none" text-anchor="middle" data-name="Timer">Timer</text></a>
+
+</g>
+</g>
+<g transform="translate(3118, 883.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Timer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Timer">
+<text x="0.0" y="13.5" stroke="none" data-name="Timer">+unsubscribe: () =&gt; void</text>
+
+</g>
+</g>
+<g transform="translate(3118, 914.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Timer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Timer">
+<text x="0.0" y="13.5" stroke="none" data-name="Timer">+start(): void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Timer">+stop(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Timer">+destroy(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="TimerEvents">
+<g fill="lightgray" stroke="#33322E" data-name="TimerEvents">
+<rect x="3013.3" y="240.0" height="70.0" width="114.0" data-name="TimerEvents"></rect>
+<path d="M3013.3 271.0 L3127.3 271.0" fill="none" data-name="TimerEvents"></path>
+<path d="M3013.3 302.0 L3127.3 302.0" fill="none" data-name="TimerEvents"></path>
+</g>
+<g transform="translate(3013.25, 240)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TimerEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TimerEvents">
+<a id="src/waveform/timer.ts.TimerEvents" xlink:href="src/waveform/timer.ts"><text x="49.0" y="13.5" stroke="none" text-anchor="middle" data-name="TimerEvents">TimerEvents</text></a>
+
+</g>
+</g>
+<g transform="translate(3013.25, 271)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TimerEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TimerEvents">
+<text x="0.0" y="13.5" stroke="none" data-name="TimerEvents">+tick: []</text>
+
+</g>
+</g>
+<g transform="translate(3013.25, 302)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TimerEvents">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TimerEvents">
+
+</g>
+</g>
+</g>
+<g data-name="WaveForm">
+<g fill="#eee8d5" stroke="#33322E" data-name="WaveForm">
+<rect x="2272.0" y="1278.0" height="723.0" width="409.0" data-name="WaveForm"></rect>
+<path d="M2272.0 1309.0 L2681.0 1309.0" fill="none" data-name="WaveForm"></path>
+<path d="M2272.0 1580.0 L2681.0 1580.0" fill="none" data-name="WaveForm"></path>
+</g>
+<g transform="translate(2272, 1278)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WaveForm">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WaveForm">
+<a id="src/waveform/waveform.ts.WaveForm" xlink:href="src/waveform/waveform.ts"><text x="196.5" y="13.5" stroke="none" text-anchor="middle" data-name="WaveForm">WaveForm</text></a>
+
+</g>
+</g>
+<g transform="translate(2272, 1309)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WaveForm">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WaveForm">
+<text x="0.0" y="13.5" stroke="none" data-name="WaveForm">#options: WaveFormOptions &amp; { waveColor: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="WaveForm">progressColor: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="WaveForm">cursorWidth: number</text>
+<text x="0.0" y="58.5" stroke="none" data-name="WaveForm">minPxPerSec: number</text>
+<text x="0.0" y="73.5" stroke="none" data-name="WaveForm">fillParent: boolean</text>
+<text x="0.0" y="88.5" stroke="none" data-name="WaveForm">interact: boolean</text>
+<text x="0.0" y="103.5" stroke="none" data-name="WaveForm">dragToSeek: boolean</text>
+<text x="0.0" y="118.5" stroke="none" data-name="WaveForm">autoScroll: boolean</text>
+<text x="0.0" y="133.5" stroke="none" data-name="WaveForm">autoCenter: boolean</text>
+<text x="0.0" y="148.5" stroke="none" data-name="WaveForm">sampleRate: number</text>
+<text x="0.0" y="163.5" stroke="none" data-name="WaveForm">}</text>
+<text x="0.0" y="178.5" stroke="none" data-name="WaveForm">+renderer: Renderer</text>
+<text x="0.0" y="193.5" stroke="none" data-name="WaveForm">+timer: Timer</text>
+<text x="0.0" y="208.5" stroke="none" data-name="WaveForm">+plugins: GenericPlugin[]</text>
+<text x="0.0" y="223.5" stroke="none" data-name="WaveForm">+decodedData: AudioBuffer</text>
+<text x="0.0" y="238.5" stroke="none" data-name="WaveForm">+subscriptions: (() =&gt; void)[]</text>
+<text x="0.0" y="253.5" stroke="none" data-name="WaveForm">+mediaSubscriptions: (() =&gt; void)[]</text>
+
+</g>
+</g>
+<g transform="translate(2272, 1580)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WaveForm">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WaveForm">
+<text x="0.0" y="13.5" stroke="none" data-name="WaveForm">#create(): WaveForm</text>
+<text x="0.0" y="28.5" stroke="none" data-name="WaveForm">+initTimerEvents(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="WaveForm">+initPlayerEvents(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="WaveForm">+initRendererEvents(): void</text>
+<text x="0.0" y="73.5" stroke="none" data-name="WaveForm">+initPlugins(): void</text>
+<text x="0.0" y="88.5" stroke="none" data-name="WaveForm">+unsubscribePlayerEvents(): void</text>
+<text x="0.0" y="103.5" stroke="none" data-name="WaveForm">#setOptions(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="WaveForm">#registerPlugin(): T</text>
+<text x="0.0" y="133.5" stroke="none" data-name="WaveForm">#getWrapper(): HTMLElement</text>
+<text x="0.0" y="148.5" stroke="none" data-name="WaveForm">#getScroll(): number</text>
+<text x="0.0" y="163.5" stroke="none" data-name="WaveForm">#getActivePlugins(): GenericPlugin[]</text>
+<text x="0.0" y="178.5" stroke="none" data-name="WaveForm">+loadAudio(): Promise&lt;void&gt;</text>
+<text x="0.0" y="193.5" stroke="none" data-name="WaveForm">#load(): Promise&lt;void&gt;</text>
+<text x="0.0" y="208.5" stroke="none" data-name="WaveForm">#loadBlob(): Promise&lt;void&gt;</text>
+<text x="0.0" y="223.5" stroke="none" data-name="WaveForm">#zoom(): void</text>
+<text x="0.0" y="238.5" stroke="none" data-name="WaveForm">#getDecodedData(): AudioBuffer</text>
+<text x="0.0" y="253.5" stroke="none" data-name="WaveForm">#exportPeaks(): number[][]</text>
+<text x="0.0" y="268.5" stroke="none" data-name="WaveForm">#getDuration(): number</text>
+<text x="0.0" y="283.5" stroke="none" data-name="WaveForm">#toggleInteraction(): void</text>
+<text x="0.0" y="298.5" stroke="none" data-name="WaveForm">#seekTo(): void</text>
+<text x="0.0" y="313.5" stroke="none" data-name="WaveForm">#playPause(): Promise&lt;void&gt;</text>
+<text x="0.0" y="328.5" stroke="none" data-name="WaveForm">#stop(): void</text>
+<text x="0.0" y="343.5" stroke="none" data-name="WaveForm">#skip(): void</text>
+<text x="0.0" y="358.5" stroke="none" data-name="WaveForm">#empty(): void</text>
+<text x="0.0" y="373.5" stroke="none" data-name="WaveForm">#setMediaElement(): void</text>
+<text x="0.0" y="388.5" stroke="none" data-name="WaveForm">#exportImage(): Promise&lt;string[] | Blob[]&gt;</text>
+<text x="0.0" y="403.5" stroke="none" data-name="WaveForm">#destroy(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="WaveFormOptions">
+<g fill="lightgray" stroke="#33322E" data-name="WaveFormOptions">
+<rect x="3167.3" y="0.0" height="550.0" width="775.0" data-name="WaveFormOptions"></rect>
+<path d="M3167.3 31.0 L3942.3 31.0" fill="none" data-name="WaveFormOptions"></path>
+<path d="M3167.3 542.0 L3942.3 542.0" fill="none" data-name="WaveFormOptions"></path>
+</g>
+<g transform="translate(3167.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WaveFormOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WaveFormOptions">
+<a id="src/waveform/waveform.ts.WaveFormOptions" xlink:href="src/waveform/waveform.ts"><text x="379.5" y="13.5" stroke="none" text-anchor="middle" data-name="WaveFormOptions">WaveFormOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(3167.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WaveFormOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WaveFormOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="WaveFormOptions">+container: string | HTMLElement</text>
+<text x="0.0" y="28.5" stroke="none" data-name="WaveFormOptions">+height?: number | &quot;auto&quot;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="WaveFormOptions">+width?: string | number</text>
+<text x="0.0" y="58.5" stroke="none" data-name="WaveFormOptions">+waveColor?: string | CanvasGradient | string[]</text>
+<text x="0.0" y="73.5" stroke="none" data-name="WaveFormOptions">+progressColor?: string | CanvasGradient | string[]</text>
+<text x="0.0" y="88.5" stroke="none" data-name="WaveFormOptions">+cursorColor?: string</text>
+<text x="0.0" y="103.5" stroke="none" data-name="WaveFormOptions">+cursorWidth?: number</text>
+<text x="0.0" y="118.5" stroke="none" data-name="WaveFormOptions">+barWidth?: number</text>
+<text x="0.0" y="133.5" stroke="none" data-name="WaveFormOptions">+barGap?: number</text>
+<text x="0.0" y="148.5" stroke="none" data-name="WaveFormOptions">+barRadius?: number</text>
+<text x="0.0" y="163.5" stroke="none" data-name="WaveFormOptions">+barHeight?: number</text>
+<text x="0.0" y="178.5" stroke="none" data-name="WaveFormOptions">+barAlign?: &quot;top&quot; | &quot;bottom&quot;</text>
+<text x="0.0" y="193.5" stroke="none" data-name="WaveFormOptions">+minPxPerSec?: number</text>
+<text x="0.0" y="208.5" stroke="none" data-name="WaveFormOptions">+fillParent?: boolean</text>
+<text x="0.0" y="223.5" stroke="none" data-name="WaveFormOptions">+url?: string</text>
+<text x="0.0" y="238.5" stroke="none" data-name="WaveFormOptions">+peaks?: (number[] | Float32Array)[]</text>
+<text x="0.0" y="253.5" stroke="none" data-name="WaveFormOptions">+duration?: number</text>
+<text x="0.0" y="268.5" stroke="none" data-name="WaveFormOptions">+media?: HTMLMediaElement</text>
+<text x="0.0" y="283.5" stroke="none" data-name="WaveFormOptions">+mediaControls?: boolean</text>
+<text x="0.0" y="298.5" stroke="none" data-name="WaveFormOptions">+autoplay?: boolean</text>
+<text x="0.0" y="313.5" stroke="none" data-name="WaveFormOptions">+interact?: boolean</text>
+<text x="0.0" y="328.5" stroke="none" data-name="WaveFormOptions">+dragToSeek?: boolean</text>
+<text x="0.0" y="343.5" stroke="none" data-name="WaveFormOptions">+hideScrollbar?: boolean</text>
+<text x="0.0" y="358.5" stroke="none" data-name="WaveFormOptions">+audioRate?: number</text>
+<text x="0.0" y="373.5" stroke="none" data-name="WaveFormOptions">+autoScroll?: boolean</text>
+<text x="0.0" y="388.5" stroke="none" data-name="WaveFormOptions">+autoCenter?: boolean</text>
+<text x="0.0" y="403.5" stroke="none" data-name="WaveFormOptions">+sampleRate?: number</text>
+<text x="0.0" y="418.5" stroke="none" data-name="WaveFormOptions">+splitChannels?: Partial&lt;WaveFormOptions&gt;[]</text>
+<text x="0.0" y="433.5" stroke="none" data-name="WaveFormOptions">+normalize?: boolean</text>
+<text x="0.0" y="448.5" stroke="none" data-name="WaveFormOptions">+plugins?: GenericPlugin[]</text>
+<text x="0.0" y="463.5" stroke="none" data-name="WaveFormOptions">+renderFunction?: (peaks: (number[] | Float32Array)[], ctx: CanvasRenderingContext2D) =&gt; void</text>
+<text x="0.0" y="478.5" stroke="none" data-name="WaveFormOptions">+fetchParams?: RequestInit</text>
+<text x="0.0" y="493.5" stroke="none" data-name="WaveFormOptions">+backend?: &quot;WebAudio&quot; | &quot;MediaElement&quot;</text>
+
+</g>
+</g>
+<g transform="translate(3167.25, 542)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WaveFormOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="WaveFormOptions">
+
+</g>
+</g>
+</g>
+<g data-name="WaveFormEvents">
+<g fill="lightgray" stroke="#33322E" data-name="WaveFormEvents">
+<rect x="3982.3" y="105.0" height="340.0" width="482.0" data-name="WaveFormEvents"></rect>
+<path d="M3982.3 136.0 L4464.3 136.0" fill="none" data-name="WaveFormEvents"></path>
+<path d="M3982.3 437.0 L4464.3 437.0" fill="none" data-name="WaveFormEvents"></path>
+</g>
+<g transform="translate(3982.25, 105)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WaveFormEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WaveFormEvents">
+<a id="src/waveform/waveform.ts.WaveFormEvents" xlink:href="src/waveform/waveform.ts"><text x="233.0" y="13.5" stroke="none" text-anchor="middle" data-name="WaveFormEvents">WaveFormEvents</text></a>
+
+</g>
+</g>
+<g transform="translate(3982.25, 136)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WaveFormEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WaveFormEvents">
+<text x="0.0" y="13.5" stroke="none" data-name="WaveFormEvents">+init: []</text>
+<text x="0.0" y="28.5" stroke="none" data-name="WaveFormEvents">+load: [url: string]</text>
+<text x="0.0" y="43.5" stroke="none" data-name="WaveFormEvents">+loading: [percent: number]</text>
+<text x="0.0" y="58.5" stroke="none" data-name="WaveFormEvents">+decode: [duration: number]</text>
+<text x="0.0" y="73.5" stroke="none" data-name="WaveFormEvents">+ready: [duration: number]</text>
+<text x="0.0" y="88.5" stroke="none" data-name="WaveFormEvents">+redraw: []</text>
+<text x="0.0" y="103.5" stroke="none" data-name="WaveFormEvents">+play: []</text>
+<text x="0.0" y="118.5" stroke="none" data-name="WaveFormEvents">+pause: []</text>
+<text x="0.0" y="133.5" stroke="none" data-name="WaveFormEvents">+finish: []</text>
+<text x="0.0" y="148.5" stroke="none" data-name="WaveFormEvents">+timeupdate: [currentTime: number]</text>
+<text x="0.0" y="163.5" stroke="none" data-name="WaveFormEvents">+audioprocess: [currentTime: number]</text>
+<text x="0.0" y="178.5" stroke="none" data-name="WaveFormEvents">+seeking: [currentTime: number]</text>
+<text x="0.0" y="193.5" stroke="none" data-name="WaveFormEvents">+interaction: [newTime: number]</text>
+<text x="0.0" y="208.5" stroke="none" data-name="WaveFormEvents">+click: [relativeX: number, relativeY: number]</text>
+<text x="0.0" y="223.5" stroke="none" data-name="WaveFormEvents">+dbclick: [relativeX: number, relativeY: number]</text>
+<text x="0.0" y="238.5" stroke="none" data-name="WaveFormEvents">+drag: [relativeX: number]</text>
+<text x="0.0" y="253.5" stroke="none" data-name="WaveFormEvents">+scroll: [visibleStartTime: number, visibleEndTime: number]</text>
+<text x="0.0" y="268.5" stroke="none" data-name="WaveFormEvents">+zoom: [minPxPerSec: number]</text>
+<text x="0.0" y="283.5" stroke="none" data-name="WaveFormEvents">+destroy: []</text>
+
+</g>
+</g>
+<g transform="translate(3982.25, 437)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WaveFormEvents">
+<g transform="translate(8, 8)" fill="#33322E" data-name="WaveFormEvents">
+
+</g>
+</g>
+</g>
+<g data-name="WebAudioPlayer">
+<g fill="#eee8d5" stroke="#33322E" data-name="WebAudioPlayer">
+<rect x="3366.0" y="710.0" height="408.0" width="1350.0" data-name="WebAudioPlayer"></rect>
+<path d="M3366.0 741.0 L4716.0 741.0" fill="none" data-name="WebAudioPlayer"></path>
+<path d="M3366.0 967.0 L4716.0 967.0" fill="none" data-name="WebAudioPlayer"></path>
+</g>
+<g transform="translate(3366, 710)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WebAudioPlayer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WebAudioPlayer">
+<a id="src/waveform/webaudio.ts.WebAudioPlayer" xlink:href="src/waveform/webaudio.ts"><text x="667.0" y="13.5" stroke="none" text-anchor="middle" data-name="WebAudioPlayer">WebAudioPlayer</text></a>
+
+</g>
+</g>
+<g transform="translate(3366, 741)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WebAudioPlayer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WebAudioPlayer">
+<text x="0.0" y="13.5" stroke="none" data-name="WebAudioPlayer">+audioContext: AudioContext</text>
+<text x="0.0" y="28.5" stroke="none" data-name="WebAudioPlayer">+gainNode: GainNode</text>
+<text x="0.0" y="43.5" stroke="none" data-name="WebAudioPlayer">+bufferNode: AudioBufferSourceNode</text>
+<text x="0.0" y="58.5" stroke="none" data-name="WebAudioPlayer">+autoplay: boolean</text>
+<text x="0.0" y="73.5" stroke="none" data-name="WebAudioPlayer">+playStartTime: number</text>
+<text x="0.0" y="88.5" stroke="none" data-name="WebAudioPlayer">+playedDuration: number</text>
+<text x="0.0" y="103.5" stroke="none" data-name="WebAudioPlayer">+_muted: boolean</text>
+<text x="0.0" y="118.5" stroke="none" data-name="WebAudioPlayer">+buffer: AudioBuffer</text>
+<text x="0.0" y="133.5" stroke="none" data-name="WebAudioPlayer">#currentSrc: string</text>
+<text x="0.0" y="148.5" stroke="none" data-name="WebAudioPlayer">#paused: boolean</text>
+<text x="0.0" y="163.5" stroke="none" data-name="WebAudioPlayer">#crossOrigin: string</text>
+<text x="0.0" y="178.5" stroke="none" data-name="WebAudioPlayer">+addEventListener: &lt;EventName extends keyof WebAudioPlayerEvents&gt;(event: EventName, listener: EventListener&lt;WebAudioPlayerEvents, EventName&gt;, options?: { ...</text>
+<text x="0.0" y="193.5" stroke="none" data-name="WebAudioPlayer">}) =&gt; () =&gt; void</text>
+<text x="0.0" y="208.5" stroke="none" data-name="WebAudioPlayer">+removeEventListener: &lt;EventName extends keyof WebAudioPlayerEvents&gt;(event: EventName, listener: EventListener&lt;WebAudioPlayerEvents, EventName&gt;) =&gt; void</text>
+
+</g>
+</g>
+<g transform="translate(3366, 967)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WebAudioPlayer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WebAudioPlayer">
+<text x="0.0" y="13.5" stroke="none" data-name="WebAudioPlayer">+load(): Promise&lt;void&gt;</text>
+<text x="0.0" y="28.5" stroke="none" data-name="WebAudioPlayer">+_play(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="WebAudioPlayer">+_pause(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="WebAudioPlayer">+play(): Promise&lt;void&gt;</text>
+<text x="0.0" y="73.5" stroke="none" data-name="WebAudioPlayer">+pause(): void</text>
+<text x="0.0" y="88.5" stroke="none" data-name="WebAudioPlayer">+stopAt(): void</text>
+<text x="0.0" y="103.5" stroke="none" data-name="WebAudioPlayer">+setSinkId(): Promise&lt;void&gt;</text>
+<text x="0.0" y="118.5" stroke="none" data-name="WebAudioPlayer">#getGainNode(): GainNode</text>
+<text x="0.0" y="133.5" stroke="none" data-name="WebAudioPlayer">#getChannelData(): Float32Array[]</text>
+
+</g>
+</g>
+</g>
+<g data-name="WebAudioPlayerEvents">
+<g fill="lightgray" stroke="#33322E" data-name="WebAudioPlayerEvents">
+<rect x="4504.3" y="180.0" height="190.0" width="201.0" data-name="WebAudioPlayerEvents"></rect>
+<path d="M4504.3 211.0 L4705.3 211.0" fill="none" data-name="WebAudioPlayerEvents"></path>
+<path d="M4504.3 362.0 L4705.3 362.0" fill="none" data-name="WebAudioPlayerEvents"></path>
+</g>
+<g transform="translate(4504.25, 180)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WebAudioPlayerEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WebAudioPlayerEvents">
+<a id="src/waveform/webaudio.ts.WebAudioPlayerEvents" xlink:href="src/waveform/webaudio.ts"><text x="92.5" y="13.5" stroke="none" text-anchor="middle" data-name="WebAudioPlayerEvents">WebAudioPlayerEvents</text></a>
+
+</g>
+</g>
+<g transform="translate(4504.25, 211)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WebAudioPlayerEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WebAudioPlayerEvents">
+<text x="0.0" y="13.5" stroke="none" data-name="WebAudioPlayerEvents">+loadedmetadata: []</text>
+<text x="0.0" y="28.5" stroke="none" data-name="WebAudioPlayerEvents">+canplay: []</text>
+<text x="0.0" y="43.5" stroke="none" data-name="WebAudioPlayerEvents">+play: []</text>
+<text x="0.0" y="58.5" stroke="none" data-name="WebAudioPlayerEvents">+pause: []</text>
+<text x="0.0" y="73.5" stroke="none" data-name="WebAudioPlayerEvents">+seeking: []</text>
+<text x="0.0" y="88.5" stroke="none" data-name="WebAudioPlayerEvents">+timeupdate: []</text>
+<text x="0.0" y="103.5" stroke="none" data-name="WebAudioPlayerEvents">+volumechange: []</text>
+<text x="0.0" y="118.5" stroke="none" data-name="WebAudioPlayerEvents">+empited: []</text>
+<text x="0.0" y="133.5" stroke="none" data-name="WebAudioPlayerEvents">+ended: []</text>
+
+</g>
+</g>
+<g transform="translate(4504.25, 362)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WebAudioPlayerEvents">
+<g transform="translate(8, 8)" fill="#33322E" data-name="WebAudioPlayerEvents">
+
+</g>
+</g>
+</g>
+<g data-name="HoverPlugin">
+<g fill="#eee8d5" stroke="#33322E" data-name="HoverPlugin">
+<rect x="0.0" y="1510.5" height="258.0" width="461.0" data-name="HoverPlugin"></rect>
+<path d="M0.0 1541.5 L461.0 1541.5" fill="none" data-name="HoverPlugin"></path>
+<path d="M0.0 1677.5 L461.0 1677.5" fill="none" data-name="HoverPlugin"></path>
+</g>
+<g transform="translate(0, 1510.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="HoverPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="HoverPlugin">
+<a id="src/waveform/plugins/hover.ts.HoverPlugin" xlink:href="src/waveform/plugins/hover.ts"><text x="222.5" y="13.5" stroke="none" text-anchor="middle" data-name="HoverPlugin">HoverPlugin</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 1541.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HoverPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HoverPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="HoverPlugin">+options: HoverPluginOptions &amp; { lineWidth: number</text>
+<text x="0.0" y="28.5" stroke="none" data-name="HoverPlugin">labelSize: number</text>
+<text x="0.0" y="43.5" stroke="none" data-name="HoverPlugin">}</text>
+<text x="0.0" y="58.5" stroke="none" data-name="HoverPlugin">+wrapper: HTMLElement</text>
+<text x="0.0" y="73.5" stroke="none" data-name="HoverPlugin">+label: HTMLElement</text>
+<text x="0.0" y="88.5" stroke="none" data-name="HoverPlugin">+unsubscribe: () =&gt; void</text>
+<text x="0.0" y="103.5" stroke="none" data-name="HoverPlugin">+onPointerMove: (e: PointerEvent | WheelEvent) =&gt; void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="HoverPlugin">+onPointerLeave: () =&gt; void</text>
+
+</g>
+</g>
+<g transform="translate(0, 1677.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HoverPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HoverPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="HoverPlugin">#create(): HoverPlugin</text>
+<text x="0.0" y="28.5" stroke="none" data-name="HoverPlugin">+addUnits(): string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="HoverPlugin">+onInit(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="HoverPlugin">+formatTime(): string</text>
+<text x="0.0" y="73.5" stroke="none" data-name="HoverPlugin">#destroy(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="HoverPluginOptions">
+<g fill="lightgray" stroke="#33322E" data-name="HoverPluginOptions">
+<rect x="4745.3" y="210.0" height="130.0" width="238.0" data-name="HoverPluginOptions"></rect>
+<path d="M4745.3 241.0 L4983.3 241.0" fill="none" data-name="HoverPluginOptions"></path>
+<path d="M4745.3 332.0 L4983.3 332.0" fill="none" data-name="HoverPluginOptions"></path>
+</g>
+<g transform="translate(4745.25, 210)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HoverPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="HoverPluginOptions">
+<a id="src/waveform/plugins/hover.ts.HoverPluginOptions" xlink:href="src/waveform/plugins/hover.ts"><text x="111.0" y="13.5" stroke="none" text-anchor="middle" data-name="HoverPluginOptions">HoverPluginOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(4745.25, 241)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HoverPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HoverPluginOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="HoverPluginOptions">+lineColor?: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="HoverPluginOptions">+lineWidth?: string | number</text>
+<text x="0.0" y="43.5" stroke="none" data-name="HoverPluginOptions">+labelColor?: string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="HoverPluginOptions">+labelSize?: string | number</text>
+<text x="0.0" y="73.5" stroke="none" data-name="HoverPluginOptions">+labelBackground?: string</text>
+
+</g>
+</g>
+<g transform="translate(4745.25, 332)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HoverPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="HoverPluginOptions">
+
+</g>
+</g>
+</g>
+<g data-name="MinimapPlugin">
+<g fill="#eee8d5" stroke="#33322E" data-name="MinimapPlugin">
+<rect x="501.0" y="1458.0" height="363.0" width="410.0" data-name="MinimapPlugin"></rect>
+<path d="M501.0 1489.0 L911.0 1489.0" fill="none" data-name="MinimapPlugin"></path>
+<path d="M501.0 1655.0 L911.0 1655.0" fill="none" data-name="MinimapPlugin"></path>
+</g>
+<g transform="translate(501, 1458)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MinimapPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MinimapPlugin">
+<a id="src/waveform/plugins/minimap.ts.MinimapPlugin" xlink:href="src/waveform/plugins/minimap.ts"><text x="197.0" y="13.5" stroke="none" text-anchor="middle" data-name="MinimapPlugin">MinimapPlugin</text></a>
+
+</g>
+</g>
+<g transform="translate(501, 1489)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MinimapPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MinimapPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="MinimapPlugin">+options: { overlayColor?: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="MinimapPlugin">insertPosition?: InsertPosition</text>
+<text x="0.0" y="43.5" stroke="none" data-name="MinimapPlugin">} &amp; Partial&lt;WaveFormOptions&gt; &amp; { height: number</text>
+<text x="0.0" y="58.5" stroke="none" data-name="MinimapPlugin">overlayColor: string</text>
+<text x="0.0" y="73.5" stroke="none" data-name="MinimapPlugin">insertPosition: string</text>
+<text x="0.0" y="88.5" stroke="none" data-name="MinimapPlugin">}</text>
+<text x="0.0" y="103.5" stroke="none" data-name="MinimapPlugin">+minimapWrapper: HTMLElement</text>
+<text x="0.0" y="118.5" stroke="none" data-name="MinimapPlugin">+miniWaveForm: WaveForm</text>
+<text x="0.0" y="133.5" stroke="none" data-name="MinimapPlugin">+overlay: HTMLElement</text>
+<text x="0.0" y="148.5" stroke="none" data-name="MinimapPlugin">+container: HTMLElement</text>
+
+</g>
+</g>
+<g transform="translate(501, 1655)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MinimapPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MinimapPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="MinimapPlugin">#create(): MinimapPlugin</text>
+<text x="0.0" y="28.5" stroke="none" data-name="MinimapPlugin">+onInit(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="MinimapPlugin">+initMinimapWrapper(): HTMLElement</text>
+<text x="0.0" y="58.5" stroke="none" data-name="MinimapPlugin">+initOverlay(): HTMLElement</text>
+<text x="0.0" y="73.5" stroke="none" data-name="MinimapPlugin">+initMinimap(): void</text>
+<text x="0.0" y="88.5" stroke="none" data-name="MinimapPlugin">+getOverlayWidth(): number</text>
+<text x="0.0" y="103.5" stroke="none" data-name="MinimapPlugin">+onRedraw(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="MinimapPlugin">+onScroll(): void</text>
+<text x="0.0" y="133.5" stroke="none" data-name="MinimapPlugin">+initWaveFormEvents(): void</text>
+<text x="0.0" y="148.5" stroke="none" data-name="MinimapPlugin">#destroy(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="SingleRegion">
+<g fill="#eee8d5" stroke="#33322E" data-name="SingleRegion">
+<rect x="4756.0" y="635.0" height="558.0" width="259.0" data-name="SingleRegion"></rect>
+<path d="M4756.0 666.0 L5015.0 666.0" fill="none" data-name="SingleRegion"></path>
+<path d="M4756.0 892.0 L5015.0 892.0" fill="none" data-name="SingleRegion"></path>
+</g>
+<g transform="translate(4756, 635)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SingleRegion">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SingleRegion">
+<a id="src/waveform/plugins/regions.ts.SingleRegion" xlink:href="src/waveform/plugins/regions.ts"><text x="121.5" y="13.5" stroke="none" text-anchor="middle" data-name="SingleRegion">SingleRegion</text></a>
+
+</g>
+</g>
+<g transform="translate(4756, 666)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SingleRegion">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SingleRegion">
+<text x="0.0" y="13.5" stroke="none" data-name="SingleRegion">#element: HTMLElement</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SingleRegion">#id: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SingleRegion">#start: number</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SingleRegion">#end: number</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SingleRegion">#drag: boolean</text>
+<text x="0.0" y="88.5" stroke="none" data-name="SingleRegion">#resize: boolean</text>
+<text x="0.0" y="103.5" stroke="none" data-name="SingleRegion">#color: string</text>
+<text x="0.0" y="118.5" stroke="none" data-name="SingleRegion">#content?: HTMLElement</text>
+<text x="0.0" y="133.5" stroke="none" data-name="SingleRegion">#minLength: number</text>
+<text x="0.0" y="148.5" stroke="none" data-name="SingleRegion">#maxLength: number</text>
+<text x="0.0" y="163.5" stroke="none" data-name="SingleRegion">#channelIndex: number</text>
+<text x="0.0" y="178.5" stroke="none" data-name="SingleRegion">#contentEditable: boolean</text>
+<text x="0.0" y="193.5" stroke="none" data-name="SingleRegion">+totalDuration: number</text>
+<text x="0.0" y="208.5" stroke="none" data-name="SingleRegion">+numberOfChannels: number</text>
+
+</g>
+</g>
+<g transform="translate(4756, 892)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SingleRegion">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SingleRegion">
+<text x="0.0" y="13.5" stroke="none" data-name="SingleRegion">+clampPosition(): number</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SingleRegion">+setPart(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SingleRegion">+addResizeHandles(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SingleRegion">+removeResizeHandles(): void</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SingleRegion">+initElement(): HTMLElement</text>
+<text x="0.0" y="88.5" stroke="none" data-name="SingleRegion">+renderPosition(): void</text>
+<text x="0.0" y="103.5" stroke="none" data-name="SingleRegion">+toggleCursor(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="SingleRegion">+initMouseEvents(): void</text>
+<text x="0.0" y="133.5" stroke="none" data-name="SingleRegion">#_onUpdate(): void</text>
+<text x="0.0" y="148.5" stroke="none" data-name="SingleRegion">+onMove(): void</text>
+<text x="0.0" y="163.5" stroke="none" data-name="SingleRegion">+onResize(): void</text>
+<text x="0.0" y="178.5" stroke="none" data-name="SingleRegion">+onEndResizing(): void</text>
+<text x="0.0" y="193.5" stroke="none" data-name="SingleRegion">+onContentClick(): void</text>
+<text x="0.0" y="208.5" stroke="none" data-name="SingleRegion">#onContentBlur(): void</text>
+<text x="0.0" y="223.5" stroke="none" data-name="SingleRegion">#_setTotalDuration(): void</text>
+<text x="0.0" y="238.5" stroke="none" data-name="SingleRegion">#play(): void</text>
+<text x="0.0" y="253.5" stroke="none" data-name="SingleRegion">#setContent(): void</text>
+<text x="0.0" y="268.5" stroke="none" data-name="SingleRegion">#setOptions(): void</text>
+<text x="0.0" y="283.5" stroke="none" data-name="SingleRegion">#remove(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="RegionsPlugin">
+<g fill="#eee8d5" stroke="#33322E" data-name="RegionsPlugin">
+<rect x="951.0" y="1510.5" height="258.0" width="323.0" data-name="RegionsPlugin"></rect>
+<path d="M951.0 1541.5 L1274.0 1541.5" fill="none" data-name="RegionsPlugin"></path>
+<path d="M951.0 1587.5 L1274.0 1587.5" fill="none" data-name="RegionsPlugin"></path>
+</g>
+<g transform="translate(951, 1510.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RegionsPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RegionsPlugin">
+<a id="src/waveform/plugins/regions.ts.RegionsPlugin" xlink:href="src/waveform/plugins/regions.ts"><text x="153.5" y="13.5" stroke="none" text-anchor="middle" data-name="RegionsPlugin">RegionsPlugin</text></a>
+
+</g>
+</g>
+<g transform="translate(951, 1541.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RegionsPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RegionsPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="RegionsPlugin">+regions: SingleRegion[]</text>
+<text x="0.0" y="28.5" stroke="none" data-name="RegionsPlugin">+regionsContainer: HTMLElement</text>
+
+</g>
+</g>
+<g transform="translate(951, 1587.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RegionsPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RegionsPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="RegionsPlugin">#create(): RegionsPlugin</text>
+<text x="0.0" y="28.5" stroke="none" data-name="RegionsPlugin">+onInit(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="RegionsPlugin">+initRegionsContainer(): HTMLElement</text>
+<text x="0.0" y="58.5" stroke="none" data-name="RegionsPlugin">#getRegions(): SingleRegion[]</text>
+<text x="0.0" y="73.5" stroke="none" data-name="RegionsPlugin">+avoidOverlapping(): void</text>
+<text x="0.0" y="88.5" stroke="none" data-name="RegionsPlugin">+adjustScroll(): void</text>
+<text x="0.0" y="103.5" stroke="none" data-name="RegionsPlugin">+saveRegion(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="RegionsPlugin">#addRegion(): SingleRegion</text>
+<text x="0.0" y="133.5" stroke="none" data-name="RegionsPlugin">#enableDragSelection(): () =&gt; void</text>
+<text x="0.0" y="148.5" stroke="none" data-name="RegionsPlugin">#clearRegions(): void</text>
+<text x="0.0" y="163.5" stroke="none" data-name="RegionsPlugin">#destroy(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="RegionEvents">
+<g fill="lightgray" stroke="#33322E" data-name="RegionEvents">
+<rect x="5023.3" y="187.5" height="175.0" width="258.0" data-name="RegionEvents"></rect>
+<path d="M5023.3 218.5 L5281.3 218.5" fill="none" data-name="RegionEvents"></path>
+<path d="M5023.3 354.5 L5281.3 354.5" fill="none" data-name="RegionEvents"></path>
+</g>
+<g transform="translate(5023.25, 187.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RegionEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RegionEvents">
+<a id="src/waveform/plugins/regions.ts.RegionEvents" xlink:href="src/waveform/plugins/regions.ts"><text x="121.0" y="13.5" stroke="none" text-anchor="middle" data-name="RegionEvents">RegionEvents</text></a>
+
+</g>
+</g>
+<g transform="translate(5023.25, 218.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RegionEvents">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RegionEvents">
+<text x="0.0" y="13.5" stroke="none" data-name="RegionEvents">+remove: []</text>
+<text x="0.0" y="28.5" stroke="none" data-name="RegionEvents">+update: [side?: &quot;start&quot; | &quot;end&quot;]</text>
+<text x="0.0" y="43.5" stroke="none" data-name="RegionEvents">+update-end: []</text>
+<text x="0.0" y="58.5" stroke="none" data-name="RegionEvents">+play: []</text>
+<text x="0.0" y="73.5" stroke="none" data-name="RegionEvents">+click: [event: MouseEvent]</text>
+<text x="0.0" y="88.5" stroke="none" data-name="RegionEvents">+dblclick: [event: MouseEvent]</text>
+<text x="0.0" y="103.5" stroke="none" data-name="RegionEvents">+over: [event: MouseEvent]</text>
+<text x="0.0" y="118.5" stroke="none" data-name="RegionEvents">+leave: [event: MouseEvent]</text>
+
+</g>
+</g>
+<g transform="translate(5023.25, 354.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RegionEvents">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RegionEvents">
+
+</g>
+</g>
+</g>
+<g data-name="RegionParams">
+<g fill="lightgray" stroke="#33322E" data-name="RegionParams">
+<rect x="5321.3" y="165.0" height="220.0" width="274.0" data-name="RegionParams"></rect>
+<path d="M5321.3 196.0 L5595.3 196.0" fill="none" data-name="RegionParams"></path>
+<path d="M5321.3 377.0 L5595.3 377.0" fill="none" data-name="RegionParams"></path>
+</g>
+<g transform="translate(5321.25, 165)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RegionParams">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RegionParams">
+<a id="src/waveform/plugins/regions.ts.RegionParams" xlink:href="src/waveform/plugins/regions.ts"><text x="129.0" y="13.5" stroke="none" text-anchor="middle" data-name="RegionParams">RegionParams</text></a>
+
+</g>
+</g>
+<g transform="translate(5321.25, 196)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RegionParams">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RegionParams">
+<text x="0.0" y="13.5" stroke="none" data-name="RegionParams">+id?: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="RegionParams">+start: number</text>
+<text x="0.0" y="43.5" stroke="none" data-name="RegionParams">+end?: number</text>
+<text x="0.0" y="58.5" stroke="none" data-name="RegionParams">+drag?: boolean</text>
+<text x="0.0" y="73.5" stroke="none" data-name="RegionParams">+resize?: boolean</text>
+<text x="0.0" y="88.5" stroke="none" data-name="RegionParams">+color?: string</text>
+<text x="0.0" y="103.5" stroke="none" data-name="RegionParams">+content?: string | HTMLElement</text>
+<text x="0.0" y="118.5" stroke="none" data-name="RegionParams">+minLength?: number</text>
+<text x="0.0" y="133.5" stroke="none" data-name="RegionParams">+maxLength?: number</text>
+<text x="0.0" y="148.5" stroke="none" data-name="RegionParams">+channelIndex?: number</text>
+<text x="0.0" y="163.5" stroke="none" data-name="RegionParams">+contentEditable?: boolean</text>
+
+</g>
+</g>
+<g transform="translate(5321.25, 377)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RegionParams">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RegionParams">
+
+</g>
+</g>
+</g>
+<g data-name="SpectrogramPlugin">
+<g fill="#eee8d5" stroke="#33322E" data-name="SpectrogramPlugin">
+<rect x="1314.0" y="1514.5" height="250.0" width="334.0" data-name="SpectrogramPlugin"></rect>
+<path d="M1314.0 1545.5 L1648.0 1545.5" fill="none" data-name="SpectrogramPlugin"></path>
+<path d="M1314.0 1553.5 L1648.0 1553.5" fill="none" data-name="SpectrogramPlugin"></path>
+</g>
+<g transform="translate(1314, 1514.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SpectrogramPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpectrogramPlugin">
+<a id="src/waveform/plugins/spectrogram.ts.SpectrogramPlugin" xlink:href="src/waveform/plugins/spectrogram.ts"><text x="159.0" y="13.5" stroke="none" text-anchor="middle" data-name="SpectrogramPlugin">SpectrogramPlugin</text></a>
+
+</g>
+</g>
+<g transform="translate(1314, 1545.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpectrogramPlugin">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpectrogramPlugin">
+
+</g>
+</g>
+<g transform="translate(1314, 1553.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpectrogramPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpectrogramPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="SpectrogramPlugin">+create(): SpectrogramPlugin</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpectrogramPlugin">+onInit(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpectrogramPlugin">#destroy(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SpectrogramPlugin">#loadFrequenciesData(): Promise&lt;void&gt;</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SpectrogramPlugin">+createWrapper(): void</text>
+<text x="0.0" y="88.5" stroke="none" data-name="SpectrogramPlugin">+createCanvas(): void</text>
+<text x="0.0" y="103.5" stroke="none" data-name="SpectrogramPlugin">+render(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="SpectrogramPlugin">+drawSpectrogram(): void</text>
+<text x="0.0" y="133.5" stroke="none" data-name="SpectrogramPlugin">+getFrequencies(): number</text>
+<text x="0.0" y="148.5" stroke="none" data-name="SpectrogramPlugin">+freqType(): string | number</text>
+<text x="0.0" y="163.5" stroke="none" data-name="SpectrogramPlugin">+unitType(): &quot;KHz&quot; | &quot;Hz&quot;</text>
+<text x="0.0" y="178.5" stroke="none" data-name="SpectrogramPlugin">+loadLabels(): void</text>
+<text x="0.0" y="193.5" stroke="none" data-name="SpectrogramPlugin">+resample(): any[]</text>
+
+</g>
+</g>
+</g>
+<g data-name="SpectrogramPluginOptions">
+<g fill="lightgray" stroke="#33322E" data-name="SpectrogramPluginOptions">
+<rect x="5635.3" y="142.5" height="265.0" width="1064.0" data-name="SpectrogramPluginOptions"></rect>
+<path d="M5635.3 173.5 L6699.3 173.5" fill="none" data-name="SpectrogramPluginOptions"></path>
+<path d="M5635.3 399.5 L6699.3 399.5" fill="none" data-name="SpectrogramPluginOptions"></path>
+</g>
+<g transform="translate(5635.25, 142.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpectrogramPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpectrogramPluginOptions">
+<a id="src/waveform/plugins/spectrogram.ts.SpectrogramPluginOptions" xlink:href="src/waveform/plugins/spectrogram.ts"><text x="524.0" y="13.5" stroke="none" text-anchor="middle" data-name="SpectrogramPluginOptions">SpectrogramPluginOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(5635.25, 173.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpectrogramPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpectrogramPluginOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="SpectrogramPluginOptions">+container?: string | HTMLElement</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpectrogramPluginOptions">+fftSamples?: number</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpectrogramPluginOptions">+height?: number</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SpectrogramPluginOptions">+labels?: boolean</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SpectrogramPluginOptions">+labelsBackground?: string</text>
+<text x="0.0" y="88.5" stroke="none" data-name="SpectrogramPluginOptions">+labelsColor?: string</text>
+<text x="0.0" y="103.5" stroke="none" data-name="SpectrogramPluginOptions">+labelsHzColor?: string</text>
+<text x="0.0" y="118.5" stroke="none" data-name="SpectrogramPluginOptions">+noverlap?: number</text>
+<text x="0.0" y="133.5" stroke="none" data-name="SpectrogramPluginOptions">+windowFunc?: &quot;bartlett&quot; | &quot;bartlettHann&quot; | &quot;blackman&quot; | &quot;cosine&quot; | &quot;gauss&quot; | &quot;hamming&quot; | &quot;hann&quot; | &quot;lanczoz&quot; | &quot;rectangular&quot; | &quot;triangular&quot;</text>
+<text x="0.0" y="148.5" stroke="none" data-name="SpectrogramPluginOptions">+alpha?: number</text>
+<text x="0.0" y="163.5" stroke="none" data-name="SpectrogramPluginOptions">+frequencyMin?: number</text>
+<text x="0.0" y="178.5" stroke="none" data-name="SpectrogramPluginOptions">+frequencyMax?: number</text>
+<text x="0.0" y="193.5" stroke="none" data-name="SpectrogramPluginOptions">+colorMap?: number[][]</text>
+<text x="0.0" y="208.5" stroke="none" data-name="SpectrogramPluginOptions">+splitChannels?: boolean</text>
+
+</g>
+</g>
+<g transform="translate(5635.25, 399.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpectrogramPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpectrogramPluginOptions">
+
+</g>
+</g>
+</g>
+<g data-name="ZoomPlugin">
+<g fill="#eee8d5" stroke="#33322E" data-name="ZoomPlugin">
+<rect x="1688.0" y="1525.5" height="228.0" width="544.0" data-name="ZoomPlugin"></rect>
+<path d="M1688.0 1556.5 L2232.0 1556.5" fill="none" data-name="ZoomPlugin"></path>
+<path d="M1688.0 1692.5 L2232.0 1692.5" fill="none" data-name="ZoomPlugin"></path>
+</g>
+<g transform="translate(1688, 1525.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ZoomPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ZoomPlugin">
+<a id="src/waveform/plugins/zoom.ts.ZoomPlugin" xlink:href="src/waveform/plugins/zoom.ts"><text x="264.0" y="13.5" stroke="none" text-anchor="middle" data-name="ZoomPlugin">ZoomPlugin</text></a>
+
+</g>
+</g>
+<g transform="translate(1688, 1556.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ZoomPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ZoomPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="ZoomPlugin">+options: ZoomPluginOptions &amp; { scale: number</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ZoomPlugin">deltaThreshold: number</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ZoomPlugin">}</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ZoomPlugin">+wrapper: HTMLElement</text>
+<text x="0.0" y="73.5" stroke="none" data-name="ZoomPlugin">+container: HTMLElement</text>
+<text x="0.0" y="88.5" stroke="none" data-name="ZoomPlugin">+accumulatedDelta: number</text>
+<text x="0.0" y="103.5" stroke="none" data-name="ZoomPlugin">+onWheel: (e: WheelEvent) =&gt; void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="ZoomPlugin">+calculateNewZoom: (oldZoom: number, delta: number) =&gt; number</text>
+
+</g>
+</g>
+<g transform="translate(1688, 1692.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ZoomPlugin">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ZoomPlugin">
+<text x="0.0" y="13.5" stroke="none" data-name="ZoomPlugin">#create(): ZoomPlugin</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ZoomPlugin">+onInit(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ZoomPlugin">+destroy(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="ZoomPluginOptions">
+<g fill="lightgray" stroke="#33322E" data-name="ZoomPluginOptions">
+<rect x="6739.3" y="225.0" height="100.0" width="224.0" data-name="ZoomPluginOptions"></rect>
+<path d="M6739.3 256.0 L6963.3 256.0" fill="none" data-name="ZoomPluginOptions"></path>
+<path d="M6739.3 317.0 L6963.3 317.0" fill="none" data-name="ZoomPluginOptions"></path>
+</g>
+<g transform="translate(6739.25, 225)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ZoomPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ZoomPluginOptions">
+<a id="src/waveform/plugins/zoom.ts.ZoomPluginOptions" xlink:href="src/waveform/plugins/zoom.ts"><text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="ZoomPluginOptions">ZoomPluginOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(6739.25, 256)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ZoomPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ZoomPluginOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="ZoomPluginOptions">+scale?: number</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ZoomPluginOptions">+maxZoom?: number</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ZoomPluginOptions">+deltaThreshold?: number</text>
+
+</g>
+</g>
+<g transform="translate(6739.25, 317)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ZoomPluginOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ZoomPluginOptions">
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>
