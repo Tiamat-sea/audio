@@ -87,7 +87,7 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions>{
         container.addEventListener('pointerleave', this.onPointerLeave)
         container.addEventListener('wheel', this.onPointerMove)
         this.unsubscribe = () => {
-            container.removeEventListener('pointermove', this.onPointMove)
+            container.removeEventListener('pointermove', this.onPointerMove)
             container.removeEventListener('pointerleave', this.onPointerLeave)
             container.removeEventListener('wheel', this.onPointerLeave)
         }

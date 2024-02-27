@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import FFTTransfer from '@/components/analysis/FFTTransfer.vue'
-import Options from '@/components/analysis/Options.vue'
+import FFTTransfer from '../components/analysis/FFTTransfer.vue'
+// import Options from '@/components/analysis/Options.vue'
 import { ref, onMounted } from 'vue'
 
 const num = ref(0)
