@@ -387,6 +387,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         options: WaveFormOptions,
         ctx: CanvasRenderingContext2D,
     ) {
+        // console.log('channelData:', channelData.length)
         ctx.fillStyle = this.convertColorValues(options.waveColor)
 
         // 自定义渲染方法

@@ -293,6 +293,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                 const val = (255 - i) / 256
                 this.colorMap.push([val, val, val, 1])
             }
+            console.log('default', this.colorMap)
         }
         this.fftSamples = options.fftSamples || 512
         this.height = options.height || this.fftSamples / 2
