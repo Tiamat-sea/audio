@@ -296,6 +296,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
             console.log('default', this.colorMap)
             console.log('default', this.colorMap)
             console.log('default', this.colorMap)
+            console.log('default', this.colorMap)
         }
         this.fftSamples = options.fftSamples || 512
         this.height = options.height || this.fftSamples / 2
