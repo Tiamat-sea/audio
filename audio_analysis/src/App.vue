@@ -9,6 +9,17 @@ import { RouterLink, RouterView } from 'vue-router'
             <RouterLink to="/about">About</RouterLink>
             <RouterLink to="/analysis">Analysis</RouterLink>
         </nav> -->
+
+        <!-- <h3>音频频谱分析(此部分存放选项卡)</h3> -->
+        <img src="/favicon.ico" width="20px" height="20px">
+        <RouterLink to="/">主页</RouterLink>
+        <RouterLink to="/about">了解一下</RouterLink>
+
+        <RouterLink to="">文档与社区</RouterLink>
+        <RouterLink to="/analysis">分析控制台</RouterLink>
+        <!-- search -->
+        <!-- 用户个人标识 -->
+
     </header>
 
     <lay-container fluid id="router-container-fluid">
@@ -20,7 +31,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <style scoped>
 .router-container {
-    height: 100vh;
+    height: calc(100vh-header);
     width: 100vw;
 }
 
@@ -29,7 +40,7 @@ import { RouterLink, RouterView } from 'vue-router'
 }
 
 header {
-    line-height: 1.5;
+    line-height: 8;
     max-height: 100vh;
 }
 

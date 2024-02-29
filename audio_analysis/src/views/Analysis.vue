@@ -15,9 +15,7 @@ onMounted(() => {
 
 <template>
     <lay-layout class="example">
-        <lay-header>
-            <h3>音频频谱分析(此部分存放选项卡)</h3>
-        </lay-header>
+        
         <lay-body>
             <lay-layout>
                 <lay-body>
