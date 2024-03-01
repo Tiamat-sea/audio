@@ -1,0 +1,1329 @@
+<main class="ant-layout-content" id="content">
+    <div id="vmus"
+        style="padding: 64px 0px 0px;height: 100%;width: 100%;display: flex;user-select: none;flex-direction: row-reverse;">
+        <button id="playbutton" type="button" class="ant-btn" style="display: none;"><span>隐藏按钮激活audio</span></button>
+        <div class="card-container" style="flex: 0 0 auto; height: 100%;">
+            <div style="display: flex; align-items: stretch; width: 100%; height: 100%;">
+                <div
+                    style="padding: 10px; border: 2px solid rgb(221, 221, 221); width: 360px; height: auto; background: rgb(246, 246, 246); display: flex; flex-direction: column;">
+                    <div
+                        style="position: relative; padding: 5px; margin-bottom: 5px; border: 1px solid; border-radius: 5px; line-height: 0px; height: fit-content;">
+                        <div id="media-container"><video id="audio-media" width="100%" hidden="" playsinline="true"
+                                src="blob:https://www.vmus.net/dd740b85-a335-401b-a450-98f1d3cf385a"></video></div>
+                        <div id="filename" class=""
+                            style="padding: 10px; width: 100%; font-size: 16px; border: 1px solid black; background: rgba(0, 0, 0, 0.65); color: white; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                            Mako、BOBBY - RISE 登峰造极境 (Remix)
+                        </div>
+                        <div style="font-size: 30px; display: flex; flex-flow: row;"><input type="file" id="localfile"
+                                accept=".mp3,audio/*" style="display: none; padding: 5px;"><button type="button"
+                                class="ant-btn ant-btn-link ant-btn-lg" style="color: rgba(32, 33, 1, 0.69);"><i
+                                    aria-label="icon: upload" class="anticon anticon-upload"><svg
+                                        viewBox="64 64 896 896" data-icon="upload" width="1em" height="1em"
+                                        fill="currentColor" aria-hidden="true" focusable="false" class="">
+                                        <path
+                                            d="M400 317.7h73.9V656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V317.7H624c6.7 0 10.4-7.7 6.3-12.9L518.3 163a8 8 0 0 0-12.6 0l-112 141.7c-4.1 5.3-.4 13 6.3 13zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z">
+                                        </path>
+                                    </svg></i><span>上传音乐</span></button><i aria-label="icon: play-circle" tabindex="-1"
+                                class="anticon anticon-play-circle" style="padding: 5px;"><svg viewBox="64 64 896 896"
+                                    data-icon="play-circle" width="1em" height="1em" fill="currentColor"
+                                    aria-hidden="true" focusable="false" class="">
+                                    <path
+                                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z">
+                                    </path>
+                                </svg></i>
+                            <div tabindex="-1" class="ant-slider"
+                                style="width: 160px; margin-left: 20px; background-color: grey; border-radius: 5px;">
+                                <div class="ant-slider-rail"></div><!---->
+                                <div class="ant-slider-step"></div>
+                                <div role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="4" aria-valuenow="2"
+                                    class="ant-slider-handle"
+                                    style="left: 50%; right: auto; transform: translateX(-50%);"></div>
+                                <div class="ant-slider-mark"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="zoomwheel" style="margin: 0px auto; user-select: none;"><span
+                            class="ant-tag ant-tag-has-color"
+                            style="background-color: rgb(143, 144, 126); margin-left: 5px; height: 30px; width: 300px; background-image: url(&quot;img/zoomwheel.png&quot;); cursor: ew-resize;"
+                            ant-click-animating-without-extra-node="false"></span></div>
+                    <div
+                        style="width: 100%; height: fit-content; display: flex; flex-direction: column; background-color: rgb(187, 187, 187); border-radius: 5px; padding: 5px;">
+                        <div style="display: flex; flex-direction: row;"><span class="ant-tag"
+                                style="user-select: none;">全屏幕</span><span><input type="file" id="beatfile"
+                                    style="display: none; padding: 10px;"><i aria-label="icon: upload" tabindex="-1"
+                                    class="anticon anticon-upload"><svg viewBox="64 64 896 896" data-icon="upload"
+                                        width="1em" height="1em" fill="currentColor" aria-hidden="true"
+                                        focusable="false" class="">
+                                        <path
+                                            d="M400 317.7h73.9V656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V317.7H624c6.7 0 10.4-7.7 6.3-12.9L518.3 163a8 8 0 0 0-12.6 0l-112 141.7c-4.1 5.3-.4 13 6.3 13zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z">
+                                        </path>
+                                    </svg></i></span></div>
+                        <div role="separator" class="ant-divider ant-divider-horizontal ant-divider-with-text-right"
+                            style="margin: 4px 0px 20px; color: white; font-size: 12px;"><span
+                                class="ant-divider-inner-text">分析文件</span></div>
+                        <div style="display: flex; flex-direction: row;"><button type="button" class="ant-btn"><span>保
+                                    存</span></button><button type="button" class="ant-btn"><span>读
+                                    取</span></button><button type="button" class="ant-btn"><span>截
+                                    图</span></button><button type="button" class="ant-btn"><span>新
+                                    建</span></button><!----><!----><!----><!----></div>
+                        <div role="separator" class="ant-divider ant-divider-horizontal ant-divider-with-text-right"
+                            style="margin: 4px 0px 20px; color: white; font-size: 12px;"><span
+                                class="ant-divider-inner-text">节拍编辑</span></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <div>
+                                <div class="ant-radio-group ant-radio-group-solid ant-radio-group-default"><label
+                                        class="ant-radio-button-wrapper ant-radio-button-wrapper-checked"><span
+                                            class="ant-radio-button ant-radio-button-checked"><input type="radio"
+                                                class="ant-radio-button-input" value="add"><span
+                                                class="ant-radio-button-inner"></span></span><span> 添加
+                                        </span></label><label class="ant-radio-button-wrapper"><span
+                                            class="ant-radio-button"><input type="radio" class="ant-radio-button-input"
+                                                value="delete"><span class="ant-radio-button-inner"></span></span><span>
+                                            擦除 </span></label></div><button disabled="disabled" type="button"
+                                    class="ant-btn"><span>撤 销</span></button><button disabled="disabled" type="button"
+                                    class="ant-btn"><span>重 做</span></button>
+                            </div>
+                            <div style="border-radius: 5px; background-color: grey; text-align: center; color: white;">
+                                <span>在指针位置标记拍子。快捷键：A、S、D、F</span><!----><!----></div>
+                        </div>
+                    </div>
+                    <div id="ui-container" style="padding: 5px; height: auto; overflow-y: scroll;">
+                        <div class="dg">
+                            <ul>
+                                <li class="title">音频设置</li>
+                                <li class="cr string">
+                                    <div><span class="property-name">颜色主题</span>
+                                        <div class="c"><select>
+                                                <option value="heaven">heaven</option>
+                                                <option value="lighten">lighten</option>
+                                                <option value="oven">oven</option>
+                                                <option value="golden">golden</option>
+                                                <option value="frozen">frozen</option>
+                                                <option value="none">none</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr number">
+                                    <div><span class="property-name">FFT采样长度</span>
+                                        <div class="c"><select>
+                                                <option value="256">256</option>
+                                                <option value="512">512</option>
+                                                <option value="1024">1024</option>
+                                                <option value="2048">2048</option>
+                                                <option value="4096">4096</option>
+                                                <option value="8192">8192</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr string">
+                                    <div><span class="property-name">频率刻度</span>
+                                        <div class="c"><select>
+                                                <option value="Linear">Linear</option>
+                                                <option value="Mel">Mel</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr string">
+                                    <div><span class="property-name">视图移动方式</span>
+                                        <div class="c"><select>
+                                                <option value="scroll">scroll</option>
+                                                <option value="page">page</option>
+                                                <option value="off">off</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr string">
+                                    <div><span class="property-name">节拍线</span>
+                                        <div class="c"><select>
+                                                <option value="隐藏">隐藏</option>
+                                                <option value="默认">默认</option>
+                                                <option value="高亮">高亮</option>
+                                                <option value="反差">反差</option>
+                                                <option value="白色">白色</option>
+                                                <option value="灰色">灰色</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">节拍静音</span>
+                                        <div class="c"><input type="checkbox"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dg">
+                            <ul>
+                                <li class="title">图形配置</li>
+                                <li class="cr string">
+                                    <div><span class="property-name">图类型</span>
+                                        <div class="c"><select>
+                                                <option value="Curve">Curve</option>
+                                                <option value="Worm">Worm</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">平滑</span>
+                                        <div class="c"><input type="checkbox" checked="checked"></div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">
+                                            <div class="xxxfont">窗口时间约<span>2</span>小节</div>
+                                        </span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 6.66667%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">显示指针</span>
+                                        <div class="c"><input type="checkbox" checked="checked"></div>
+                                    </div>
+                                </li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">同步绘制节拍</span>
+                                        <div class="c"><input type="checkbox"></div>
+                                    </div>
+                                </li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">跟随播放进度绘制</span>
+                                        <div class="c"><input type="checkbox"></div>
+                                    </div>
+                                </li>
+                                <li class="folder"></li>
+                            </ul>
+                        </div>
+                        <div class="dg" style="display: none;">
+                            <ul class="closed">
+                                <li class="title">蠕虫</li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">固定蠕虫显示区间</span>
+                                        <div class="c"><input type="checkbox"></div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">速度上限</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 0.277008%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">速度下限</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 1.10803%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr string">
+                                    <div><span class="property-name">颜色主题</span>
+                                        <div class="c"><select>
+                                                <option value="Greys">Greys</option>
+                                                <option value="YlGnBu">YlGnBu</option>
+                                                <option value="Greens">Greens</option>
+                                                <option value="YlOrRd">YlOrRd</option>
+                                                <option value="Bluered">Bluered</option>
+                                                <option value="RdBu">RdBu</option>
+                                                <option value="Reds">Reds</option>
+                                                <option value="Blues">Blues</option>
+                                                <option value="Picnic">Picnic</option>
+                                                <option value="Rainbow">Rainbow</option>
+                                                <option value="Portland">Portland</option>
+                                                <option value="Jet">Jet</option>
+                                                <option value="Hot">Hot</option>
+                                                <option value="Blackbody">Blackbody</option>
+                                                <option value="Earth">Earth</option>
+                                                <option value="Electric">Electric</option>
+                                                <option value="Viridis">Viridis</option>
+                                                <option value="Cividis">Cividis</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">精度</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 7.69231%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dg">
+                            <ul class="closed">
+                                <li class="title">节拍</li>
+                                <li class="cr string">
+                                    <div><span class="property-name">对齐方式</span>
+                                        <div class="c"><select>
+                                                <option value="line">line</option>
+                                                <option value="bar">bar</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">开始小节</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">结束小节</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 100%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">每节拍数</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">小节平移</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 50%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">拍子弱起</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 100%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">显示拍点</span>
+                                        <div class="c"><input type="checkbox" checked="checked"></div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">节拍大小</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 20%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr string">
+                                    <div><span class="property-name">节拍形状</span>
+                                        <div class="c"><select>
+                                                <option value="circle">circle</option>
+                                                <option value="cross">cross</option>
+                                                <option value="x">x</option>
+                                                <option value="square">square</option>
+                                                <option value="diamond">diamond</option>
+                                                <option value="star">star</option>
+                                                <option value="triangle-up">triangle-up</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr color">
+                                    <div><span class="property-name">节拍颜色</span>
+                                        <div class="c"><input type="text"
+                                                style="outline: none; text-align: center; color: rgb(255, 255, 255); border: 0px; font-weight: bold; text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 1px; background-color: rgb(255, 0, 0);">
+                                            <div class="selector"
+                                                style="width: 122px; height: 102px; padding: 3px; background-color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;">
+                                                <div class="field-knob"
+                                                    style="position: absolute; width: 12px; height: 12px; border: 2px solid rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px; border-radius: 12px; z-index: 1; margin-left: 93px; margin-top: -7px; background-color: rgb(255, 0, 0);">
+                                                </div>
+                                                <div class="saturation-field"
+                                                    style="width: 100px; height: 100px; border: 1px solid rgb(85, 85, 85); margin-right: 3px; display: inline-block; cursor: pointer; background: -webkit-linear-gradient(left, rgb(255, 255, 255) 0%, rgb(255, 0, 0) 100%);">
+                                                    <div
+                                                        style="width: 100%; height: 100%; background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);">
+                                                    </div>
+                                                </div>
+                                                <div class="hue-field"
+                                                    style="width: 15px; height: 100px; border: 1px solid rgb(85, 85, 85); cursor: ns-resize; position: absolute; top: 3px; right: 3px; background: -webkit-linear-gradient(top, rgb(255, 0, 0) 0%, rgb(255, 0, 255) 17%, rgb(0, 0, 255) 34%, rgb(0, 255, 255) 50%, rgb(0, 255, 0) 67%, rgb(255, 255, 0) 84%, rgb(255, 0, 0) 100%);">
+                                                    <div class="hue-knob"
+                                                        style="position: absolute; width: 15px; height: 2px; border-right: 4px solid rgb(255, 255, 255); z-index: 1; margin-top: 100px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dg">
+                            <ul class="closed">
+                                <li class="title">速度</li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">自动涨落</span>
+                                        <div class="c"><input type="checkbox" checked="checked"></div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider" style="display: none;">
+                                    <div><span class="property-name">速度上限</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 0.277008%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider" style="display: none;">
+                                    <div><span class="property-name">速度下限</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 0.277008%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">平均速度</span>
+                                        <div class="c"><input type="checkbox" checked="checked"></div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">线条粗细</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 22.2222%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr color">
+                                    <div><span class="property-name">线条颜色</span>
+                                        <div class="c"><input type="text"
+                                                style="outline: none; text-align: center; color: rgb(255, 255, 255); border: 0px; font-weight: bold; text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 1px; background-color: rgb(0, 0, 0);">
+                                            <div class="selector"
+                                                style="width: 122px; height: 102px; padding: 3px; background-color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;">
+                                                <div class="field-knob"
+                                                    style="position: absolute; width: 12px; height: 12px; border: 2px solid rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px; border-radius: 12px; z-index: 1; margin-left: -7px; margin-top: 93px; background-color: rgb(0, 0, 0);">
+                                                </div>
+                                                <div class="saturation-field"
+                                                    style="width: 100px; height: 100px; border: 1px solid rgb(85, 85, 85); margin-right: 3px; display: inline-block; cursor: pointer; background: -webkit-linear-gradient(left, rgb(255, 255, 255) 0%, rgb(255, 0, 0) 100%);">
+                                                    <div
+                                                        style="width: 100%; height: 100%; background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);">
+                                                    </div>
+                                                </div>
+                                                <div class="hue-field"
+                                                    style="width: 15px; height: 100px; border: 1px solid rgb(85, 85, 85); cursor: ns-resize; position: absolute; top: 3px; right: 3px; background: -webkit-linear-gradient(top, rgb(255, 0, 0) 0%, rgb(255, 0, 255) 17%, rgb(0, 0, 255) 34%, rgb(0, 255, 255) 50%, rgb(0, 255, 0) 67%, rgb(255, 255, 0) 84%, rgb(255, 0, 0) 100%);">
+                                                    <div class="hue-knob"
+                                                        style="position: absolute; width: 15px; height: 2px; border-right: 4px solid rgb(255, 255, 255); z-index: 1; margin-top: 100px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dg">
+                            <ul class="closed">
+                                <li class="title">力度</li>
+                                <li class="cr boolean">
+                                    <div><span class="property-name">力度</span>
+                                        <div class="c"><input type="checkbox" checked="checked"></div>
+                                    </div>
+                                </li>
+                                <li class="cr string">
+                                    <div><span class="property-name">模式</span>
+                                        <div class="c"><select>
+                                                <option value="tube">tube</option>
+                                                <option value="wrap">wrap</option>
+                                            </select></div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">力度放大</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 31.0345%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr number has-slider">
+                                    <div><span class="property-name">透明度</span>
+                                        <div class="c">
+                                            <div><input type="text"></div>
+                                            <div class="slider">
+                                                <div class="slider-fg" style="width: 30%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="cr color">
+                                    <div><span class="property-name">颜色</span>
+                                        <div class="c"><input type="text"
+                                                style="outline: none; text-align: center; color: rgb(255, 255, 255); border: 0px; font-weight: bold; text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 1px; background-color: rgb(0, 0, 0);">
+                                            <div class="selector"
+                                                style="width: 122px; height: 102px; padding: 3px; background-color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;">
+                                                <div class="field-knob"
+                                                    style="position: absolute; width: 12px; height: 12px; border: 2px solid rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px; border-radius: 12px; z-index: 1; margin-left: -7px; margin-top: 93px; background-color: rgb(0, 0, 0);">
+                                                </div>
+                                                <div class="saturation-field"
+                                                    style="width: 100px; height: 100px; border: 1px solid rgb(85, 85, 85); margin-right: 3px; display: inline-block; cursor: pointer; background: -webkit-linear-gradient(left, rgb(255, 255, 255) 0%, rgb(255, 0, 0) 100%);">
+                                                    <div
+                                                        style="width: 100%; height: 100%; background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);">
+                                                    </div>
+                                                </div>
+                                                <div class="hue-field"
+                                                    style="width: 15px; height: 100px; border: 1px solid rgb(85, 85, 85); cursor: ns-resize; position: absolute; top: 3px; right: 3px; background: -webkit-linear-gradient(top, rgb(255, 0, 0) 0%, rgb(255, 0, 255) 17%, rgb(0, 0, 255) 34%, rgb(0, 255, 255) 50%, rgb(0, 255, 0) 67%, rgb(255, 255, 0) 84%, rgb(255, 0, 0) 100%);">
+                                                    <div class="hue-knob"
+                                                        style="position: absolute; width: 15px; height: 2px; border-right: 4px solid rgb(255, 255, 255); z-index: 1; margin-top: 100px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="vmusviews" style="width: 360px; flex: 1 1 0%;">
+            <div class="default-theme splitpanes splitpanes--horizontal" style="width: auto;">
+                <div class="splitpanes__pane" style="height: 48.6966%;">
+                    <div class="split-theme splitpanes splitpanes--horizontal">
+                        <div class="splitpanes__pane" style="height: 43.7063%;">
+                            <div id="waveform"
+                                style="overflow: hidden; position: relative; z-index: 1; top: 0px; padding: 0px; transform-origin: left top; height: 100%; cursor: grab;">
+                                <canvas id="waveCanvas" style="z-index: 0; transform-origin: left top;" width="1308"
+                                    height="200"></canvas>
+                                <div></div>
+                            </div>
+                        </div>
+                        <div class="splitpanes__splitter"></div>
+                        <div class="splitpanes__pane" style="height: 56.2937%;">
+                            <div id="spectrogram"
+                                style="overflow: hidden; position: relative; z-index: 1; padding: 0px; height: 100%; cursor: crosshair;">
+                                <canvas id="spectrogramCanvas" style="top: 0px; z-index: 0;" width="1308"
+                                    height="258"></canvas><span
+                                    style="position: absolute; top: 0px; right: 0px; background: gray;">
+                                    <div tabindex="-1" class="ant-slider ant-slider-vertical"
+                                        style="margin: 20px 4px; height: 218px;">
+                                        <div class="ant-slider-rail"></div>
+                                        <div class="ant-slider-track ant-slider-track-1"
+                                            style="bottom: 0%; top: auto; height: 100%;"></div>
+                                        <div class="ant-slider-step"></div>
+                                        <div role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100"
+                                            aria-valuenow="0" class="ant-slider-handle ant-slider-handle-1"
+                                            style="bottom: 0%; top: auto; transform: translateY(50%);"></div>
+                                        <div role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100"
+                                            aria-valuenow="100" class="ant-slider-handle ant-slider-handle-2"
+                                            style="bottom: 100%; top: auto; transform: translateY(50%);"></div>
+                                        <div class="ant-slider-mark"></div>
+                                    </div>
+                                </span>
+                                <div id="layer"
+                                    style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; user-select: none; pointer-events: none;">
+                                    <canvas id="frequency"
+                                        style="top: 0px; left: 0px; width: 100%; height: 100%; user-select: none; pointer-events: none;"
+                                        width="1308" height="258"></canvas></div><canvas id="information"
+                                    style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; user-select: none; pointer-events: none; visibility: hidden;"
+                                    width="1308" height="258"></canvas>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="splitpanes__splitter"></div>
+                <div class="splitpanes__pane" style="height: 51.3034%;">
+                    <div style="position: relative; top: 0px; left: 0px; width: 100%; height: 100%;">
+                        <div id="tempoplot" class="js-plotly-plot"
+                            style="position: relative; top: 0px; left: 0px; width: 100%; height: 100%; user-select: none; pointer-events: auto; background-color: white; border-style: inset;">
+                            <div class="plot-container plotly">
+                                <div class="user-select-none svg-container"
+                                    style="position: relative; width: 1304px; height: 485px;"><svg class="main-svg"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="1304" height="485" style="background: rgb(255, 255, 255);">
+                                        <defs id="defs-26329b">
+                                            <g class="clips">
+                                                <clipPath id="clip26329bxyplot" class="plotclip">
+                                                    <rect width="1125" height="375"></rect>
+                                                </clipPath>
+                                                <clipPath id="clip26329bxy2plot" class="plotclip">
+                                                    <rect width="1125" height="375"></rect>
+                                                </clipPath>
+                                                <clipPath id="clip26329bx2yplot" class="plotclip">
+                                                    <rect width="1125" height="375"></rect>
+                                                </clipPath>
+                                                <clipPath class="axesclip" id="clip26329bx">
+                                                    <rect x="50" y="0" width="1125" height="485"></rect>
+                                                </clipPath>
+                                                <clipPath class="axesclip" id="clip26329by">
+                                                    <rect x="0" y="30" width="1304" height="375"></rect>
+                                                </clipPath>
+                                                <clipPath class="axesclip" id="clip26329bxy">
+                                                    <rect x="50" y="30" width="1125" height="375"></rect>
+                                                </clipPath>
+                                                <clipPath class="axesclip" id="clip26329by2">
+                                                    <rect x="0" y="30" width="1304" height="375"></rect>
+                                                </clipPath>
+                                                <clipPath class="axesclip" id="clip26329bxy2">
+                                                    <rect x="50" y="30" width="1125" height="375"></rect>
+                                                </clipPath>
+                                                <clipPath class="axesclip" id="clip26329bx2">
+                                                    <rect x="50" y="0" width="1125" height="485"></rect>
+                                                </clipPath>
+                                                <clipPath class="axesclip" id="clip26329bx2y">
+                                                    <rect x="50" y="30" width="1125" height="375"></rect>
+                                                </clipPath>
+                                                <clipPath class="axesclip" id="clip26329bx2y2">
+                                                    <rect x="50" y="30" width="1125" height="375"></rect>
+                                                </clipPath>
+                                            </g>
+                                            <g class="gradients"></g>
+                                        </defs>
+                                        <g class="bglayer"></g>
+                                        <g class="draglayer cursor-crosshair">
+                                            <g class="xy">
+                                                <rect class="nsewdrag drag cursor-pointer" data-subplot="xy" x="50"
+                                                    y="30" width="1125" height="375"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: all;">
+                                                </rect>
+                                                <rect class="nwdrag drag cursor-pointer" data-subplot="xy" x="30" y="10"
+                                                    width="20" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="nedrag drag cursor-pointer" data-subplot="xy" x="1175"
+                                                    y="10" width="20" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="swdrag drag cursor-pointer" data-subplot="xy" x="30"
+                                                    y="405" width="20" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="sedrag drag cursor-pointer" data-subplot="xy" x="1175"
+                                                    y="405" width="20" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="ewdrag drag cursor-pointer" data-subplot="xy" x="162.5"
+                                                    y="405.5" width="900" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="wdrag drag cursor-pointer" data-subplot="xy" x="50"
+                                                    y="405.5" width="112.5" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="edrag drag cursor-pointer" data-subplot="xy" x="1062.5"
+                                                    y="405.5" width="112.5" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="nsdrag drag cursor-pointer" data-subplot="xy" x="29.5"
+                                                    y="67.5" width="20" height="300"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="sdrag drag cursor-pointer" data-subplot="xy" x="29.5"
+                                                    y="367.5" width="20" height="37.5"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="ndrag drag cursor-pointer" data-subplot="xy" x="29.5"
+                                                    y="30" width="20" height="37.5"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                            </g>
+                                            <g class="xy2">
+                                                <rect class="nsdrag drag cursor-pointer" data-subplot="xy2" x="29.5"
+                                                    y="67.5" width="20" height="300"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="sdrag drag cursor-pointer" data-subplot="xy2" x="29.5"
+                                                    y="367.5" width="20" height="37.5"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="ndrag drag cursor-pointer" data-subplot="xy2" x="29.5"
+                                                    y="30" width="20" height="37.5"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                            </g>
+                                            <g class="x2y">
+                                                <rect class="ewdrag drag cursor-pointer" data-subplot="x2y" x="162.5"
+                                                    y="405.5" width="900" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="wdrag drag cursor-pointer" data-subplot="x2y" x="50"
+                                                    y="405.5" width="112.5" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                                <rect class="edrag drag cursor-pointer" data-subplot="x2y" x="1062.5"
+                                                    y="405.5" width="112.5" height="20"
+                                                    style="fill: transparent; stroke-width: 0; pointer-events: none;">
+                                                </rect>
+                                            </g>
+                                        </g>
+                                        <g class="layer-below">
+                                            <g class="imagelayer">
+                                                <image xmlns="http://www.w3.org/2000/svg" x="275" y="105" width="787.5"
+                                                    height="262.5" preserveAspectRatio="xMinYMin" opacity="0.1"
+                                                    xlink:href="data:image/png;base64,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">
+                                                </image>
+                                            </g>
+                                            <g class="shapelayer"></g>
+                                        </g>
+                                        <g class="cartesianlayer">
+                                            <g class="subplot xy">
+                                                <g class="layer-subplot">
+                                                    <g class="shapelayer"></g>
+                                                    <g class="imagelayer"></g>
+                                                </g>
+                                                <g class="gridlayer">
+                                                    <g class="x">
+                                                        <path class="xgrid crisp"
+                                                            transform="translate(85.71000000000001,0)" d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(121.43,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(157.14,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(192.86,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(228.57,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp"
+                                                            transform="translate(264.28999999999996,0)" d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(300,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(335.71,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(371.43,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(407.14,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(442.86,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(478.57,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(514.29,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(550,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(585.71,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(621.43,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(657.14,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(692.86,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(728.57,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(764.29,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(800,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(835.71,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(871.43,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(907.14,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(942.86,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(978.57,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(1014.29,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(1050,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(1085.71,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(1121.43,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="xgrid crisp" transform="translate(1157.14,0)"
+                                                            d="M0,30v375"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                    </g>
+                                                    <g class="y">
+                                                        <path class="ygrid crisp" transform="translate(0,326.88)"
+                                                            d="M50,0h1125"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="ygrid crisp" transform="translate(0,285.81)"
+                                                            d="M50,0h1125"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="ygrid crisp" transform="translate(0,244.74)"
+                                                            d="M50,0h1125"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="ygrid crisp" transform="translate(0,203.67)"
+                                                            d="M50,0h1125"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="ygrid crisp" transform="translate(0,162.6)"
+                                                            d="M50,0h1125"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="ygrid crisp" transform="translate(0,121.54)"
+                                                            d="M50,0h1125"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="ygrid crisp" transform="translate(0,80.47)"
+                                                            d="M50,0h1125"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                        <path class="ygrid crisp" transform="translate(0,39.4)"
+                                                            d="M50,0h1125"
+                                                            style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;">
+                                                        </path>
+                                                    </g>
+                                                    <g class="y2"></g>
+                                                    <g class="x2"></g>
+                                                </g>
+                                                <g class="zerolinelayer">
+                                                    <path class="yzl zl crisp" transform="translate(0,367.95)"
+                                                        d="M50,0h1125"
+                                                        style="stroke: rgb(68, 68, 68); stroke-opacity: 1; stroke-width: 1px;">
+                                                    </path>
+                                                </g>
+                                                <path class="xlines-below"></path>
+                                                <path class="ylines-below"></path>
+                                                <g class="overlines-below">
+                                                    <path class="xy2-x"></path>
+                                                    <path class="xy2-y"></path>
+                                                    <path class="x2y-x"></path>
+                                                    <path class="x2y-y"></path>
+                                                </g>
+                                                <g class="xaxislayer-below"></g>
+                                                <g class="yaxislayer-below"></g>
+                                                <g class="overaxes-below">
+                                                    <g class="xy2-x"></g>
+                                                    <g class="xy2-y"></g>
+                                                    <g class="x2y-x"></g>
+                                                    <g class="x2y-y"></g>
+                                                </g>
+                                                <g class="plot" transform="translate(50,30)"
+                                                    clip-path="url('#clip26329bxyplot')"></g>
+                                                <g class="overplot">
+                                                    <g class="xy2" transform="translate(50,30)"
+                                                        clip-path="url('#clip26329bxy2plot')"></g>
+                                                    <g class="x2y" transform="translate(50,30)"
+                                                        clip-path="url('#clip26329bx2yplot')"></g>
+                                                </g>
+                                                <path class="xlines-above crisp" d="M0,0" style="fill: none;"></path>
+                                                <path class="ylines-above crisp" d="M0,0" style="fill: none;"></path>
+                                                <g class="overlines-above">
+                                                    <path class="xy2-x crisp" d="M0,0" style="fill: none;"></path>
+                                                    <path class="xy2-y crisp" d="M0,0" style="fill: none;"></path>
+                                                    <path class="x2y-x crisp" d="M0,0" style="fill: none;"></path>
+                                                    <path class="x2y-y crisp" d="M0,0" style="fill: none;"></path>
+                                                </g>
+                                                <g class="xaxislayer-above">
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="1" data-math="N"
+                                                            transform="translate(50,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">1</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="2" data-math="N"
+                                                            transform="translate(85.71000000000001,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">2</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="3" data-math="N"
+                                                            transform="translate(121.43,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">3</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="4" data-math="N"
+                                                            transform="translate(157.14,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">4</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="5" data-math="N"
+                                                            transform="translate(192.86,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">5</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="6" data-math="N"
+                                                            transform="translate(228.57,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">6</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="7" data-math="N"
+                                                            transform="translate(264.28999999999996,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">7</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="8" data-math="N"
+                                                            transform="translate(300,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">8</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="9" data-math="N"
+                                                            transform="translate(335.71,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">9</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="10" data-math="N"
+                                                            transform="translate(371.43,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">10</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="11" data-math="N"
+                                                            transform="translate(407.14,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">11</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="12" data-math="N"
+                                                            transform="translate(442.86,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">12</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="13" data-math="N"
+                                                            transform="translate(478.57,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">13</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="14" data-math="N"
+                                                            transform="translate(514.29,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">14</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="15" data-math="N"
+                                                            transform="translate(550,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">15</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="16" data-math="N"
+                                                            transform="translate(585.71,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">16</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="17" data-math="N"
+                                                            transform="translate(621.43,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">17</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="18" data-math="N"
+                                                            transform="translate(657.14,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">18</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="19" data-math="N"
+                                                            transform="translate(692.86,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">19</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="20" data-math="N"
+                                                            transform="translate(728.57,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">20</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="21" data-math="N"
+                                                            transform="translate(764.29,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">21</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="22" data-math="N"
+                                                            transform="translate(800,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">22</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="23" data-math="N"
+                                                            transform="translate(835.71,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">23</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="24" data-math="N"
+                                                            transform="translate(871.43,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">24</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="25" data-math="N"
+                                                            transform="translate(907.14,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">25</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="26" data-math="N"
+                                                            transform="translate(942.86,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">26</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="27" data-math="N"
+                                                            transform="translate(978.57,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">27</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="28" data-math="N"
+                                                            transform="translate(1014.29,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">28</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="29" data-math="N"
+                                                            transform="translate(1050,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">29</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="30" data-math="N"
+                                                            transform="translate(1085.71,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">30</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="31" data-math="N"
+                                                            transform="translate(1121.43,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">31</text>
+                                                    </g>
+                                                    <g class="xtick"><text text-anchor="middle" x="0" y="418"
+                                                            data-unformatted="32" data-math="N"
+                                                            transform="translate(1157.14,0)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">32</text>
+                                                    </g>
+                                                </g>
+                                                <g class="yaxislayer-above">
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="0" data-math="N"
+                                                            transform="translate(0,367.95)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">0</text>
+                                                    </g>
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="50" data-math="N"
+                                                            transform="translate(0,326.88)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">50</text>
+                                                    </g>
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="100" data-math="N"
+                                                            transform="translate(0,285.81)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">100</text>
+                                                    </g>
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="150" data-math="N"
+                                                            transform="translate(0,244.74)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">150</text>
+                                                    </g>
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="200" data-math="N"
+                                                            transform="translate(0,203.67)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">200</text>
+                                                    </g>
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="250" data-math="N"
+                                                            transform="translate(0,162.6)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">250</text>
+                                                    </g>
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="300" data-math="N"
+                                                            transform="translate(0,121.54)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">300</text>
+                                                    </g>
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="350" data-math="N"
+                                                            transform="translate(0,80.47)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">350</text>
+                                                    </g>
+                                                    <g class="ytick"><text text-anchor="end" x="49"
+                                                            y="4.199999999999999" data-unformatted="400" data-math="N"
+                                                            transform="translate(0,39.4)"
+                                                            style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">400</text>
+                                                    </g>
+                                                </g>
+                                                <g class="overaxes-above">
+                                                    <g class="xy2-x"></g>
+                                                    <g class="xy2-y"></g>
+                                                    <g class="x2y-x"></g>
+                                                    <g class="x2y-y"></g>
+                                                </g>
+                                            </g>
+                                            <g class="subplot xy2"></g>
+                                            <g class="subplot x2y"></g>
+                                        </g>
+                                        <g class="polarlayer"></g>
+                                        <g class="ternarylayer"></g>
+                                        <g class="geolayer"></g>
+                                        <g class="funnelarealayer"></g>
+                                        <g class="pielayer"></g>
+                                        <g class="treemaplayer"></g>
+                                        <g class="sunburstlayer"></g>
+                                        <g class="glimages"></g>
+                                    </svg>
+                                    <div class="gl-container"><canvas class="gl-canvas gl-canvas-context" width="1304"
+                                            height="485"
+                                            style="position: absolute; top: 0px; left: 0px; overflow: visible; pointer-events: none;"></canvas><canvas
+                                            class="gl-canvas gl-canvas-focus" width="1304" height="485"
+                                            style="position: absolute; top: 0px; left: 0px; overflow: visible; pointer-events: none;"></canvas><canvas
+                                            class="gl-canvas gl-canvas-pick" width="1304" height="485"
+                                            style="position: absolute; top: 0px; left: 0px; overflow: visible; pointer-events: none;"></canvas>
+                                    </div><svg class="main-svg" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" width="1304" height="485">
+                                        <defs id="topdefs-26329b">
+                                            <g class="clips"></g>
+                                            <clipPath id="legend26329b">
+                                                <rect width="94" height="105" x="0" y="0"></rect>
+                                            </clipPath>
+                                        </defs>
+                                        <g class="indicatorlayer"></g>
+                                        <g class="layer-above">
+                                            <g class="imagelayer"></g>
+                                            <g class="shapelayer"></g>
+                                        </g>
+                                        <g class="infolayer">
+                                            <g class="g-gtitle"><text class="gtitle" x="652" y="15" text-anchor="middle"
+                                                    dy="0em" data-unformatted="速度 - 力度 曲线" data-math="N"
+                                                    style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 17px; fill: rgb(68, 68, 68); opacity: 1; font-weight: normal; white-space: pre;">速度
+                                                    - 力度 曲线</text></g>
+                                            <g class="legend" pointer-events="all" transform="translate(1197.5,30)">
+                                                <rect class="bg" shape-rendering="crispEdges" width="94" height="105"
+                                                    x="0" y="0"
+                                                    style="stroke: rgb(68, 68, 68); stroke-opacity: 1; fill: rgb(255, 255, 255); fill-opacity: 1; stroke-width: 0px;">
+                                                </rect>
+                                                <g class="scrollbox" transform="" clip-path="url('#legend26329b')">
+                                                    <g class="groups">
+                                                        <g class="traces" transform="translate(0,14.5)"
+                                                            style="opacity: 1;"><text class="legendtext"
+                                                                text-anchor="start" x="40" y="4.680000000000001"
+                                                                data-unformatted="力度" data-math="N"
+                                                                style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">力度</text>
+                                                            <g class="layers" style="opacity: 1;">
+                                                                <g class="legendfill">
+                                                                    <path class="js-fill" d="M5,-2h30v6h-30z"
+                                                                        style="stroke-width: 0; fill: rgb(0, 0, 0); fill-opacity: 0.3;">
+                                                                    </path>
+                                                                </g>
+                                                                <g class="legendlines">
+                                                                    <path class="js-line" d="M5,-2h30"
+                                                                        style="fill: none; stroke: rgb(27, 27, 27); stroke-opacity: 0.3; stroke-width: 1px;">
+                                                                    </path>
+                                                                </g>
+                                                                <g class="legendsymbols">
+                                                                    <g class="legendpoints"></g>
+                                                                </g>
+                                                            </g>
+                                                            <rect class="legendtoggle" pointer-events="all" x="0"
+                                                                y="-9.5" width="88.66666793823242" height="19"
+                                                                style="cursor: pointer; fill: rgb(0, 0, 0); fill-opacity: 0;">
+                                                            </rect>
+                                                        </g>
+                                                        <g class="traces" transform="translate(0,33.5)"
+                                                            style="opacity: 1;"><text class="legendtext"
+                                                                text-anchor="start" x="40" y="4.680000000000001"
+                                                                data-unformatted="速度" data-math="N"
+                                                                style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">速度</text>
+                                                            <g class="layers" style="opacity: 1;">
+                                                                <g class="legendfill"></g>
+                                                                <g class="legendlines">
+                                                                    <path class="js-line" d="M5,0h30"
+                                                                        style="fill: none; stroke: rgb(0, 0, 0); stroke-opacity: 1; stroke-width: 3px;">
+                                                                    </path>
+                                                                </g>
+                                                                <g class="legendsymbols">
+                                                                    <g class="legendpoints"></g>
+                                                                </g>
+                                                            </g>
+                                                            <rect class="legendtoggle" pointer-events="all" x="0"
+                                                                y="-9.5" width="88.66666793823242" height="19"
+                                                                style="cursor: pointer; fill: rgb(0, 0, 0); fill-opacity: 0;">
+                                                            </rect>
+                                                        </g>
+                                                        <g class="traces" transform="translate(0,52.5)"
+                                                            style="opacity: 1;"><text class="legendtext"
+                                                                text-anchor="start" x="40" y="4.680000000000001"
+                                                                data-unformatted="小节数" data-math="N"
+                                                                style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">小节数</text>
+                                                            <g class="layers" style="opacity: 1;">
+                                                                <g class="legendfill"></g>
+                                                                <g class="legendlines"></g>
+                                                                <g class="legendsymbols">
+                                                                    <g class="legendpoints">
+                                                                        <path class="scatterpts"
+                                                                            transform="translate(20,0)"
+                                                                            d="M-3.46,1.5H3.46L0,-3Z"
+                                                                            style="opacity: 1; stroke-width: 0px; fill: rgb(255, 0, 0); fill-opacity: 1;">
+                                                                        </path>
+                                                                    </g>
+                                                                </g>
+                                                            </g>
+                                                            <rect class="legendtoggle" pointer-events="all" x="0"
+                                                                y="-9.5" width="88.66666793823242" height="19"
+                                                                style="cursor: pointer; fill: rgb(0, 0, 0); fill-opacity: 0;">
+                                                            </rect>
+                                                        </g>
+                                                        <g class="traces" transform="translate(0,71.5)"
+                                                            style="opacity: 1;"><text class="legendtext"
+                                                                text-anchor="start" x="40" y="4.680000000000001"
+                                                                data-unformatted="当前位置" data-math="N"
+                                                                style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">当前位置</text>
+                                                            <g class="layers" style="opacity: 1;">
+                                                                <g class="legendfill"></g>
+                                                                <g class="legendlines">
+                                                                    <path class="js-line" d="M5,0h30"
+                                                                        style="fill: none; stroke: rgb(255, 0, 0); stroke-opacity: 1; stroke-dasharray: 9px, 3px, 3px, 3px; stroke-width: 1px;">
+                                                                    </path>
+                                                                </g>
+                                                                <g class="legendsymbols">
+                                                                    <g class="legendpoints"></g>
+                                                                </g>
+                                                            </g>
+                                                            <rect class="legendtoggle" pointer-events="all" x="0"
+                                                                y="-9.5" width="88.66666793823242" height="19"
+                                                                style="cursor: pointer; fill: rgb(0, 0, 0); fill-opacity: 0;">
+                                                            </rect>
+                                                        </g>
+                                                        <g class="traces" transform="translate(0,90.5)"
+                                                            style="opacity: 1;"><text class="legendtext"
+                                                                text-anchor="start" x="40" y="4.680000000000001"
+                                                                data-unformatted="平均速度" data-math="N"
+                                                                style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">平均速度</text>
+                                                            <g class="layers" style="opacity: 1;">
+                                                                <g class="legendfill"></g>
+                                                                <g class="legendlines">
+                                                                    <path class="js-line" d="M5,0h30"
+                                                                        style="fill: none; stroke: rgb(0, 0, 255); stroke-opacity: 1; stroke-dasharray: 9px, 3px, 3px, 3px; stroke-width: 1px;">
+                                                                    </path>
+                                                                </g>
+                                                                <g class="legendsymbols">
+                                                                    <g class="legendpoints">
+                                                                        <path class="scatterpts"
+                                                                            transform="translate(20,0)"
+                                                                            d="M3,0A3,3 0 1,1 0,-3A3,3 0 0,1 3,0Z"
+                                                                            style="opacity: 1; stroke-width: 0px; fill: rgb(0, 0, 255); fill-opacity: 1;">
+                                                                        </path>
+                                                                    </g>
+                                                                </g>
+                                                            </g>
+                                                            <rect class="legendtoggle" pointer-events="all" x="0"
+                                                                y="-9.5" width="88.66666793823242" height="19"
+                                                                style="cursor: pointer; fill: rgb(0, 0, 0); fill-opacity: 0;">
+                                                            </rect>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                                <rect class="scrollbar" rx="20" ry="3" width="0" height="0" x="0" y="0"
+                                                    style="fill: rgb(128, 139, 164); fill-opacity: 1;"></rect>
+                                            </g>
+                                            <g class="g-xtitle"><text class="xtitle" x="612.5" y="457"
+                                                    text-anchor="middle" data-unformatted="小节数" data-math="N"
+                                                    style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 14px; fill: rgb(68, 68, 68); opacity: 1; font-weight: normal; white-space: pre;">小节数</text>
+                                            </g>
+                                            <g class="g-ytitle" transform="translate(2,0)"><text class="ytitle"
+                                                    transform="rotate(-90,12,217.5)" x="12" y="217.5"
+                                                    text-anchor="middle" data-unformatted="速度 (BPM)" data-math="N"
+                                                    style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 14px; fill: rgb(68, 68, 68); opacity: 1; font-weight: normal; white-space: pre;">速度
+                                                    (BPM)</text></g>
+                                        </g>
+                                        <g class="menulayer"></g>
+                                        <g class="zoomlayer"></g>
+                                    </svg>
+                                    <div class="modebar-container"
+                                        style="position: absolute; top: 0px; right: 0px; width: 100%;"></div><svg
+                                        class="main-svg" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" width="1304" height="485">
+                                        <g class="hoverlayer"></g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ant-spin ant-spin-lg"
+            style="z-index: 20; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"><span
+                class="ant-spin-dot ant-spin-dot-spin"><i class="ant-spin-dot-item"></i><i
+                    class="ant-spin-dot-item"></i><i class="ant-spin-dot-item"></i><i
+                    class="ant-spin-dot-item"></i></span></div>
+        <div class="ant-spin ant-spin-lg"
+            style="z-index: 20; position: absolute; left: 0px; top: 400px; width: 100%; height: 100%;"><span
+                class="ant-spin-dot ant-spin-dot-spin"><i class="ant-spin-dot-item"></i><i
+                    class="ant-spin-dot-item"></i><i class="ant-spin-dot-item"></i><i
+                    class="ant-spin-dot-item"></i></span></div>
+        <div class="ant-spin ant-spin-lg"
+            style="z-index: 20; position: absolute; left: 0px; top: 800px; width: 100%; height: 100%;"><span
+                class="ant-spin-dot ant-spin-dot-spin"><i class="ant-spin-dot-item"></i><i
+                    class="ant-spin-dot-item"></i><i class="ant-spin-dot-item"></i><i
+                    class="ant-spin-dot-item"></i></span></div>
+    </div>
+</main>

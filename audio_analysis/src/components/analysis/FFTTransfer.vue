@@ -32,7 +32,6 @@ onMounted(() => {
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
         minPxPerSec: 20,
-        mediaControls: true,
         plugins: [
             SpectrogramPlugin.create({
                 labels: true,
