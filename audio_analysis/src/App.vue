@@ -11,14 +11,17 @@ import { RouterLink, RouterView } from 'vue-router'
         </nav> -->
 
         <!-- <h3>音频频谱分析(此部分存放选项卡)</h3> -->
-        <img src="/favicon.ico" width="20px" height="20px">
+        <img src="/favicon.ico" width="80px" height="80px">
         <RouterLink to="/">主页</RouterLink>
         <RouterLink to="/about">了解一下</RouterLink>
 
         <RouterLink to="">文档与社区</RouterLink>
         <RouterLink to="/analysis">分析控制台</RouterLink>
-        <!-- search -->
+        <!-- search 右对齐 -->
         <!-- 用户个人标识 -->
+        <!-- layui 弹层 - 抽屉 -->
+        <!-- 加载 -->
+        
 
     </header>
 

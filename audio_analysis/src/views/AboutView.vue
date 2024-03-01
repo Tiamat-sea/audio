@@ -7,7 +7,7 @@
 <style>
 @media (min-width: 1024px) {
     .about {
-        min-height: 100vh;
+        min-height: calc(100vh - header);
         display: flex;
         align-items: center;
     }

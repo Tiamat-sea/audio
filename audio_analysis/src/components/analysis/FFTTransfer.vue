@@ -125,12 +125,12 @@ onMounted(() => {
 </template>
 
 <style scoped>
-#waveformc::part(wrapper) {
+#waveform::part(wrapper) {
+    overflow: visible;
     height: 200px;
     width: 100%;
     background: #000000;
     position: relative;
-    overflow: hidden;
     cursor: pointer;
     user-select: none;
     touch-action: none;
