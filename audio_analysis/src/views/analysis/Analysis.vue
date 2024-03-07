@@ -10,7 +10,7 @@ function increment() {
 }
 
 onMounted(() => {
-    console.log(`The initial number is ${num.value}.`)
+    // console.log(`The initial number is ${num.value}.`)
 })
 </script>
 
@@ -26,21 +26,6 @@ onMounted(() => {
             3
         </lay-split-panel-item>
     </lay-split-panel>
-
-
-    <!-- <lay-layout class="example">
-        <lay-body>
-            <lay-layout>
-                <lay-body>
-
-                </lay-body>
-                <lay-side>
-                    Right 选项卡区域
-                    <Options></Options>
-                </lay-side>
-            </lay-layout>
-        </lay-body>
-    </lay-layout> -->
 </template>
 
 <style scoped>

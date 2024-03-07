@@ -4,7 +4,7 @@ import { layer } from "@layui/layui-vue"
 
 const openDrawer = function () {
     layer.drawer({
-        title: "标题",
+        title: "选项卡",
         content: "内容"
     })
 }
@@ -13,13 +13,6 @@ const openDrawer = function () {
 <template>
     <header>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-        <!-- <nav>
-            <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/about">About</RouterLink>
-            <RouterLink to="/analysis">Analysis</RouterLink>
-        </nav> -->
-
         <nav>
             <!-- <h3>音频频谱分析(此部分存放选项卡)</h3> -->
             <img src="/favicon.ico" alt="LOGO.ico">
@@ -35,8 +28,6 @@ const openDrawer = function () {
             <!-- layui 弹层 - 抽屉 -->
             <!-- 加载 -->
         </nav>
-
-
     </header>
 
     <!-- <lay-container fluid id="router-container-fluid"> -->
