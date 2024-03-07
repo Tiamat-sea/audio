@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import FFTTransfer from '../components/analysis/FFTTransfer.vue'
+import FFTTransfer from './components/FFTTransfer.vue'
 // import Options from '@/components/analysis/Options.vue'
 import { ref, onMounted } from 'vue'
+import { LaySplitPanel, LaySplitPanelItem } from '@layui/layui-vue'
 
 const num = ref(0)
 function increment() {
@@ -14,19 +15,32 @@ onMounted(() => {
 </script>
 
 <template>
-    <lay-layout class="example">       
+    <lay-split-panel :vertical="true" style="height: 600px; width: 100%">
+        <lay-split-panel-item>
+            <FFTTransfer></FFTTransfer>
+        </lay-split-panel-item>
+        <lay-split-panel-item>
+            2
+        </lay-split-panel-item>
+        <lay-split-panel-item>
+            3
+        </lay-split-panel-item>
+    </lay-split-panel>
+
+
+    <!-- <lay-layout class="example">
         <lay-body>
             <lay-layout>
                 <lay-body>
-                    <FFTTransfer></FFTTransfer>
+
                 </lay-body>
-                <!-- <lay-side>
+                <lay-side>
                     Right 选项卡区域
                     <Options></Options>
-                </lay-side> -->
+                </lay-side>
             </lay-layout>
         </lay-body>
-    </lay-layout>
+    </lay-layout> -->
 </template>
 
 <style scoped>
