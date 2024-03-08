@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import FFTTransfer from './components/FFTTransfer.vue'
-// import Options from '@/components/analysis/Options.vue'
 import { ref, onMounted } from 'vue'
 import { LaySplitPanel, LaySplitPanelItem } from '@layui/layui-vue'
 

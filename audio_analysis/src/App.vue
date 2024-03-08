@@ -22,7 +22,7 @@ const openDrawer = function () {
             <RouterLink to="">文档与社区</RouterLink>
             <RouterLink to="/test">测试</RouterLink>
             <RouterLink to="/analysis">分析控制台</RouterLink>
-            <lay-button type="primary" @click="openDrawer">抽屉</lay-button>
+            <!-- <lay-button type="primary" @click="openDrawer">抽屉</lay-button> -->
             <!-- search 右对齐 -->
             <!-- 用户个人标识 -->
             <!-- layui 弹层 - 抽屉 -->

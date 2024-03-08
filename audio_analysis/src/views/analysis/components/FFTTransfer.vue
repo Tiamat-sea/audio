@@ -7,8 +7,6 @@ import HoverPlugin from '@/waveform/plugins/hover'
 import RegionsPlugin from '@/waveform/plugins/regions'
 import chroma from 'chroma-js'
 
-const minimapContainer = ref(null)
-
 onMounted(() => {
     const sampleRateVal = 44100;
 
@@ -21,7 +19,7 @@ onMounted(() => {
     })
     // 现在 colorMap 是一个符合要求的颜色映射数组
 
-    console.log('colorMap', colorMap)
+    // console.log('colorMap', colorMap)
 
     // 创建一个 waveform 实例
     const waveform = WaveForm.create({
@@ -69,40 +67,40 @@ onMounted(() => {
 
     waveform.on('decode', () => {
         // 区域
-        waveformRegions.addRegion({
-            start: 0,
-            end: 10,
-            color: randomColor(),
-            drag: true,
-            resize: true,
-        }),
-            waveformRegions.addRegion({
-                start: 9,
-                end: 10,
-                content: 'Cramped region',
-                color: randomColor(),
-                minLength: 1,
-                maxLength: 10,
-            })
-        waveformRegions.addRegion({
-            start: 12,
-            end: 17,
-            content: 'Drag me',
-            color: randomColor(),
-            resize: false,
-        })
+        // waveformRegions.addRegion({
+        //     start: 0,
+        //     end: 10,
+        //     color: randomColor(),
+        //     drag: true,
+        //     resize: true,
+        // }),
+        // waveformRegions.addRegion({
+        //     start: 9,
+        //     end: 10,
+        //     content: 'Cramped region',
+        //     color: randomColor(),
+        //     minLength: 1,
+        //     maxLength: 10,
+        // }),
+        // waveformRegions.addRegion({
+        //     start: 12,
+        //     end: 17,
+        //     content: 'Drag me',
+        //     color: randomColor(),
+        //     resize: false,
+        // }),
 
-        // Markers (zero-length regions)
-        waveformRegions.addRegion({
-            start: 19,
-            content: 'Marker',
-            color: randomColor(),
-        })
-        waveformRegions.addRegion({
-            start: 20,
-            content: 'Second marker',
-            color: randomColor(),
-        })
+        // // 标记 ( 0 长度区域)
+        // waveformRegions.addRegion({
+        //     start: 19,
+        //     content: 'Marker',
+        //     color: randomColor(),
+        // })
+        // waveformRegions.addRegion({
+        //     start: 20,
+        //     content: 'Second marker',
+        //     color: randomColor(),
+        // })
     })
 
     waveformRegions.enableDragSelection({
