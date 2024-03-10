@@ -11,7 +11,7 @@ type RendererEvents = {
 }
 
 class Renderer extends EventEmitter<RendererEvents> {
-    private static MAX_CANVAS_WIDTH = 4000
+    private static MAX_CANVAS_WIDTH = 8000
     private options: WaveFormOptions
     private parent: HTMLElement
     private container: HTMLElement
@@ -40,7 +40,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         this.container = div
         this.scrollContainer = shadow.querySelector('.scroll') as HTMLElement
         this.wrapper = shadow.querySelector('.wrapper') as HTMLElement
-        this.canvasWrapper = shadow.querySelector('.canvases') as HTMLElement
+        this.canvasWrapper = shadow.querySelector('.canvas') as HTMLElement
         this.progressWrapper = shadow.querySelector('.progress') as HTMLElement
         this.cursor = shadow.querySelector('.cursor') as HTMLElement
 
@@ -140,6 +140,7 @@ class Renderer extends EventEmitter<RendererEvents> {
 
     private initHTML(): [HTMLElement, ShadowRoot] {
         const div = document.createElement('div')
+        console.log('div:', div)
         const shadow = div.attachShadow({ mode: 'open' })
 
         shadow.innerHTML = `
@@ -171,13 +172,9 @@ class Renderer extends EventEmitter<RendererEvents> {
                 overflow: visible;
                 z-index: 2;
             }
-            :host .canvases {
-                min-height: ${this.getHeight(this.options.height)}px;
-            }
-            :host .canvases > div {
-                position: relative;
-            }
+
             :host canvas {
+                min-height: ${this.getHeight(this.options.height)}px;
                 display: block;
                 position: absolute;
                 top: 0;
@@ -209,7 +206,8 @@ class Renderer extends EventEmitter<RendererEvents> {
 
             <div class="scroll" part="scroll">
                 <div class="wrapper" part="wrapper">
-                    <div class="canvases"></div>
+                    
+                    <div class="canvas"></div>
                     <div class="progress" part="progress"></div>
                     <div class="cursor" part="cursor"></div>
                 </div>
@@ -219,7 +217,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         return [div, shadow]
     }
 
-    /** WaveForm 自己调用此方法，不要手动调用 */
+    /** WaveForm 调用此方法，不要手动调用 */
     setOptions(options: WaveFormOptions) {
         if (this.options.container !== options.container) {
             const newParent = this.parentFromOptionsContainer(options.container)
@@ -378,7 +376,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         drawChannel(0)
         drawChannel(1)
 
-        ctx.fill()
+        ctx.stroke()
         ctx.closePath()
     }
 
@@ -424,6 +422,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         progressContainer: HTMLElement,
     ) {
         const pixelRatio = window.devicePixelRatio || 1
+        console.log('pixelRatio:', pixelRatio)
         const canvas = document.createElement('canvas')
         const length = channelData[0].length
         canvas.width = Math.round((width * (end - start)) / length)

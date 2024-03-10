@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import WaveForm from '@/waveform/waveform'
-import SpectrogramPlugin from '@/waveform/plugins/spectrogram'
-import Minimap from '@/waveform/plugins/minimap'
-import HoverPlugin from '@/waveform/plugins/hover'
-import RegionsPlugin from '@/waveform/plugins/regions'
+import WaveForm from './waveform/waveform'
+import SpectrogramPlugin from './waveform/plugins/spectrogram'
+import Minimap from './waveform/plugins/minimap'
+import HoverPlugin from './waveform/plugins/hover'
+import RegionsPlugin from './waveform/plugins/regions'
 import chroma from 'chroma-js'
 
 onMounted(() => {
@@ -29,7 +29,7 @@ onMounted(() => {
         sampleRate: sampleRateVal,
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
-        minPxPerSec: 20,
+        minPxPerSec: 100,
         plugins: [
             SpectrogramPlugin.create({
                 labels: true,
@@ -125,7 +125,7 @@ onMounted(() => {
 #waveform::part(wrapper) {
     overflow: visible;
     height: 200px;
-    width: 100%;
+    /* width: 100%; */
     background: #000000;
     position: relative;
     cursor: pointer;

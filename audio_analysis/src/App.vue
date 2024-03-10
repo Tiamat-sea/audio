@@ -21,7 +21,8 @@ const openDrawer = function () {
 
             <RouterLink to="">文档与社区</RouterLink>
             <RouterLink to="/test">测试</RouterLink>
-            <RouterLink to="/analysis">分析控制台</RouterLink>
+            <RouterLink to="/analysis1">Ana1</RouterLink>
+            <RouterLink to="/analysis2">Ana2</RouterLink>
             <!-- <lay-button type="primary" @click="openDrawer">抽屉</lay-button> -->
             <!-- search 右对齐 -->
             <!-- 用户个人标识 -->
@@ -30,24 +31,18 @@ const openDrawer = function () {
         </nav>
     </header>
 
-    <!-- <lay-container fluid id="router-container-fluid"> -->
     <div class="router-container">
         <RouterView />
     </div>
-    <!-- </lay-container> -->
 </template>
 
 <style scoped>
 .router-container {
-    padding: 0px;
+    padding: 1px;
     min-height: calc(100vh-header);
-    width: 100vw;
+    /* width: 100vw; */
     background-color: rgba(41, 196, 111, 0.306);
 }
-
-/* #router-container-fluid {
-    padding: 0;
-} */
 
 header {
     /* max-height: 30px; */

@@ -14,7 +14,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <lay-split-panel :vertical="true" style="height: 600px; width: 100%">
+    <lay-split-panel :vertical="true" style="height: 800px; width: 99.99vw">
         <lay-split-panel-item>
             <FFTTransfer></FFTTransfer>
         </lay-split-panel-item>
@@ -28,28 +28,5 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.example .layui-header {
-    line-height: 60px;
-    text-align: center;
-    background: #87ca9a;
-    color: black;
-}
 
-.example .layui-side {
-    display: block;
-    background: #77c38c;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    min-width: 100px;
-}
-
-.example .layui-body {
-    display: block;
-    background: #5FB878;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    min-height: calc(100vh - 60px);
-}
 </style>

@@ -12,6 +12,6 @@ import TheWelcome from '../components/TheWelcome.vue'
 main {
     padding: 20px;
     height: calc(100vh-header);
-    width: 100vw;
+    /* width: 100vw; */
 }
 </style>
