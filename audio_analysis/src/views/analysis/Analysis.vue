@@ -14,7 +14,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <lay-split-panel :vertical="true" style="height: 800px; width: 99.99vw">
+    <lay-split-panel :vertical="true" style="height: 800px; width: 99.8vw">
         <lay-split-panel-item>
             <FFTTransfer></FFTTransfer>
         </lay-split-panel-item>
@@ -27,6 +27,4 @@ onMounted(() => {
     </lay-split-panel>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

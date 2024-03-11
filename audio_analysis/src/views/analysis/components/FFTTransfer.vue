@@ -125,22 +125,5 @@ onMounted(() => {
 #waveform::part(wrapper) {
     overflow: visible;
     height: 200px;
-    /* width: 100%; */
-    background: #000000;
-    position: relative;
-    cursor: pointer;
-    user-select: none;
-    touch-action: none;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -khtml-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-user-drag: none;
-    -webkit-user-modify: none;
-    -webkit-highlight: none;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 </style>
