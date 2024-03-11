@@ -166,15 +166,14 @@ class WaveForm extends Player<WaveFormEvents>{
             this.emit('init')
 
             // 如果传递了 URL 或带有 src 的外部媒体，则加载音频
-            // 如果提供了预解码的峰值和持续时间，则渲染 w/o 音频
             const url = this.options.url || this.getSrc() || ''
-            if (url || (this.options.peaks && this.options.duration)) {
+            if (url) {
                 this.load(url)
             }
         })
     }
 
-    /** 通过 url 加载音频文件，包括可选的预解码音频数据 */
+    /** 通过 url 加载音频文件 */
     public async load(url: string) {
         await this.loadAudio(url, undefined) // 加载音频
     }
@@ -184,9 +183,12 @@ class WaveForm extends Player<WaveFormEvents>{
 
         if (!this.options.media && this.isPlaying()) this.pause() // 如果没有媒体元素并且正在播放，则暂停
 
-        // 如果未提供预解码数据，则将整个音频提取为 blob
+        // 将整个音频提取为 blob
         if (!blob) {
-            const onProgress = (percentage: number) => this.emit('loading', percentage) // 发送 loading 事件
+            const onProgress = (percentage: number) => {
+                this.emit('loading', percentage) // 发送 loading 事件
+                console.log('loading', percentage)
+            }
             blob = await Fetcher.fetchBlob(url, onProgress, this.options.fetchParams) // 获取音频文件
         }
 
@@ -195,11 +197,12 @@ class WaveForm extends Player<WaveFormEvents>{
 
         if (blob) {
             const arrayBuffer = await blob.arrayBuffer() // 获取音频文件的 ArrayBuffer
-            this.decodedData = await Decoder.decode(arrayBuffer, this.options.sampleRate) // 解码音频
+            this.decodedData = await Decoder.decode(arrayBuffer, this.options.sampleRate) // 解码音频为 AudioBuffer
         }
 
         if (this.decodedData) {
             this.emit('decode', this.getDuration()) // 发送 decode 事件
+            // console.log(this)
             this.renderer.render(this.decodedData) // 渲染波形
         }
 

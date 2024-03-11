@@ -16,7 +16,6 @@ onMounted(() => {
 
     waveform.once('decode', () => {
         const playPause = document.getElementById('playPause')
-        console.log('playPause', playPause)
         playPause?.addEventListener('click', () => {
             waveform.playPause()
         })
@@ -29,10 +28,9 @@ onMounted(() => {
     <lay-split-panel :vertical="true" style="height: 400px; width: 99.8vw">
         <lay-split-panel-item>
             <div id="waveform"></div>
-            <button id='playPause'>播放/暂停</button>
         </lay-split-panel-item>
         <lay-split-panel-item>
-            2
+            <button id='playPause'>播放/暂停</button>
         </lay-split-panel-item>
         <lay-split-panel-item>
             3
