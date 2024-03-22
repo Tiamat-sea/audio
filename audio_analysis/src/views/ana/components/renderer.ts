@@ -2,7 +2,7 @@ import EventEmitter from "./event-emitter"
 import { type WaveFormOptions } from "./waveform"
 import { makeDraggable } from './draggable'
 
-type RendererEvents = { // 渲染事件类型
+type RendererEvents = {
     click: [relativeX: number, relativeY: number]
     dblclick: [relativeX: number, relativeY: number]
     drag: [relativeX: number]
@@ -10,8 +10,8 @@ type RendererEvents = { // 渲染事件类型
     render: []
 }
 
-class Renderer extends EventEmitter<RendererEvents> { // 渲染器类 继承 EventEmitter 类
-    private static MAX_CANVAS_WIDTH = 4000 // 静态属性 MAX_CANVAS_WIDTH 的值为 4000
+class Renderer extends EventEmitter<RendererEvents> {
+    private static MAX_CANVAS_WIDTH = 4000
     private options: WaveFormOptions
     private parent: HTMLElement
     private container: HTMLElement
@@ -20,7 +20,7 @@ class Renderer extends EventEmitter<RendererEvents> { // 渲染器类 继承 Eve
     private canvasWrapper: HTMLElement
     private progressWrapper: HTMLElement
     private cursor: HTMLElement
-    private timeouts: Array<{ timeout?: ReturnType<typeof setTimeout> }> = [] // 元素为对象的数组，对象有一个 timeout 属性，类型为 setTimeout 返回类型
+    private timeouts: Array<{ timeout?: ReturnType<typeof setTimeout> }> = []
     private isScrollable = false
     private audioData: AudioBuffer | null = null
     private resizeObserver: ResizeObserver | null = null
@@ -378,7 +378,7 @@ class Renderer extends EventEmitter<RendererEvents> { // 渲染器类 继承 Eve
         drawChannel(0)
         drawChannel(1)
 
-        ctx.stroke()
+        ctx.fill()
         ctx.closePath()
     }
 

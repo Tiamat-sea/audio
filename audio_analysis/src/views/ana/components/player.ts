@@ -67,7 +67,7 @@ class Player<T extends GeneralEventTypes> extends EventEmitter<T> {
         const src = this.getSrc()
         if (src === url) return
         this.revokeSrc()
-        const newSrc = blob instanceof Blob ? URL.createObjectURL(blob) : url // 创建一个指向该对象的 URL
+        const newSrc = blob instanceof Blob ? URL.createObjectURL(blob) : url
         this.media.src = newSrc
     }
 
