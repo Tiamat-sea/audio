@@ -279,65 +279,6 @@ class Renderer extends EventEmitter<RendererEvents> {
         return gradient
     }
 
-    private renderBarWaveform(
-        channelData: Array<Float32Array | number[]>,
-        options: WaveFormOptions,
-        ctx: CanvasRenderingContext2D,
-        vScale: number,
-    ) {
-        const topChannel = channelData[0]
-        const bottomChannel = channelData[1] || channelData[0]
-        const length = topChannel.length
-
-        const { width, height } = ctx.canvas
-        const halfHeight = height / 2
-        const pixelRatio = window.devicePixelRatio || 1
-
-        const barWidth = options.barWidth ? options.barWidth * pixelRatio : 1
-        const barGap = options.barGap ? options.barGap * pixelRatio : options.barWidth ? barWidth / 2 : 0
-        const barRadius = options.barRadius || 0
-        const barIndexScale = width / (barWidth + barGap) / length
-
-        const rectFn = barRadius && 'roundRect' in ctx ? 'roundRect' : 'rect'
-
-        ctx.beginPath()
-
-        let prevX = 0
-        let maxTop = 0
-        let maxBottom = 0
-        for (let i = 0; i <= length; ++i) {
-            const x = Math.round(i * barIndexScale)
-
-            if (x > prevX) {
-                const topBarHeight = Math.round(maxTop * halfHeight * vScale)
-                const bottomBarHeight = Math.round(maxBottom * halfHeight * vScale)
-                const barHeight = topBarHeight + bottomBarHeight || 1
-
-                // 垂直对齐
-                let y = halfHeight - topBarHeight
-                if (options.barAlign === 'top') {
-                    y = 0
-                } else if (options.barAlign === 'bottom') {
-                    y = height - barHeight
-                }
-
-                (ctx as any)[rectFn](prevX * (barWidth + barGap), y, barWidth, barHeight, barRadius)
-
-                prevX = x
-                maxTop = 0
-                maxBottom = 0
-            }
-
-            const magnitudeTop = Math.abs(topChannel[i] || 0)
-            const magnitudeBottom = Math.abs(bottomChannel[i] || 0)
-            if (magnitudeTop > maxTop) maxTop = magnitudeTop
-            if (magnitudeBottom > maxBottom) maxBottom = magnitudeBottom
-        }
-
-        ctx.fill()
-        ctx.closePath()
-    }
-
     private renderLineWaveForm(
         channelData: Array<Float32Array | number[]>,
         _options: WaveFormOptions,
@@ -378,6 +319,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         drawChannel(0)
         drawChannel(1)
 
+        ctx.stroke()
         ctx.fill()
         ctx.closePath()
     }
@@ -387,7 +329,6 @@ class Renderer extends EventEmitter<RendererEvents> {
         options: WaveFormOptions,
         ctx: CanvasRenderingContext2D,
     ) {
-        // console.log('channelData:', channelData.length)
         ctx.fillStyle = this.convertColorValues(options.waveColor)
 
         // 自定义渲染方法
@@ -397,16 +338,10 @@ class Renderer extends EventEmitter<RendererEvents> {
         }
 
         // 垂直缩放
-        let vScale = options.barHeight || 1
+        let vScale = 1
         if (options.normalize) {
             const max = Array.from(channelData[0]).reduce((max, value) => Math.max(max, Math.abs(value)), 0)
             vScale = max ? 1 / max : 1
-        }
-
-        // 渲染波形为栅栏状
-        if (options.barWidth || options.barGap || options.barAlign) {
-            this.renderBarWaveform(channelData, options, ctx, vScale)
-            return
         }
 
         // 渲染波形为多段线
@@ -471,19 +406,8 @@ class Renderer extends EventEmitter<RendererEvents> {
         const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer
         const len = channelData[0].length
         const scale = len / scrollWidth
-        // console.log('scale:', scale, 'scrollLeft:', scrollLeft, 'clientWidth:', clientWidth, 'scrollWidth:', scrollWidth)
 
         let viewportWidth = Math.min(Renderer.MAX_CANVAS_WIDTH, clientWidth)
-
-        // 使用条形图时，调整宽度以避免画布之间出现间隙
-        if (options.barWidth || options.barGap) {
-            const barWidth = options.barWidth || 0.5
-            const barGap = options.barGap || barWidth / 2
-            const totalBarWidth = barWidth + barGap
-            if (viewportWidth % totalBarWidth !== 0) {
-                viewportWidth = Math.floor(viewportWidth / totalBarWidth) * totalBarWidth
-            }
-        }
 
         const start = Math.floor(Math.abs(scrollLeft) * scale)
         const end = Math.floor(start + viewportWidth * scale)
@@ -530,7 +454,6 @@ class Renderer extends EventEmitter<RendererEvents> {
     }
 
     render(audioData: AudioBuffer) {
-        // console.log('audioData:', audioData.getChannelData.toString())
         // 清除先前的超时设定
         this.timeouts.forEach((context) => context.timeout && clearTimeout(context.timeout))
         this.timeouts = []

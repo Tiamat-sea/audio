@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import WaveForm from './components/waveform'
+import WaveForm from './waveform/waveform'
 const audioURL = "/example.mp3"
 
 onMounted(() => {
@@ -12,6 +12,7 @@ onMounted(() => {
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
         minPxPerSec: 100,
+        hideScrollbar: true,
     })
 
     waveform.once('decode', () => {

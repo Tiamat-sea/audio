@@ -21,16 +21,6 @@ export type WaveFormOptions = {
     cursorColor?: string
     /** 光标宽度 */
     cursorWidth?: number
-    /** 如果配置, 波形将渲染为像这样的栅栏: ▁ ▂ ▇ ▃ ▅ ▂ */
-    barWidth?: number
-    /** 栅栏间距（像素） */
-    barGap?: number
-    /** 栅栏圆角 */
-    barRadius?: number
-    /** 波形的垂直缩放因子 */
-    barHeight?: number
-    /** 栅栏垂直对齐 */
-    barAlign?: 'top' | 'bottom'
     /** 每秒音频的最小像素数（即缩放级别） */
     minPxPerSec?: number
     /** 拉伸波形以填充容器，默认为true */
