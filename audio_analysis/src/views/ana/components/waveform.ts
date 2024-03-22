@@ -1,10 +1,10 @@
-import WebAudioPlayer from "@/waveform/webaudio"
-import { type GenericPlugin } from "./base-plugin"
+import type { GenericPlugin } from "./base-plugin"
+import Decoder from "./decoder"
+import Fetcher from "./fetcher"
 import Player from "./player"
 import Renderer from "./renderer"
 import Timer from "./timer"
-import Fetcher from "./fetcher"
-import Decoder from "./decoder"
+import WebAudioPlayer from "./webaudio"
 
 export type WaveFormOptions = {
     /** 必需：渲染波形的 HTML 元素或选择器 */
