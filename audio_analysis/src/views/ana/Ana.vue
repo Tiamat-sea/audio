@@ -1,18 +1,39 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue';
+import { onMounted } from 'vue'
 import WaveForm from './waveform/waveform'
-const audioURL = "/example.mp3"
+import SpectrogramPlugin from './waveform/plugins/spectrogram'
+import Minimap from './waveform/plugins/minimap'
+import HoverPlugin from './waveform/plugins/hover'
+
+const audioURL = "./example.mp3"
+const audio = new Audio()
+audio.src = audioURL
 
 onMounted(() => {
     const waveform = WaveForm.create({
         container: '#waveform',
         progressColor: 'rgba(0, 0, 0, 0.5)',
-        url: '/example.mp3',
+        // url: audioURL,
+        media: audio,
         sampleRate: 44100,
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
-        minPxPerSec: 100,
+        // minPxPerSec: 100,
+        // autoplay: true,
         hideScrollbar: true,
+        plugins: [
+            SpectrogramPlugin.create({
+                labels: true,
+                labelsColor: 'black',
+            }),
+            Minimap.create({
+                height: 60,
+                insertPosition: 'beforebegin',
+                waveColor: '#ddd',
+                progressColor: '#999',
+            }),
+            HoverPlugin.create(),
+        ],
     })
 
     waveform.once('decode', () => {
@@ -21,20 +42,31 @@ onMounted(() => {
             waveform.playPause()
         })
     })
-})
 
+    waveform.once('decode', () => {
+        const slider = document.querySelector('input[type="range"]')
+
+        slider?.addEventListener('input', (e) => {
+            const zoomLevel = Number((e.target as HTMLInputElement).value)
+            waveform.zoom(zoomLevel)
+        })
+    })
+})
 </script>
 
 <template>
-    <lay-split-panel :vertical="true" style="height: 400px; width: 99.8vw">
+    <lay-split-panel :vertical="true" style="height: 800px; width: 99.8vw">
         <lay-split-panel-item>
             <div id="waveform"></div>
         </lay-split-panel-item>
         <lay-split-panel-item>
+            <label>
+                缩放: <input type="range" min="10" max="1000" value="100" />
+            </label>
             <button id='playPause'>播放/暂停</button>
         </lay-split-panel-item>
         <lay-split-panel-item>
-            3
+            <div id="spectrogram"></div>
         </lay-split-panel-item>
     </lay-split-panel>
 </template>

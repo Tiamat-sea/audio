@@ -6,7 +6,7 @@ import Renderer from "./renderer"
 import Timer from "./timer"
 import WebAudioPlayer from "./webaudio"
 
-export type WaveFormOptions = {
+export type WaveFormOptions = { // 波形图选项
     /** 必需：渲染波形的 HTML 元素或选择器 */
     container: HTMLElement | string
     /** 波形的高度，以像素为单位，或者是 "auto" 以填充容器高度 */
@@ -21,21 +21,17 @@ export type WaveFormOptions = {
     cursorColor?: string
     /** 光标宽度 */
     cursorWidth?: number
-    /** 每秒音频的最小像素数（即缩放级别） */
+    /** 每秒音频的最小像素数（即缩放级别），一秒音频用多少像素来表示 */
     minPxPerSec?: number
     /** 拉伸波形以填充容器，默认为true */
     fillParent?: boolean
     /** 音频URL */
     url?: string
-    /** 预计算的音频数据，每个通道的浮点数组 */
-    peaks?: Array<Float32Array | number[]>
-    /** 预计算的音频持续时间（秒） */
-    duration?: number
     /** 使用现有的媒体元素，而不是再创建一个 */
     media?: HTMLMediaElement
     /** 是否显示默认的音频元素控件 */
     mediaControls?: boolean
-    /** 加载时播放音频 */
+    /** 自动播放音频 */
     autoplay?: boolean
     /** 传递 false 以禁用波形上的点击 */
     interact?: boolean
@@ -49,10 +45,8 @@ export type WaveFormOptions = {
     autoScroll?: boolean
     /** 如果启用了 autoScroll ，则在播放期间将光标保持在波形中心 */
     autoCenter?: boolean
-    /** 解码采样率，不影响播放，默认8000，DVD音质44100 */
+    /** 解码采样率，不影响播放时的音质，默认8000，DVD音质44100 */
     sampleRate?: number
-    /** 为每个音频通道渲染单独的波形 */
-    splitChannels?: Partial<WaveFormOptions>[]
     /** 将波形拉伸到最大高度 */
     normalize?: boolean
     /** 启动时要初始化的插件列表 */
@@ -65,7 +59,7 @@ export type WaveFormOptions = {
     backend?: 'WebAudio' | 'MediaElement'
 }
 
-const defaultOptions = {
+const defaultOptions = { // 默认选项
     waveColor: '#999',
     progressColor: '#555',
     cursorWidth: 1,
@@ -78,7 +72,7 @@ const defaultOptions = {
     sampleRate: 8000,
 }
 
-export type WaveFormEvents = {
+export type WaveFormEvents = { // 波形图事件
     /** 波形图创建之后 */
     init: []
     /** 当音频开始加载 */
@@ -119,7 +113,7 @@ export type WaveFormEvents = {
     destroy: []
 }
 
-class WaveForm extends Player<WaveFormEvents>{
+class WaveForm extends Player<WaveFormEvents>{ // 波形图类
     public options: WaveFormOptions & typeof defaultOptions
     private renderer: Renderer
     private timer: Timer

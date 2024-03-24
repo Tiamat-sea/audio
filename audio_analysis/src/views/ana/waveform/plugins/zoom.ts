@@ -41,7 +41,7 @@ export type ZoomPluginOptions = {
 }
 const defaultOptions = {
     scale: 0.5,
-    deltaThreshold: 0,
+    deltaThreshold: 5,
 }
 
 export type ZoomPluginEvents = BasePluginEvents
