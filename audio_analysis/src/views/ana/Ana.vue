@@ -13,8 +13,8 @@ onMounted(() => {
     const waveform = WaveForm.create({
         container: '#waveform',
         progressColor: 'rgba(0, 0, 0, 0.5)',
-        // url: audioURL,
-        media: audio,
+        url: audioURL,
+        // media: audio,
         sampleRate: 44100,
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],

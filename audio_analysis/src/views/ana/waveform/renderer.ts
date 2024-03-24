@@ -2,32 +2,32 @@ import EventEmitter from "./event-emitter"
 import { type WaveFormOptions } from "./waveform"
 import { makeDraggable } from './draggable'
 
-type RendererEvents = {
-    click: [relativeX: number, relativeY: number]
-    dblclick: [relativeX: number, relativeY: number]
-    drag: [relativeX: number]
-    scroll: [relativeStart: number, relativeEnd: number]
-    render: []
+type RendererEvents = { // 渲染器事件类型
+    click: [relativeX: number, relativeY: number] // 点击事件
+    dblclick: [relativeX: number, relativeY: number] // 双击事件
+    drag: [relativeX: number] // 拖拽事件
+    scroll: [relativeStart: number, relativeEnd: number] // 滚动事件
+    render: [] // 渲染事件
 }
 
-class Renderer extends EventEmitter<RendererEvents> {
-    private static MAX_CANVAS_WIDTH = 4000
-    private options: WaveFormOptions
-    private parent: HTMLElement
-    private container: HTMLElement
-    private scrollContainer: HTMLElement
-    private wrapper: HTMLElement
-    private canvasWrapper: HTMLElement
-    private progressWrapper: HTMLElement
-    private cursor: HTMLElement
-    private timeouts: Array<{ timeout?: ReturnType<typeof setTimeout> }> = []
-    private isScrollable = false
-    private audioData: AudioBuffer | null = null
-    private resizeObserver: ResizeObserver | null = null
-    private lastContainerWidth = 0
-    private isDragging = false
+class Renderer extends EventEmitter<RendererEvents> { // 渲染器类，继承自事件发射器
+    private static MAX_CANVAS_WIDTH = 4000 // 最大画布宽度
+    private options: WaveFormOptions // 波形选项
+    private parent: HTMLElement // 父元素
+    private container: HTMLElement // 容器
+    private scrollContainer: HTMLElement // 滚动容器
+    private wrapper: HTMLElement // 包装器
+    private canvasWrapper: HTMLElement // 画布包装器
+    private progressWrapper: HTMLElement // 进度包装器
+    private cursor: HTMLElement // 光标
+    private timeouts: Array<{ timeout?: ReturnType<typeof setTimeout> }> = [] // 超时
+    private isScrollable = false // 是否可滚动
+    private audioData: AudioBuffer | null = null // 音频数据
+    private resizeObserver: ResizeObserver | null = null // 调整大小观察者
+    private lastContainerWidth = 0 // 上一个容器宽度
+    private isDragging = false // 是否拖拽中
 
-    constructor(options: WaveFormOptions, audioElement?: HTMLElement) {
+    constructor(options: WaveFormOptions, audioElement?: HTMLElement) { // 构造函数，传入波形选项和音频元素
         super()
 
         this.options = options

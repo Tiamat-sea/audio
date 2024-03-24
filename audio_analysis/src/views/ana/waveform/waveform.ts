@@ -135,13 +135,13 @@ class WaveForm extends Player<WaveFormEvents>{ // 波形图类，继承自 Playe
             mediaControls: options.mediaControls,
             autoplay: options.autoplay,
             playbackRate: options.audioRate,
-        })
+        }) // 调用父类 Player 播放器构造函数
 
-        this.options = Object.assign({}, defaultOptions, options)
-        this.timer = new Timer()
+        this.options = Object.assign({}, defaultOptions, options) // 合并选项 assign 将所有可枚举自身属性的值从一个或多个源对象复制到目标对象，返回目标对象。
+        this.timer = new Timer() // 创建一个新的计时器
 
-        const audioElement = media ? undefined : this.getMediaElement()
-        this.renderer = new Renderer(this.options, audioElement)
+        const audioElement = media ? undefined : this.getMediaElement() // 如果传入了媒体元素，则不传入音频元素
+        this.renderer = new Renderer(this.options, audioElement) // 创建一个新的渲染器
 
         this.initPlayerEvents()
         this.initRendererEvents()
