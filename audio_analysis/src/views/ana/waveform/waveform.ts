@@ -4,7 +4,6 @@ import Fetcher from "./fetcher"
 import Player from "./player"
 import Renderer from "./renderer"
 import Timer from "./timer"
-import WebAudioPlayer from "./webaudio"
 
 export type WaveFormOptions = { // 波形图选项
     /** 必需：渲染波形的 HTML 元素或选择器 */
@@ -113,25 +112,23 @@ export type WaveFormEvents = { // 波形图事件
     destroy: []
 }
 
-class WaveForm extends Player<WaveFormEvents>{ // 波形图类
-    public options: WaveFormOptions & typeof defaultOptions
-    private renderer: Renderer
-    private timer: Timer
-    private plugins: GenericPlugin[] = []
-    private decodedData: AudioBuffer | null = null
-    protected subscriptions: Array<() => void> = []
-    protected mediaSubscriptions: Array<() => void> = []
+class WaveForm extends Player<WaveFormEvents>{ // 波形图类，继承自 Player 播放器类
+    public options: WaveFormOptions & typeof defaultOptions // 波形图选项
+    private renderer: Renderer // 渲染器
+    private timer: Timer // 计时器
+    private plugins: GenericPlugin[] = [] // 插件
+    private decodedData: AudioBuffer | null = null // 解码后的音频数据
+    protected subscriptions: Array<() => void> = [] // 订阅
+    protected mediaSubscriptions: Array<() => void> = [] // 媒体订阅
 
     /** 创建一个新的 WaveForm 实例 */
     public static create(options: WaveFormOptions) {
-        return new WaveForm(options)
+        return new WaveForm(options) // 返回一个新的波形图实例
     }
 
     /** 创建一个新的 WaveForm 实例 */
     constructor(options: WaveFormOptions) {
-        const media =
-            options.media ||
-            (options.backend === 'WebAudio' ? (new WebAudioPlayer() as unknown as HTMLAudioElement) : undefined)
+        const media = options.media // 媒体元素
 
         super({
             media,
