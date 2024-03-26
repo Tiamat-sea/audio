@@ -8,23 +8,28 @@ type WebAudioPlayerEvents = {
     seeking: []
     timeupdate: []
     volumechange: []
-    empited: []
+    emptied: []
     ended: []
 }
 
-/** 一个 Web 音频缓冲播放器，模拟 HTML5 音频元素的行为 */
+/**
+ * A Web Audio buffer player emulating the behavior of an HTML5 Audio element.
+ */
 class WebAudioPlayer extends EventEmitter<WebAudioPlayerEvents> {
     private audioContext: AudioContext
     private gainNode: GainNode
     private bufferNode: AudioBufferSourceNode | null = null
-    private autoplay = false
     private playStartTime = 0
     private playedDuration = 0
     private _muted = false
+    private _playbackRate = 1
+    private _duration: number | undefined = undefined
     private buffer: AudioBuffer | null = null
     public currentSrc = ''
     public paused = true
     public crossOrigin: string | null = null
+    public seeking = false
+    public autoplay = false
 
     constructor(audioContext = new AudioContext()) {
         super()
@@ -33,10 +38,10 @@ class WebAudioPlayer extends EventEmitter<WebAudioPlayerEvents> {
         this.gainNode.connect(this.audioContext.destination)
     }
 
-    /** 订阅一个事件，返回一个取消订阅的方法 */
+    /** Subscribe to an event. Returns an unsubscribe function. */
     addEventListener = this.on
 
-    /** 从一个事件取消订阅 */
+    /** Unsubscribe from an event */
     removeEventListener = this.un
 
     async load() {
@@ -49,15 +54,23 @@ class WebAudioPlayer extends EventEmitter<WebAudioPlayerEvents> {
 
     set src(value: string) {
         this.currentSrc = value
+        this._duration = undefined
 
         if (!value) {
             this.buffer = null
-            this.emit('empited')
+            this.emit('emptied')
             return
         }
 
         fetch(value)
-            .then((response) => response.arrayBuffer())
+            .then((response) => {
+                if (response.status >= 400) {
+                    throw new Error(
+                        `Failed to fetch ${value}: ${response.status} (${response.statusText})`
+                    )
+                }
+                return response.arrayBuffer()
+            })
             .then((arrayBuffer) => {
                 if (this.currentSrc !== value) return null
                 return this.audioContext.decodeAudioData(arrayBuffer)
@@ -80,14 +93,19 @@ class WebAudioPlayer extends EventEmitter<WebAudioPlayerEvents> {
 
         this.bufferNode?.disconnect()
         this.bufferNode = this.audioContext.createBufferSource()
-        this.bufferNode.buffer = this.buffer
+        if (this.buffer) {
+            this.bufferNode.buffer = this.buffer
+        }
+        this.bufferNode.playbackRate.value = this._playbackRate
         this.bufferNode.connect(this.gainNode)
 
-        if (this.playedDuration >= this.duration) {
+        let currentPos = this.playedDuration * this._playbackRate
+        if (currentPos >= this.duration) {
+            currentPos = 0
             this.playedDuration = 0
         }
 
-        this.bufferNode.start(this.audioContext.currentTime, this.playedDuration)
+        this.bufferNode.start(this.audioContext.currentTime, currentPos)
         this.playStartTime = this.audioContext.currentTime
 
         this.bufferNode.onended = () => {
@@ -99,18 +117,19 @@ class WebAudioPlayer extends EventEmitter<WebAudioPlayerEvents> {
     }
 
     private _pause() {
-        if (this.paused) return
         this.paused = true
         this.bufferNode?.stop()
         this.playedDuration += this.audioContext.currentTime - this.playStartTime
     }
 
     async play() {
+        if (!this.paused) return
         this._play()
         this.emit('play')
     }
 
     pause() {
+        if (this.paused) return
         this._pause()
         this.emit('pause')
     }
@@ -135,43 +154,42 @@ class WebAudioPlayer extends EventEmitter<WebAudioPlayerEvents> {
     }
 
     get playbackRate() {
-        return this.bufferNode?.playbackRate.value ?? 1
+        return this._playbackRate
     }
-
     set playbackRate(value) {
+        this._playbackRate = value
         if (this.bufferNode) {
             this.bufferNode.playbackRate.value = value
         }
     }
 
     get currentTime() {
-        return this.paused
+        const time = this.paused
             ? this.playedDuration
-            : this.playedDuration + this.audioContext.currentTime - this.playStartTime
+            : this.playedDuration + (this.audioContext.currentTime - this.playStartTime)
+        return time * this._playbackRate
     }
-
     set currentTime(value) {
+        const wasPlaying = !this.paused
+
+        wasPlaying && this._pause()
+        this.playedDuration = value / this._playbackRate
+        wasPlaying && this._play()
+
         this.emit('seeking')
-
-        if (this.paused) {
-            this.playedDuration = value
-        } else {
-            this._pause()
-            this.playedDuration = value
-            this._play()
-        }
-
         this.emit('timeupdate')
     }
 
     get duration() {
-        return this.buffer?.duration || 0
+        return this._duration ?? (this.buffer?.duration || 0)
+    }
+    set duration(value: number) {
+        this._duration = value
     }
 
     get volume() {
         return this.gainNode.gain.value
     }
-
     set volume(value) {
         this.gainNode.gain.value = value
         this.emit('volumechange')
@@ -180,7 +198,6 @@ class WebAudioPlayer extends EventEmitter<WebAudioPlayerEvents> {
     get muted() {
         return this._muted
     }
-
     set muted(value: boolean) {
         if (this._muted === value) return
         this._muted = value
@@ -192,17 +209,21 @@ class WebAudioPlayer extends EventEmitter<WebAudioPlayerEvents> {
         }
     }
 
-    /** 获取用于播放音频的 GainNode ，可用于连接过滤器 */
+    public canPlayType(mimeType: string) {
+        return /^(audio|video)\//.test(mimeType)
+    }
+
+    /** Get the GainNode used to play the audio. Can be used to attach filters. */
     public getGainNode(): GainNode {
         return this.gainNode
     }
 
-    /** 获取解码的音频 */
+    /** Get decoded audio */
     public getChannelData(): Float32Array[] {
         const channels: Float32Array[] = []
         if (!this.buffer) return channels
         const numChannels = this.buffer.numberOfChannels
-        for (let i = 0; i < numChannels; ++i) {
+        for (let i = 0; i < numChannels; i++) {
             channels.push(this.buffer.getChannelData(i))
         }
         return channels

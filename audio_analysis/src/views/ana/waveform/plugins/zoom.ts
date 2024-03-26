@@ -8,9 +8,9 @@
  * @author Sam Hulick (https://github.com/ffxsam)
  *
  * @example
- * // ... initialising wavesurfer with the plugin
- * var wavesurfer = WaveSurfer.create({
- *   // wavesurfer options ...
+ * // ... initialising waveform with the plugin
+ * var waveform = WaveForm.create({
+ *   // waveform options ...
  *   plugins: [
  *     ZoomPlugin.create({
  *       // plugin options ...
@@ -19,7 +19,7 @@
  * });
  */
 
-import { BasePlugin, BasePluginEvents } from '../base-plugin.js'
+import { BasePlugin, BasePluginEvents } from '../base-plugin'
 
 export type ZoomPluginOptions = {
     /**
@@ -60,7 +60,7 @@ class ZoomPlugin extends BasePlugin<ZoomPluginEvents, ZoomPluginOptions> {
     }
 
     onInit() {
-        this.wrapper = this.wavesurfer?.getWrapper()
+        this.wrapper = this.waveform?.getWrapper()
         if (!this.wrapper) {
             return
         }
@@ -69,7 +69,7 @@ class ZoomPlugin extends BasePlugin<ZoomPluginEvents, ZoomPluginOptions> {
     }
 
     private onWheel = (e: WheelEvent) => {
-        if (!this.wavesurfer || !this.container || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) {
+        if (!this.waveform || !this.container || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) {
             return
         }
         // prevent scrolling the sidebar while zooming
@@ -83,20 +83,20 @@ class ZoomPlugin extends BasePlugin<ZoomPluginEvents, ZoomPluginOptions> {
             this.options.deltaThreshold === 0 ||
             Math.abs(this.accumulatedDelta) >= this.options.deltaThreshold
         ) {
-            const duration = this.wavesurfer.getDuration()
-            const oldMinPxPerSec = this.wavesurfer.options.minPxPerSec
+            const duration = this.waveform.getDuration()
+            const oldMinPxPerSec = this.waveform.options.minPxPerSec
             const x = e.clientX
             const width = this.container.clientWidth
-            const scrollX = this.wavesurfer.getScroll()
+            const scrollX = this.waveform.getScroll()
             const pointerTime = (scrollX + x) / oldMinPxPerSec
             const newMinPxPerSec = this.calculateNewZoom(oldMinPxPerSec, this.accumulatedDelta)
             const newLeftSec = (width / newMinPxPerSec) * (x / width)
 
             if (newMinPxPerSec * duration < width) {
-                this.wavesurfer.zoom(width / duration)
+                this.waveform.zoom(width / duration)
                 this.container.scrollLeft = 0
             } else {
-                this.wavesurfer.zoom(newMinPxPerSec)
+                this.waveform.zoom(newMinPxPerSec)
                 this.container.scrollLeft = (pointerTime - newLeftSec) * newMinPxPerSec
             }
 

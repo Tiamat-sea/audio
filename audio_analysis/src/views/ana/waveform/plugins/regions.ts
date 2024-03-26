@@ -1,7 +1,7 @@
 /**
- * Regions plugin 是波形上的视觉覆盖，可用于标记音频中的特定区域。
- * 区域可以单击、拖动和调整大小。
- * 您可以设置每个区域的颜色和内容，以及他们的 HTML 内容
+ * Regions are visual overlays on the waveform that can be used to mark segments of audio.
+ * Regions can be clicked on, dragged and resized.
+ * You can set the color and content of each region, as well as their HTML content.
  */
 
 import BasePlugin, { type BasePluginEvents } from '../base-plugin'
@@ -16,52 +16,52 @@ export type RegionsPluginEvents = BasePluginEvents & {
     'region-updated': [region: Region]
     'region-removed': [region: Region]
     'region-clicked': [region: Region, e: MouseEvent]
-    'region-dblclicked': [region: Region, e: MouseEvent]
+    'region-double-clicked': [region: Region, e: MouseEvent]
     'region-in': [region: Region]
     'region-out': [region: Region]
 }
 
 export type RegionEvents = {
-    /** 删除区域之前 */
+    /** Before the region is removed */
     remove: []
-    /** 更新区域参数时 */
+    /** When the region's parameters are being updated */
     update: [side?: 'start' | 'end']
-    /** 完成拖动或调整大小时 */
+    /** When dragging or resizing is finished */
     'update-end': []
-    /** 播放中 */
+    /** On play */
     play: []
-    /** 鼠标单击时 */
+    /** On mouse click */
     click: [event: MouseEvent]
-    /** 双击 */
+    /** Double click */
     dblclick: [event: MouseEvent]
-    /** 鼠标悬停 */
+    /** Mouse over */
     over: [event: MouseEvent]
-    /** 鼠标离开 */
+    /** Mouse leave */
     leave: [event: MouseEvent]
 }
 
 export type RegionParams = {
-    /** 区域的 id, 任意字符串 */
+    /** The id of the region, any string */
     id?: string
-    /** 区域的开始位置，即时间（单位：秒） */
+    /** The start position of the region (in seconds) */
     start: number
-    /** 区域的结束位置，即时间（单位：秒） */
+    /** The end position of the region (in seconds) */
     end?: number
-    /** 允许/拒绝拖动区域 */
+    /** Allow/dissallow dragging the region */
     drag?: boolean
-    /** 允许/拒绝调整区域大小 */
+    /** Allow/dissallow resizing the region */
     resize?: boolean
-    /** 区域的颜色（CSS 颜色） */
+    /** The color of the region (CSS color) */
     color?: string
-    /** 区域的内容或 HTML  */
+    /** Content string or HTML element */
     content?: string | HTMLElement
-    /** 调整大小时的最小长度（单位：秒） */
+    /** Min length when resizing (in seconds) */
     minLength?: number
-    /** 调整大小时的最大长度（单位：秒） */
+    /** Max length when resizing (in seconds) */
     maxLength?: number
-    /** 通道的索引 */
-    channelIndex?: number
-    /** 允许/拒绝内容的内容可编辑（contenteditable）属性 */
+    /** The index of the channel */
+    channelIdx?: number
+    /** Allow/Disallow contenteditable property for content */
     contentEditable?: boolean
 }
 
@@ -76,7 +76,7 @@ class SingleRegion extends EventEmitter<RegionEvents> {
     public content?: HTMLElement
     public minLength = 0
     public maxLength = Infinity
-    public channelIndex: number
+    public channelIdx: number
     public contentEditable = false
 
     constructor(
@@ -86,7 +86,7 @@ class SingleRegion extends EventEmitter<RegionEvents> {
     ) {
         super()
 
-        this.id = params.id || `region-${Math.random().toString(36).slice(2)}`
+        this.id = params.id || `region-${Math.random().toString(32).slice(2)}`
         this.start = this.clampPosition(params.start)
         this.end = this.clampPosition(params.end ?? params.start)
         this.drag = params.drag ?? true
@@ -94,7 +94,7 @@ class SingleRegion extends EventEmitter<RegionEvents> {
         this.color = params.color ?? 'rgba(0, 0, 0, 0.1)'
         this.minLength = params.minLength ?? this.minLength
         this.maxLength = params.maxLength ?? this.maxLength
-        this.channelIndex = params.channelIndex ?? -1
+        this.channelIdx = params.channelIdx ?? -1
         this.contentEditable = params.contentEditable ?? this.contentEditable
         this.element = this.initElement()
         this.setContent(params.content)
@@ -152,7 +152,7 @@ class SingleRegion extends EventEmitter<RegionEvents> {
             element
         )
 
-        // 调整大小
+        // Resize
         const resizeThreshold = 1
         makeDraggable(
             leftHandle,
@@ -187,9 +187,9 @@ class SingleRegion extends EventEmitter<RegionEvents> {
         let elementTop = 0
         let elementHeight = 100
 
-        if (this.channelIndex >= 0 && this.channelIndex < this.numberOfChannels) {
+        if (this.channelIdx >= 0 && this.channelIdx < this.numberOfChannels) {
             elementHeight = 100 / this.numberOfChannels
-            elementTop = elementHeight * this.channelIndex
+            elementTop = elementHeight * this.channelIdx
         }
 
         const element = createElement('div', {
@@ -207,7 +207,7 @@ class SingleRegion extends EventEmitter<RegionEvents> {
             }
         })
 
-        // 添加调整大小的控件
+        // Add resize handles
         if (!isMarker && this.resize) {
             this.addResizeHandles(element)
         }
@@ -238,7 +238,7 @@ class SingleRegion extends EventEmitter<RegionEvents> {
         element.addEventListener('pointerdown', () => this.toggleCursor(true))
         element.addEventListener('pointerup', () => this.toggleCursor(false))
 
-        // 拖动
+        // Drag
         makeDraggable(
             element,
             (dx) => this.onMove(dx),
@@ -309,12 +309,12 @@ class SingleRegion extends EventEmitter<RegionEvents> {
         this.renderPosition()
     }
 
-    /** 区域从头开始播放 */
+    /** Play the region from the start */
     public play() {
         this.emit('play')
     }
 
-    /** 设置区域的 HTML 内容 */
+    /** Set the HTML content of the region */
     public setContent(content: RegionParams['content']) {
         this.content?.remove()
         if (!content) {
@@ -325,7 +325,7 @@ class SingleRegion extends EventEmitter<RegionEvents> {
             const isMarker = this.start === this.end
             this.content = createElement('div', {
                 style: {
-                    padding: '0.2em ${isMarker ? 0.2 : 0.4}em',
+                    padding: `0.2em ${isMarker ? 0.2 : 0.4}em`,
                     display: 'inline-block'
                 },
                 textContent: content
@@ -340,16 +340,16 @@ class SingleRegion extends EventEmitter<RegionEvents> {
         this.element.appendChild(this.content)
     }
 
-    /** 更新区域的选项 */
+    /** Update the region's options */
     public setOptions(options: Omit<RegionParams, 'minLength' | 'maxLength'>) {
         if (options.color) {
             this.color = options.color
-            this.element.style.backgroundColor = options.color
+            this.element.style.backgroundColor = this.color
         }
 
         if (options.drag !== undefined) {
             this.drag = options.drag
-            this.element.style.cursor = options.drag ? 'grab' : 'default'
+            this.element.style.cursor = this.drag ? 'grab' : 'default'
         }
 
         if (options.start !== undefined || options.end !== undefined) {
@@ -380,12 +380,12 @@ class SingleRegion extends EventEmitter<RegionEvents> {
         }
     }
 
-    /** 删除区域 */
+    /** Remove the region */
     public remove() {
         this.emit('remove')
         this.element.remove()
-        // 这违反了类型限制，但是我们希望清除 DOM 引用
-        // 对于这个元素，w/o 必须包含一个可空的类型
+        // This violates the type but we want to clean up the DOM reference
+        // w/o having to have a nullable type of the element
         this.element = null as unknown as HTMLElement
     }
 }
@@ -394,50 +394,50 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
     private regions: Region[] = []
     private regionsContainer: HTMLElement
 
-    /** 创建一个 RegionsPlugin 实例 */
+    /** Create an instance of RegionsPlugin */
     constructor(options?: RegionsPluginOptions) {
         super(options)
         this.regionsContainer = this.initRegionsContainer()
     }
 
-    /** 创建一个 RegionsPlugin 实例 */
+    /** Create an instance of RegionsPlugin */
     public static create(options?: RegionsPluginOptions) {
         return new RegionsPlugin(options)
     }
 
-    /** 由 waveform 调用，不要手动调用 */
+    /** Called by waveform, don't call manually */
     onInit() {
         if (!this.waveform) {
-            throw new Error('Waveform is not defined')
+            throw Error('WaveForm is not initialized')
         }
         this.waveform.getWrapper().appendChild(this.regionsContainer)
 
         let activeRegions: Region[] = []
         this.subscriptions.push(
             this.waveform.on('timeupdate', (currentTime) => {
-                // 播放区域时检测
+                // Detect when regions are being played
                 const playedRegions = this.regions.filter(
                     (region) =>
                         region.start <= currentTime &&
                         (region.end === region.start ? region.start + 0.05 : region.end) >=
-                            currentTime
+                        currentTime
                 )
 
-                // 当 activeRegions 不包括 playedRegions 时，触发 region-in 事件
+                // Trigger region-in when activeRegions doesn't include a played regions
                 playedRegions.forEach((region) => {
                     if (!activeRegions.includes(region)) {
                         this.emit('region-in', region)
                     }
                 })
 
-                // 当 activeRegions 包括 un-playedRegions 时，触发 region-out 事件
+                // Trigger region-out when activeRegions include a un-played regions
                 activeRegions.forEach((region) => {
                     if (!playedRegions.includes(region)) {
                         this.emit('region-out', region)
                     }
                 })
 
-                // 仅 playedRegions 更新 activeRegions
+                // Update activeRegions only played regions
                 activeRegions = playedRegions
             })
         )
@@ -457,7 +457,7 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
         })
     }
 
-    /** 获取所有被创建了的区域 */
+    /** Get all created regions */
     public getRegions(): Region[] {
         return this.regions
     }
@@ -465,8 +465,8 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
     private avoidOverlapping(region: Region) {
         if (!region.content) return
 
-        // 检查是否有标签重叠
-        // 如果有，把它往下推，直到没有重叠标签
+        // Check that the label doesn't overlap with other labels
+        // If it does, push it down until it doesn't
         const div = region.content as HTMLElement
         const box = div.getBoundingClientRect()
 
@@ -475,7 +475,10 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
                 if (reg === region || !reg.content) return 0
 
                 const otherBox = reg.content.getBoundingClientRect()
-                if (box.left < otherBox.left + otherBox.left && box.left + box.width) {
+                if (
+                    box.left < otherBox.left + otherBox.width &&
+                    otherBox.left < box.left + box.width
+                ) {
                     return otherBox.height
                 }
                 return 0
@@ -493,7 +496,7 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
         const scrollBbox = scrollContainer.getBoundingClientRect()
         const bbox = region.element.getBoundingClientRect()
         const left = bbox.left - scrollBbox.left
-        const right = bbox.right - scrollBbox.right
+        const right = bbox.right - scrollBbox.left
         if (left < 0) {
             scrollContainer.scrollLeft += left
         } else if (right > clientWidth) {
@@ -508,7 +511,7 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
 
         const regionSubscriptions = [
             region.on('update', (side) => {
-                // 未定义的边表明我们是在拖动而不是调整大小
+                // Undefined side indicates that we are dragging not resizing
                 if (!side) {
                     this.adjustScroll(region)
                 }
@@ -529,10 +532,10 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
             }),
 
             region.on('dblclick', (e) => {
-                this.emit('region-dblclicked', region, e)
+                this.emit('region-double-clicked', region, e)
             }),
 
-            // 删除区域后将其从列表中删除
+            // Remove the region from the list when it's removed
             region.once('remove', () => {
                 regionSubscriptions.forEach((unsubscribe) => unsubscribe())
                 this.regions = this.regions.filter((reg) => reg !== region)
@@ -545,10 +548,10 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
         this.emit('region-created', region)
     }
 
-    /** 使用给定的参数创建一个区域 */
+    /** Create a region with given parameters */
     public addRegion(options: RegionParams): Region {
         if (!this.waveform) {
-            throw new Error('Waveform is not initialized')
+            throw Error('WaveForm is not initialized')
         }
 
         const duration = this.waveform.getDuration()
@@ -557,7 +560,7 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
 
         if (!duration) {
             this.subscriptions.push(
-                this.waveform.on('ready', (duration) => {
+                this.waveform.once('ready', (duration) => {
                     region._setTotalDuration(duration)
                     this.saveRegion(region)
                 })
@@ -570,8 +573,8 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
     }
 
     /**
-     * 通过拖动波形上的空白区域，可以创建区域
-     * 返回一个函数以禁用拖动选择
+     * Enable creation of regions by dragging on an empty space on the waveform.
+     * Returns a function to disable the drag selection.
      */
     public enableDragSelection(
         options: Omit<RegionParams, 'start' | 'end'>,
@@ -587,28 +590,28 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
         return makeDraggable(
             wrapper,
 
-            // 开始拖动
+            // On drag move
             (dx, _dy, x) => {
                 if (region) {
-                    // 更新区域的结束位置
-                    // 如果我们正在向左拖动，我们需要更新开始位置
+                    // Update the end position of the region
+                    // If we're dragging to the left, we need to update the start instead
                     region._onUpdate(dx, x > startX ? 'end' : 'start')
                 }
             },
 
-            // 拖动开始，拖动阈值
+            // On drag start
             (x) => {
                 startX = x
                 if (!this.waveform) return
                 const duration = this.waveform.getDuration()
                 const numberOfChannels = this.waveform?.getDecodedData()?.numberOfChannels
                 const { width } = this.waveform.getWrapper().getBoundingClientRect()
-                // 计算区域的开始时间
+                // Calculate the start time of the region
                 const start = (x / width) * duration
-                // 给区域一个较小的初始大小
+                // Give the region a small initial size
                 const end = ((x + initialSize) / width) * duration
 
-                // 创建区域，但在拖动结束之前不要保存
+                // Create a region but don't save it until the drag ends
                 region = new SingleRegion(
                     {
                         ...options,
@@ -618,11 +621,11 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
                     duration,
                     numberOfChannels
                 )
-                // 现在只需将它添加到 DOM 中
+                // Just add it to the DOM for now
                 this.regionsContainer.appendChild(region.element)
             },
 
-            // 拖动结束
+            // On drag end
             () => {
                 if (region) {
                     this.saveRegion(region)
@@ -634,16 +637,16 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
         )
     }
 
-    /** 删除所有区域 */
+    /** Remove all regions */
     public clearRegions() {
         this.regions.forEach((region) => region.remove())
     }
 
-    /** 销毁插件并清理干净 */
+    /** Destroy the plugin and clean up */
     public destroy() {
         this.clearRegions()
-        this.regionsContainer.remove()
         super.destroy()
+        this.regionsContainer.remove()
     }
 }
 

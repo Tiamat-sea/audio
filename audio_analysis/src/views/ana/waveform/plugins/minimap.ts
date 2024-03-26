@@ -1,5 +1,5 @@
 /**
- * Minimap 是主波形的一个微小副本，用作导航工具。
+ * Minimap is a tiny copy of the main waveform serving as a navigation tool.
  */
 
 import BasePlugin, { type BasePluginEvents } from '../base-plugin'
@@ -25,7 +25,7 @@ export type MinimapPluginEvents = BasePluginEvents & {
 class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions> {
     protected options: MinimapPluginOptions & typeof defaultOptions
     private minimapWrapper: HTMLElement
-    private miniWaveForm: WaveForm | null = null
+    private miniWaveform: WaveForm | null = null
     private overlay: HTMLElement
     private container: HTMLElement | null = null
 
@@ -41,10 +41,10 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         return new MinimapPlugin(options)
     }
 
-    /** 由 waveform 调用，不要手动调用 */
+    /** Called by waveform, don't call manually */
     onInit() {
         if (!this.waveform) {
-            throw Error('WaveForm is not initialized!')
+            throw Error('WaveForm is not initialized')
         }
 
         if (this.options.container) {
@@ -92,9 +92,9 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
     }
 
     private initMinimap() {
-        if (this.miniWaveForm) {
-            this.miniWaveForm.destroy()
-            this.miniWaveForm = null
+        if (this.miniWaveform) {
+            this.miniWaveform.destroy()
+            this.miniWaveform = null
         }
 
         if (!this.waveform) return
@@ -104,11 +104,11 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         if (!data || !media) return
 
         const peaks = []
-        for (let i = 0; i < data.numberOfChannels; ++i) {
+        for (let i = 0; i < data.numberOfChannels; i++) {
             peaks.push(data.getChannelData(i))
         }
 
-        this.miniWaveForm = WaveForm.create({
+        this.miniWaveform = WaveForm.create({
             ...this.options,
             container: this.minimapWrapper,
             minPxPerSec: 0,
@@ -119,11 +119,11 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         })
 
         this.subscriptions.push(
-            this.miniWaveForm.on('ready', () => {
+            this.miniWaveform.on('ready', () => {
                 this.emit('ready')
             }),
 
-            this.miniWaveForm.on('interaction', () => {
+            this.miniWaveform.on('interaction', () => {
                 this.emit('interaction')
             })
         )
@@ -149,7 +149,7 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         if (!this.waveform) return
 
         this.subscriptions.push(
-            this.waveform.on('redraw', () => {
+            this.waveform.on('decode', () => {
                 this.initMinimap()
             }),
 
@@ -163,9 +163,9 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         )
     }
 
-    /** 卸载 */
+    /** Unmount */
     public destroy() {
-        this.miniWaveForm?.destroy()
+        this.miniWaveform?.destroy()
         this.minimapWrapper.remove()
         super.destroy()
     }

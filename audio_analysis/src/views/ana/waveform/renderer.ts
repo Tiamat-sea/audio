@@ -1,17 +1,20 @@
-import EventEmitter from './event-emitter'
-import { type WaveFormOptions } from './waveform'
 import { makeDraggable } from './draggable'
+import EventEmitter from './event-emitter'
+import type { WaveFormOptions } from './waveform'
 
 type RendererEvents = {
     click: [relativeX: number, relativeY: number]
     dblclick: [relativeX: number, relativeY: number]
     drag: [relativeX: number]
+    dragstart: [relativeX: number]
+    dragend: [relativeX: number]
     scroll: [relativeStart: number, relativeEnd: number]
     render: []
+    rendered: []
 }
 
 class Renderer extends EventEmitter<RendererEvents> {
-    private static MAX_CANVAS_WIDTH = 8000
+    private static MAX_CANVAS_WIDTH = 4000
     private options: WaveFormOptions
     private parent: HTMLElement
     private container: HTMLElement
@@ -20,7 +23,7 @@ class Renderer extends EventEmitter<RendererEvents> {
     private canvasWrapper: HTMLElement
     private progressWrapper: HTMLElement
     private cursor: HTMLElement
-    private timeouts: Array<{ timeout?: ReturnType<typeof setTimeout> }> = []
+    private timeouts: Array<() => void> = []
     private isScrollable = false
     private audioData: AudioBuffer | null = null
     private resizeObserver: ResizeObserver | null = null
@@ -35,12 +38,12 @@ class Renderer extends EventEmitter<RendererEvents> {
         const parent = this.parentFromOptionsContainer(options.container)
         this.parent = parent
 
-        const [div, shadow] = this.initHTML()
+        const [div, shadow] = this.initHtml()
         parent.appendChild(div)
         this.container = div
         this.scrollContainer = shadow.querySelector('.scroll') as HTMLElement
         this.wrapper = shadow.querySelector('.wrapper') as HTMLElement
-        this.canvasWrapper = shadow.querySelector('.canvas') as HTMLElement
+        this.canvasWrapper = shadow.querySelector('.canvases') as HTMLElement
         this.progressWrapper = shadow.querySelector('.progress') as HTMLElement
         this.cursor = shadow.querySelector('.cursor') as HTMLElement
 
@@ -54,13 +57,13 @@ class Renderer extends EventEmitter<RendererEvents> {
     private parentFromOptionsContainer(container: WaveFormOptions['container']) {
         let parent
         if (typeof container === 'string') {
-            parent = document.querySelector(container) as HTMLElement | null
+            parent = document.querySelector(container) satisfies HTMLElement | null
         } else if (container instanceof HTMLElement) {
             parent = container
         }
 
         if (!parent) {
-            throw new Error('Container not found!')
+            throw new Error('Container not found')
         }
 
         return parent
@@ -76,24 +79,24 @@ class Renderer extends EventEmitter<RendererEvents> {
             return [relativeX, relativeY]
         }
 
-        // 单击侦听器
+        // Add a click listener
         this.wrapper.addEventListener('click', (e) => {
             const [x, y] = getClickPosition(e)
             this.emit('click', x, y)
         })
 
-        // 双击侦听器
+        // Add a double click listener
         this.wrapper.addEventListener('dblclick', (e) => {
             const [x, y] = getClickPosition(e)
             this.emit('dblclick', x, y)
         })
 
-        // 拖拽
-        if (this.options.dragToSeek) {
+        // Drag
+        if (this.options.dragToSeek === true || typeof this.options.dragToSeek === 'object') {
             this.initDrag()
         }
 
-        // 滚动侦听器
+        // Add a scroll listener
         this.scrollContainer.addEventListener('scroll', () => {
             const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer
             const startX = scrollLeft / scrollWidth
@@ -101,10 +104,12 @@ class Renderer extends EventEmitter<RendererEvents> {
             this.emit('scroll', startX, endX)
         })
 
-        // 容器调整大小时重新渲染波形
+        // Re-render the waveform on container resize
         const delay = this.createDelay(100)
         this.resizeObserver = new ResizeObserver(() => {
-            delay(() => this.onContainerResize())
+            delay()
+                .then(() => this.onContainerResize())
+                .catch(() => undefined)
         })
         this.resizeObserver.observe(this.scrollContainer)
     }
@@ -119,17 +124,29 @@ class Renderer extends EventEmitter<RendererEvents> {
     private initDrag() {
         makeDraggable(
             this.wrapper,
-            // 拖拽
+            // On drag
             (_, __, x) => {
                 this.emit(
                     'drag',
                     Math.max(0, Math.min(1, x / this.wrapper.getBoundingClientRect().width))
                 )
             },
-            // 开始拖拽
-            () => (this.isDragging = true),
-            // 结束拖拽
-            () => (this.isDragging = false)
+            // On start drag
+            (x) => {
+                this.isDragging = true
+                this.emit(
+                    'dragstart',
+                    Math.max(0, Math.min(1, x / this.wrapper.getBoundingClientRect().width))
+                )
+            },
+            // On end drag
+            (x) => {
+                this.isDragging = false
+                this.emit(
+                    'dragend',
+                    Math.max(0, Math.min(1, x / this.wrapper.getBoundingClientRect().width))
+                )
+            }
         )
     }
 
@@ -141,86 +158,88 @@ class Renderer extends EventEmitter<RendererEvents> {
         return defaultHeight
     }
 
-    private initHTML(): [HTMLElement, ShadowRoot] {
+    private initHtml(): [HTMLElement, ShadowRoot] {
         const div = document.createElement('div')
-        console.log('div:', div)
         const shadow = div.attachShadow({ mode: 'open' })
 
         shadow.innerHTML = `
-            <style>
-            :host {
-                user-select: none;
-                min-width: 1px;
-            }
-            :host audio {
-                display: block;
-                width: 100%;
-            }
-            :host .scroll {
-                overflow-x: auto;
-                overflow-y: hidden;
-                width: 100%;
-                position: relative;
-            }
-            :host .noScrollbar {
-                scrollbar-color: transparent;
-                scrollbar-width: none;
-            }
-            :host .noScrollbar::-webkit-scrollbar {
-                display: none;
-                -webkit-appearance: none;
-            }
-            :host .wrapper {
-                position: relative;
-                overflow: visible;
-                z-index: 2;
-            }
+      <style>
+        :host {
+          user-select: none;
+          min-width: 1px;
+        }
+        :host audio {
+          display: block;
+          width: 100%;
+        }
+        :host .scroll {
+          overflow-x: auto;
+          overflow-y: hidden;
+          width: 100%;
+          position: relative;
+        }
+        :host .noScrollbar {
+          scrollbar-color: transparent;
+          scrollbar-width: none;
+        }
+        :host .noScrollbar::-webkit-scrollbar {
+          display: none;
+          -webkit-appearance: none;
+        }
+        :host .wrapper {
+          position: relative;
+          overflow: visible;
+          z-index: 2;
+        }
+        :host .canvases {
+          min-height: ${this.getHeight(this.options.height)}px;
+        }
+        :host .canvases > div {
+          position: relative;
+        }
+        :host canvas {
+          display: block;
+          position: absolute;
+          top: 0;
+          image-rendering: pixelated;
+        }
+        :host .progress {
+          pointer-events: none;
+          position: absolute;
+          z-index: 2;
+          top: 0;
+          left: 0;
+          width: 0;
+          height: 100%;
+          overflow: hidden;
+        }
+        :host .progress > div {
+          position: relative;
+        }
+        :host .cursor {
+          pointer-events: none;
+          position: absolute;
+          z-index: 5;
+          top: 0;
+          left: 0;
+          height: 100%;
+          border-radius: 2px;
+        }
+      </style>
 
-            :host canvas {
-                min-height: ${this.getHeight(this.options.height)}px;
-                display: block;
-                position: absolute;
-                top: 0;
-                image-rendering: pixelated;
-            }
-            :host .progress {
-                pointer-events: none;
-                position: absolute;
-                z-index: 2;
-                top: 0;
-                left: 0;
-                width: 0;
-                height: 100%;
-                overflow: hidden;
-            }
-            :host .progress > div {
-                position: relative;
-            }
-            :host .cursor {
-                pointer-events: none;
-                position: absolute;
-                z-index: 5;
-                top: 0;
-                left: 0;
-                height: 100%;
-                border-radius: 2px;
-            }
-            </style>
-
-            <div class="scroll" part="scroll">
-                <div class="wrapper" part="wrapper">
-                    
-                    <div class="canvas"></div>
-                    <div class="progress" part="progress"></div>
-                    <div class="cursor" part="cursor"></div>
-                </div>
-            </div>
-        `
+      <div class="scroll" part="scroll">
+        <div class="wrapper" part="wrapper">
+          <div class="canvases"></div>
+          <div class="progress" part="progress"></div>
+          <div class="cursor" part="cursor"></div>
+        </div>
+      </div>
+    `
 
         return [div, shadow]
     }
 
-    /** WaveForm 调用此方法，不要手动调用 */
+    /** Waveform itself calls this method. Do not call it manually. */
     setOptions(options: WaveFormOptions) {
         if (this.options.container !== options.container) {
             const newParent = this.parentFromOptionsContainer(options.container)
@@ -229,13 +248,13 @@ class Renderer extends EventEmitter<RendererEvents> {
             this.parent = newParent
         }
 
-        if (options.dragToSeek && !this.options.dragToSeek) {
+        if (options.dragToSeek === true || typeof this.options.dragToSeek === 'object') {
             this.initDrag()
         }
 
         this.options = options
 
-        // 重新渲染波形
+        // Re-render the waveform
         this.reRender()
     }
 
@@ -247,21 +266,46 @@ class Renderer extends EventEmitter<RendererEvents> {
         return this.scrollContainer.scrollLeft
     }
 
+    private setScroll(pixels: number) {
+        this.scrollContainer.scrollLeft = pixels
+    }
+
+    setScrollPercentage(percent: number) {
+        const { scrollWidth } = this.scrollContainer
+        const scrollStart = scrollWidth * percent
+        this.setScroll(scrollStart)
+    }
+
     destroy() {
         this.container.remove()
         this.resizeObserver?.disconnect()
     }
 
-    private createDelay(delayMs = 10): (fn: () => void) => void {
-        const context: { timeout?: ReturnType<typeof setTimeout> } = {}
-        this.timeouts.push(context)
-        return (callback: () => void) => {
-            context.timeout && clearTimeout(context.timeout)
-            context.timeout = setTimeout(callback, delayMs)
+    private createDelay(delayMs = 10): () => Promise<void> {
+        let timeout: ReturnType<typeof setTimeout> | undefined
+        let reject: (() => void) | undefined
+
+        const onClear = () => {
+            if (timeout) clearTimeout(timeout)
+            if (reject) reject()
+        }
+
+        this.timeouts.push(onClear)
+
+        return () => {
+            return new Promise((resolveFn, rejectFn) => {
+                onClear()
+                reject = rejectFn
+                timeout = setTimeout(() => {
+                    timeout = undefined
+                    reject = undefined
+                    resolveFn()
+                }, delayMs)
+            })
         }
     }
 
-    // 将颜色值数组转换为线性渐变
+    // Convert array of color values to linear gradient
     private convertColorValues(color?: WaveFormOptions['waveColor']): string | CanvasGradient {
         if (!Array.isArray(color)) return color || ''
         if (color.length < 2) return color[0] || ''
@@ -298,8 +342,8 @@ class Renderer extends EventEmitter<RendererEvents> {
         const barGap = options.barGap
             ? options.barGap * pixelRatio
             : options.barWidth
-              ? barWidth / 2
-              : 0
+                ? barWidth / 2
+                : 0
         const barRadius = options.barRadius || 0
         const barIndexScale = width / (barWidth + barGap) / length
 
@@ -310,7 +354,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         let prevX = 0
         let maxTop = 0
         let maxBottom = 0
-        for (let i = 0; i <= length; ++i) {
+        for (let i = 0; i <= length; i++) {
             const x = Math.round(i * barIndexScale)
 
             if (x > prevX) {
@@ -318,7 +362,7 @@ class Renderer extends EventEmitter<RendererEvents> {
                 const bottomBarHeight = Math.round(maxBottom * halfHeight * vScale)
                 const barHeight = topBarHeight + bottomBarHeight || 1
 
-                // 垂直对齐
+                // Vertical alignment
                 let y = halfHeight - topBarHeight
                 if (options.barAlign === 'top') {
                     y = 0
@@ -326,13 +370,7 @@ class Renderer extends EventEmitter<RendererEvents> {
                     y = height - barHeight
                 }
 
-                ;(ctx as any)[rectFn](
-                    prevX * (barWidth + barGap),
-                    y,
-                    barWidth,
-                    barHeight,
-                    barRadius
-                )
+                ctx[rectFn](prevX * (barWidth + barGap), y, barWidth, barHeight, barRadius)
 
                 prevX = x
                 maxTop = 0
@@ -349,7 +387,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         ctx.closePath()
     }
 
-    private renderLineWaveForm(
+    private renderLineWaveform(
         channelData: Array<Float32Array | number[]>,
         _options: WaveFormOptions,
         ctx: CanvasRenderingContext2D,
@@ -366,7 +404,7 @@ class Renderer extends EventEmitter<RendererEvents> {
 
             let prevX = 0
             let max = 0
-            for (let i = 0; i <= length; ++i) {
+            for (let i = 0; i <= length; i++) {
                 const x = Math.round(i * hScale)
 
                 if (x > prevX) {
@@ -389,7 +427,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         drawChannel(0)
         drawChannel(1)
 
-        ctx.stroke()
+        ctx.fill()
         ctx.closePath()
     }
 
@@ -398,16 +436,15 @@ class Renderer extends EventEmitter<RendererEvents> {
         options: WaveFormOptions,
         ctx: CanvasRenderingContext2D
     ) {
-        // console.log('channelData:', channelData.length)
         ctx.fillStyle = this.convertColorValues(options.waveColor)
 
-        // 自定义渲染方法
+        // Custom rendering function
         if (options.renderFunction) {
             options.renderFunction(channelData, ctx)
             return
         }
 
-        // 垂直缩放
+        // Vertical scaling
         let vScale = options.barHeight || 1
         if (options.normalize) {
             const max = Array.from(channelData[0]).reduce(
@@ -417,14 +454,14 @@ class Renderer extends EventEmitter<RendererEvents> {
             vScale = max ? 1 / max : 1
         }
 
-        // 渲染波形为栅栏状
+        // Render waveform as bars
         if (options.barWidth || options.barGap || options.barAlign) {
             this.renderBarWaveform(channelData, options, ctx, vScale)
             return
         }
 
-        // 渲染波形为多段线
-        this.renderLineWaveForm(channelData, options, ctx, vScale)
+        // Render waveform as a polyline
+        this.renderLineWaveform(channelData, options, ctx, vScale)
     }
 
     private renderSingleCanvas(
@@ -438,7 +475,6 @@ class Renderer extends EventEmitter<RendererEvents> {
         progressContainer: HTMLElement
     ) {
         const pixelRatio = window.devicePixelRatio || 1
-        console.log('pixelRatio:', pixelRatio)
         const canvas = document.createElement('canvas')
         const length = channelData[0].length
         canvas.width = Math.round((width * (end - start)) / length)
@@ -456,45 +492,65 @@ class Renderer extends EventEmitter<RendererEvents> {
             ctx
         )
 
-        // 绘制进度画布
+        // Draw a progress canvas
         if (canvas.width > 0 && canvas.height > 0) {
             const progressCanvas = canvas.cloneNode() as HTMLCanvasElement
             const progressCtx = progressCanvas.getContext('2d') as CanvasRenderingContext2D
             progressCtx.drawImage(canvas, 0, 0)
-            // 将合成方法设置为仅在绘制波形的位置绘制
+            // Set the composition method to draw only where the waveform is drawn
             progressCtx.globalCompositeOperation = 'source-in'
             progressCtx.fillStyle = this.convertColorValues(options.progressColor)
-            // 矩形因合成方法起到了遮罩的作用
+            // This rectangle acts as a mask thanks to the composition method
             progressCtx.fillRect(0, 0, canvas.width, canvas.height)
             progressContainer.appendChild(progressCanvas)
         }
     }
 
-    private renderChannel(
+    private async renderChannel(
         channelData: Array<Float32Array | number[]>,
         options: WaveFormOptions,
         width: number
-    ) {
-        // canvases 容器
+    ): Promise<void> {
+        // A container for canvases
         const canvasContainer = document.createElement('div')
         const height = this.getHeight(options.height)
         canvasContainer.style.height = `${height}px`
         this.canvasWrapper.style.minHeight = `${height}px`
         this.canvasWrapper.appendChild(canvasContainer)
 
-        // 进度 canvases 容器
+        // A container for progress canvases
         const progressContainer = canvasContainer.cloneNode() as HTMLElement
         this.progressWrapper.appendChild(progressContainer)
 
-        // 决定当前能够看到的波形部分
+        const dataLength = channelData[0].length
+
+        // Draw a portion of the waveform from start peak to end peak
+        const draw = (start: number, end: number) => {
+            this.renderSingleCanvas(
+                channelData,
+                options,
+                width,
+                height,
+                Math.max(0, start),
+                Math.min(end, dataLength),
+                canvasContainer,
+                progressContainer
+            )
+        }
+
+        // Draw the entire waveform
+        if (!this.isScrollable) {
+            draw(0, dataLength)
+            return
+        }
+
+        // Determine the currently visible part of the waveform
         const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer
-        const len = channelData[0].length
-        const scale = len / scrollWidth
-        // console.log('scale:', scale, 'scrollLeft:', scrollLeft, 'clientWidth:', clientWidth, 'scrollWidth:', scrollWidth)
+        const scale = dataLength / scrollWidth
 
         let viewportWidth = Math.min(Renderer.MAX_CANVAS_WIDTH, clientWidth)
 
-        // 使用条形图时，调整宽度以避免画布之间出现间隙
+        // Adjust width to avoid gaps between canvases when using bars
         if (options.barWidth || options.barGap) {
             const barWidth = options.barWidth || 0.5
             const barGap = options.barGap || barWidth / 2
@@ -508,57 +564,46 @@ class Renderer extends EventEmitter<RendererEvents> {
         const end = Math.floor(start + viewportWidth * scale)
         const viewportLen = end - start
 
-        // 从开始峰值到结束峰值绘制一部分波形
-        const draw = (start: number, end: number) => {
-            this.renderSingleCanvas(
-                channelData,
-                options,
-                width,
-                height,
-                Math.max(0, start),
-                Math.min(end, len),
-                canvasContainer,
-                progressContainer
-            )
+        if (viewportLen <= 0) {
+            return
         }
 
-        // 在视图块中绘制波形，每个块都有延迟
-        const headDelay = this.createDelay()
-        const tailDelay = this.createDelay()
-        const renderHead = (fromIndex: number, toIndex: number) => {
-            draw(fromIndex, toIndex)
-            if (fromIndex > 0) {
-                headDelay(() => {
-                    renderHead(fromIndex - viewportLen, toIndex - viewportLen)
-                })
-            }
-        }
-        const renderTail = (fromIndex: number, toIndex: number) => {
-            draw(fromIndex, toIndex)
-            if (toIndex < len) {
-                tailDelay(() => {
-                    renderTail(fromIndex + viewportLen, toIndex + viewportLen)
-                })
-            }
-        }
+        // Draw the visible part of the waveform
+        draw(start, end)
 
-        renderHead(start, end)
-        if (end < len) {
-            renderTail(end, end + viewportLen)
-        }
+        // Draw the waveform in chunks equal to the size of the viewport, starting from the position of the viewport
+        await Promise.all([
+            // Draw the chunks to the left of the viewport
+            (async () => {
+                if (start === 0) return
+                const delay = this.createDelay()
+                for (let i = start; i >= 0; i -= viewportLen) {
+                    await delay()
+                    draw(Math.max(0, i - viewportLen), i)
+                }
+            })(),
+            // Draw the chunks to the right of the viewport
+            (async () => {
+                if (end === dataLength) return
+                const delay = this.createDelay()
+                for (let i = end; i < dataLength; i += viewportLen) {
+                    await delay()
+                    draw(i, Math.min(dataLength, i + viewportLen))
+                }
+            })()
+        ])
     }
 
-    render(audioData: AudioBuffer) {
-        // console.log('audioData:', audioData.getChannelData.toString())
-        // 清除先前的超时设定
-        this.timeouts.forEach((context) => context.timeout && clearTimeout(context.timeout))
+    async render(audioData: AudioBuffer) {
+        // Clear previous timeouts
+        this.timeouts.forEach((clear) => clear())
         this.timeouts = []
 
-        // 清除 canvases
+        // Clear the canvases
         this.canvasWrapper.innerHTML = ''
         this.progressWrapper.innerHTML = ''
 
-        // 宽度
+        // Width
         if (this.options.width != null) {
             this.scrollContainer.style.width =
                 typeof this.options.width === 'number'
@@ -566,60 +611,75 @@ class Renderer extends EventEmitter<RendererEvents> {
                     : this.options.width
         }
 
-        // 决定 waveform 的宽度
+        // Determine the width of the waveform
         const pixelRatio = window.devicePixelRatio || 1
         const parentWidth = this.scrollContainer.clientWidth
         const scrollWidth = Math.ceil(audioData.duration * (this.options.minPxPerSec || 0))
 
-        // 容器是否能够滚动
+        // Whether the container should scroll
         this.isScrollable = scrollWidth > parentWidth
         const useParentWidth = this.options.fillParent && !this.isScrollable
-        // 波形的宽度（像素）
+        // Width of the waveform in pixels
         const width = (useParentWidth ? parentWidth : scrollWidth) * pixelRatio
 
-        // 设置 wrapper 的宽度
+        // Set the width of the wrapper
         this.wrapper.style.width = useParentWidth ? '100%' : `${scrollWidth}px`
 
-        // 设置附加样式
+        // Set additional styles
         this.scrollContainer.style.overflowX = this.isScrollable ? 'auto' : 'hidden'
         this.scrollContainer.classList.toggle('noScrollbar', !!this.options.hideScrollbar)
         this.cursor.style.backgroundColor = `${this.options.cursorColor || this.options.progressColor}`
         this.cursor.style.width = `${this.options.cursorWidth}px`
 
-        // 渲染波形
-        if (this.options.splitChannels) {
-            // 为每个通道渲染一个波形
-            for (let i = 0; i < audioData.numberOfChannels; ++i) {
-                const options = { ...this.options, ...this.options.splitChannels[i] }
-                this.renderChannel([audioData.getChannelData(i)], options, width)
-            }
-        } else {
-            // 为前两个通道渲染一个的波形（通常是左右声道），即将两个通道渲染在一个波形图中
-            const channels = [audioData.getChannelData(0)]
-            if (audioData.numberOfChannels > 1) channels.push(audioData.getChannelData(1))
-            this.renderChannel(channels, this.options, width)
-        }
-
         this.audioData = audioData
 
         this.emit('render')
+
+        // Render the waveform
+        try {
+            if (this.options.splitChannels) {
+                // Render a waveform for each channel
+                await Promise.all(
+                    Array.from({ length: audioData.numberOfChannels }).map((_, i) => {
+                        const options = { ...this.options, ...this.options.splitChannels?.[i] }
+                        return this.renderChannel([audioData.getChannelData(i)], options, width)
+                    })
+                )
+            } else {
+                // Render a single waveform for the first two channels (left and right)
+                const channels = [audioData.getChannelData(0)]
+                if (audioData.numberOfChannels > 1) channels.push(audioData.getChannelData(1))
+                await this.renderChannel(channels, this.options, width)
+            }
+        } catch {
+            // Render cancelled due to another render
+            return
+        }
+
+        this.emit('rendered')
     }
 
     reRender() {
-        // 如果波形尚未渲染则return
+        // Return if the waveform has not been rendered yet
         if (!this.audioData) return
 
-        // 记住当前指针位置
+        // Remember the current cursor position
         const { scrollWidth } = this.scrollContainer
-        const oldCursorPosition = this.progressWrapper.clientWidth
+        const { right: before } = this.progressWrapper.getBoundingClientRect()
 
-        // 重新渲染波形
+        // Re-render the waveform
         this.render(this.audioData)
 
-        // 调整滚动位置，使光标保持在同一位置
+        // Adjust the scroll position so that the cursor stays in the same place
         if (this.isScrollable && scrollWidth !== this.scrollContainer.scrollWidth) {
-            const newCursorPosition = this.progressWrapper.clientWidth
-            this.scrollContainer.scrollLeft += newCursorPosition - oldCursorPosition
+            const { right: after } = this.progressWrapper.getBoundingClientRect()
+            let delta = after - before
+            // to limit compounding floating-point drift
+            // we need to round to the half px furthest from 0
+            delta *= 2
+            delta = delta < 0 ? Math.floor(delta) : Math.ceil(delta)
+            delta /= 2
+            this.scrollContainer.scrollLeft += delta
         }
     }
 
@@ -636,7 +696,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         const middle = clientWidth / 2
 
         if (this.isDragging) {
-            // 拖动靠近视图边缘时滚动
+            // Scroll when dragging close to the edge of the viewport
             const minGap = 30
             if (progressWidth + minGap > endEdge) {
                 this.scrollContainer.scrollLeft += minGap
@@ -649,14 +709,14 @@ class Renderer extends EventEmitter<RendererEvents> {
                     progressWidth - (this.options.autoCenter ? middle : 0)
             }
 
-            // 播放时保持光标居中
+            // Keep the cursor centered when playing
             const center = progressWidth - scrollLeft - middle
             if (isPlaying && this.options.autoCenter && center > 0) {
                 this.scrollContainer.scrollLeft += Math.min(center, 10)
             }
         }
 
-        // 发射 scroll 事件
+        // Emit the scroll event
         {
             const newScroll = this.scrollContainer.scrollLeft
             const startX = newScroll / scrollWidth
@@ -668,11 +728,10 @@ class Renderer extends EventEmitter<RendererEvents> {
     renderProgress(progress: number, isPlaying?: boolean) {
         if (isNaN(progress)) return
         const percents = progress * 100
-        this.canvasWrapper.style.clipPath = `polygon(${percents}%0, 100% 0, 100% 100%,${percents}% %100)`
+        this.canvasWrapper.style.clipPath = `polygon(${percents}% 0, 100% 0, 100% 100%, ${percents}% 100%)`
         this.progressWrapper.style.width = `${percents}%`
         this.cursor.style.left = `${percents}%`
-        this.cursor.style.marginLeft =
-            Math.round(percents) === 100 ? `-${this.options.cursorWidth}px` : ''
+        this.cursor.style.transform = `translateX(-${Math.round(percents) === 100 ? this.options.cursorWidth : 0}px)`
 
         if (this.isScrollable && this.options.autoScroll) {
             this.scrollIntoView(progress, isPlaying)
@@ -686,7 +745,7 @@ class Renderer extends EventEmitter<RendererEvents> {
     ): Promise<string[] | Blob[]> {
         const canvases = this.canvasWrapper.querySelectorAll('canvas')
         if (!canvases.length) {
-            throw new Error('No waveform data!')
+            throw new Error('No waveform data')
         }
 
         // Data URLs
@@ -701,7 +760,7 @@ class Renderer extends EventEmitter<RendererEvents> {
                 return new Promise<Blob>((resolve, reject) => {
                     canvas.toBlob(
                         (blob) => {
-                            blob ? resolve(blob) : reject(new Error('Could not export image!'))
+                            blob ? resolve(blob) : reject(new Error('Could not export image'))
                         },
                         format,
                         quality

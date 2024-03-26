@@ -2,10 +2,10 @@
  * Envelope is a visual UI for controlling the audio volume and add fade-in and fade-out effects.
  */
 
-import BasePlugin, { type BasePluginEvents } from '../base-plugin.js'
-import { makeDraggable } from '../draggable.js'
-import EventEmitter from '../event-emitter.js'
-import createElement from '../dom.js'
+import BasePlugin, { type BasePluginEvents } from '../base-plugin'
+import { makeDraggable } from '../draggable'
+import EventEmitter from '../event-emitter'
+import createElement from '../dom'
 
 export type EnvelopePoint = {
     id?: string
@@ -99,9 +99,9 @@ class Polyline extends EventEmitter<{
                 part: 'polyline',
                 style: options.dragLine
                     ? {
-                          cursor: 'row-resize',
-                          pointerEvents: 'stroke'
-                      }
+                        cursor: 'row-resize',
+                        pointerEvents: 'stroke'
+                    }
                     : {}
             },
             svg
@@ -324,7 +324,7 @@ class EnvelopePlugin extends BasePlugin<EnvelopePluginEvents, EnvelopePluginOpti
         this.emitPoints()
 
         // Add the point to the polyline if the duration is available
-        const duration = this.wavesurfer?.getDuration()
+        const duration = this.waveform?.getDuration()
         if (duration) {
             this.addPolyPoint(point, duration)
         }
@@ -377,22 +377,22 @@ class EnvelopePlugin extends BasePlugin<EnvelopePluginEvents, EnvelopePluginOpti
      */
     public setVolume(floatValue: number) {
         this.volume = floatValue
-        this.wavesurfer?.setVolume(floatValue)
+        this.waveform?.setVolume(floatValue)
     }
 
-    /** Called by wavesurfer, don't call manually */
+    /** Called by waveform, don't call manually */
     onInit() {
-        if (!this.wavesurfer) {
-            throw Error('WaveSurfer is not initialized')
+        if (!this.waveform) {
+            throw Error('WaveForm is not initialized')
         }
 
         const { options } = this
-        options.volume = options.volume ?? this.wavesurfer.getVolume()
+        options.volume = options.volume ?? this.waveform.getVolume()
 
         this.setVolume(options.volume)
 
         this.subscriptions.push(
-            this.wavesurfer.on('decode', (duration) => {
+            this.waveform.on('decode', (duration) => {
                 this.initPolyline()
 
                 this.points.forEach((point) => {
@@ -400,11 +400,11 @@ class EnvelopePlugin extends BasePlugin<EnvelopePluginEvents, EnvelopePluginOpti
                 })
             }),
 
-            this.wavesurfer.on('redraw', () => {
+            this.waveform.on('redraw', () => {
                 this.polyline?.update()
             }),
 
-            this.wavesurfer.on('timeupdate', (time) => {
+            this.waveform.on('timeupdate', (time) => {
                 this.onTimeUpdate(time)
             })
         )
@@ -421,15 +421,15 @@ class EnvelopePlugin extends BasePlugin<EnvelopePluginEvents, EnvelopePluginOpti
 
     private initPolyline() {
         if (this.polyline) this.polyline.destroy()
-        if (!this.wavesurfer) return
+        if (!this.waveform) return
 
-        const wrapper = this.wavesurfer.getWrapper()
+        const wrapper = this.waveform.getWrapper()
 
         this.polyline = new Polyline(this.options, wrapper)
 
         this.subscriptions.push(
             this.polyline.on('point-move', (point, relativeX, relativeY) => {
-                const duration = this.wavesurfer?.getDuration() || 0
+                const duration = this.waveform?.getDuration() || 0
                 point.time = relativeX * duration
                 point.volume = 1 - relativeY
 
@@ -442,7 +442,7 @@ class EnvelopePlugin extends BasePlugin<EnvelopePluginEvents, EnvelopePluginOpti
 
             this.polyline.on('point-create', (relativeX, relativeY) => {
                 this.addPoint({
-                    time: relativeX * (this.wavesurfer?.getDuration() || 0),
+                    time: relativeX * (this.waveform?.getDuration() || 0),
                     volume: 1 - relativeY
                 })
             }),
@@ -454,7 +454,7 @@ class EnvelopePlugin extends BasePlugin<EnvelopePluginEvents, EnvelopePluginOpti
 
                 this.emitPoints()
 
-                this.onTimeUpdate(this.wavesurfer?.getCurrentTime() || 0)
+                this.onTimeUpdate(this.waveform?.getCurrentTime() || 0)
             })
         )
     }
@@ -464,10 +464,10 @@ class EnvelopePlugin extends BasePlugin<EnvelopePluginEvents, EnvelopePluginOpti
     }
 
     private onTimeUpdate(time: number) {
-        if (!this.wavesurfer) return
+        if (!this.waveform) return
         let nextPoint = this.points.find((point) => point.time > time)
         if (!nextPoint) {
-            nextPoint = { time: this.wavesurfer.getDuration() || 0, volume: 0 }
+            nextPoint = { time: this.waveform.getDuration() || 0, volume: 0 }
         }
         let prevPoint = this.points.findLast((point) => point.time <= time)
         if (!prevPoint) {

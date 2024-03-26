@@ -1,4 +1,4 @@
-import EventEmitter, { type GeneralEventTypes } from './event-emitter.js'
+import EventEmitter, { type GeneralEventTypes } from './event-emitter'
 
 type PlayerOptions = {
     media?: HTMLMediaElement

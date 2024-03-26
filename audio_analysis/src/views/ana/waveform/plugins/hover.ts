@@ -1,5 +1,5 @@
 /**
- * 悬停插件跟随鼠标移动并显示时间戳
+ * The Hover plugin follows the mouse and shows a timestamp
  */
 
 import BasePlugin, { type BasePluginEvents } from '../base-plugin'
@@ -32,7 +32,7 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions> {
         super(options || {})
         this.options = Object.assign({}, defaultOptions, options)
 
-        // 创建插件元素
+        // Create the plugin elements
         this.wrapper = createElement('div', { part: 'hover' })
         this.label = createElement('span', { part: 'hover-label' }, this.wrapper)
     }
@@ -46,17 +46,16 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions> {
         return `${value}${units}`
     }
 
-    /** 由 waveform 调用，不用手动调用 */
+    /** Called by waveform, don't call manually */
     onInit() {
         if (!this.waveform) {
-            throw Error('Waveform is not initialized')
+            throw Error('WaveForm is not initialized')
         }
 
-        const waveformOptions = this.waveform.options
-        const lineColor =
-            this.options.lineColor || waveformOptions.cursorColor || waveformOptions.progressColor
+        const wsOptions = this.waveform.options
+        const lineColor = this.options.lineColor || wsOptions.cursorColor || wsOptions.progressColor
 
-        // 垂直线
+        // Vertical line
         Object.assign(this.wrapper.style, {
             position: 'absolute',
             zIndex: 10,
@@ -69,7 +68,7 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions> {
             transition: 'opacity .1s ease-in'
         })
 
-        // 时间戳标注
+        // Timestamp label
         Object.assign(this.label.style, {
             display: 'block',
             backgroundColor: this.options.labelBackground,
@@ -79,11 +78,11 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions> {
             padding: '2px 3px'
         })
 
-        // 添加包装器
+        // Append the wrapper
         const container = this.waveform.getWrapper()
         container.appendChild(this.wrapper)
 
-        // 附加指针事件
+        // Attach pointer events
         container.addEventListener('pointermove', this.onPointerMove)
         container.addEventListener('pointerleave', this.onPointerLeave)
         container.addEventListener('wheel', this.onPointerMove)
@@ -104,7 +103,7 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions> {
     private onPointerMove = (e: PointerEvent | WheelEvent) => {
         if (!this.waveform) return
 
-        // 位置
+        // Position
         const bbox = this.waveform.getWrapper().getBoundingClientRect()
         const { width } = bbox
         const offsetX = e.clientX - bbox.left
@@ -113,14 +112,14 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions> {
         this.wrapper.style.transform = `translateX(${posX}px)`
         this.wrapper.style.opacity = '1'
 
-        // 时间戳
+        // Timestamp
         const duration = this.waveform.getDuration() || 0
         this.label.textContent = this.formatTime(duration * relX)
         const labelWidth = this.label.offsetWidth
         this.label.style.transform =
             posX + labelWidth > width ? `translateX(-${labelWidth + this.options.lineWidth}px)` : ''
 
-        // 使用相对 X 位置发射一个 hover 事件
+        // Emit a hover event with the relative X position
         this.emit('hover', relX)
     }
 
@@ -128,8 +127,8 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions> {
         this.wrapper.style.opacity = '0'
     }
 
-    /** 取消挂载 */
-    public destroy(): void {
+    /** Unmount */
+    public destroy() {
         super.destroy()
         this.unsubscribe()
         this.wrapper.remove()

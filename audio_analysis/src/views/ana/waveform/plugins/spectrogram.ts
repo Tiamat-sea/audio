@@ -4,12 +4,12 @@
  * Render a spectrogram visualisation of the audio.
  *
  * @author Pavel Denisov (https://github.com/akreal)
- * @see https://github.com/wavesurfer-js/wavesurfer.js/pull/337
+ * @see https://github.com/waveform-js/waveform/pull/337
  *
  * @example
- * // ... initialising wavesurfer with the plugin
- * var wavesurfer = WaveSurfer.create({
- *   // wavesurfer options ...
+ * // ... initialising waveform with the plugin
+ * var waveform = WaveForm.create({
+ *   // waveform options ...
  *   plugins: [
  *     SpectrogramPlugin.create({
  *       // plugin options ...
@@ -21,7 +21,7 @@
 // @ts-nocheck
 
 /**
- * Calculate FFT - Based on https://github.com/corbanbrook/dsp.js
+ * Calculate FFT - Based on https://github.com/corbanbrook/dsp
  */
 function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: number) {
     this.bufferSize = bufferSize
@@ -73,7 +73,7 @@ function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: 
                 this.windowValues[i] = Math.pow(
                     Math.E,
                     -0.5 *
-                        Math.pow((i - (bufferSize - 1) / 2) / ((alpha * (bufferSize - 1)) / 2), 2)
+                    Math.pow((i - (bufferSize - 1) / 2) / ((alpha * (bufferSize - 1)) / 2), 2)
                 )
             }
             break
@@ -221,10 +221,10 @@ function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: 
 }
 
 /**
- * Spectrogram plugin for wavesurfer.
+ * Spectrogram plugin for waveform.
  */
-import BasePlugin, { type BasePluginEvents } from '../base-plugin.js'
-import createElement from '../dom.js'
+import BasePlugin, { type BasePluginEvents } from '../base-plugin'
+import createElement from '../dom'
 
 export type SpectrogramPluginOptions = {
     /** Selector of element or element in which to render */
@@ -242,16 +242,16 @@ export type SpectrogramPluginOptions = {
     noverlap?: number
     /** The window function to be used. */
     windowFunc?:
-        | 'bartlett'
-        | 'bartlettHann'
-        | 'blackman'
-        | 'cosine'
-        | 'gauss'
-        | 'hamming'
-        | 'hann'
-        | 'lanczoz'
-        | 'rectangular'
-        | 'triangular'
+    | 'bartlett'
+    | 'bartlettHann'
+    | 'blackman'
+    | 'cosine'
+    | 'gauss'
+    | 'hamming'
+    | 'hann'
+    | 'lanczoz'
+    | 'rectangular'
+    | 'triangular'
     /** Some window functions have this extra value. (Between 0 and 1) */
     alpha?: number
     /** Min frequency to scale spectrogram. */
@@ -312,7 +312,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         this.alpha = options.alpha
 
         // Getting file's original samplerate is difficult(#1248).
-        // So set 12kHz default to render like wavesurfer.js 5.x.
+        // So set 12kHz default to render like waveform 5.x.
         this.frequencyMin = options.frequencyMin || 0
         this.frequencyMax = options.frequencyMax || 0
 
@@ -321,24 +321,24 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
     }
 
     onInit() {
-        this.container = this.container || this.wavesurfer.getWrapper()
+        this.container = this.container || this.waveform.getWrapper()
         this.container.appendChild(this.wrapper)
 
-        if (this.wavesurfer.options.fillParent) {
+        if (this.waveform.options.fillParent) {
             Object.assign(this.wrapper.style, {
                 width: '100%',
                 overflowX: 'hidden',
                 overflowY: 'hidden'
             })
         }
-        this.subscriptions.push(this.wavesurfer.on('redraw', () => this.render()))
+        this.subscriptions.push(this.waveform.on('redraw', () => this.render()))
     }
 
     public destroy() {
         this.unAll()
-        this.wavesurfer.un('ready', this._onReady)
-        this.wavesurfer.un('redraw', this._onRender)
-        this.wavesurfer = null
+        this.waveform.un('ready', this._onReady)
+        this.waveform.un('redraw', this._onRender)
+        this.waveform = null
         this.util = null
         this.options = null
         if (this.wrapper) {
@@ -353,7 +353,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         if (!resp.ok) {
             throw new Error('Unable to fetch frequencies data')
         }
-        const data = await resp.json()
+        const data = await respon()
         this.drawSpectrogram(data)
     }
 
@@ -408,7 +408,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         if (this.frequenciesDataUrl) {
             this.loadFrequenciesData(this.frequenciesDataUrl)
         } else {
-            const decodedData = this.wavesurfer?.getDecodedData()
+            const decodedData = this.waveform?.getDecodedData()
             if (decodedData) {
                 this.drawSpectrogram(this.getFrequencies(decodedData))
             }
@@ -425,7 +425,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         // Set the height to fit all channels
         this.wrapper.style.height = this.height * frequenciesData.length + 'px'
 
-        this.width = this.wavesurfer.getWrapper().offsetWidth
+        this.width = this.waveform.getWrapper().offsetWidth
         this.canvas.width = this.width
         this.canvas.height = this.height * frequenciesData.length
 
@@ -492,7 +492,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
     private getFrequencies(buffer: AudioBuffer): number[] {
         const fftSamples = this.fftSamples
         const channels =
-            this.options.splitChannels ?? this.wavesurfer?.options.splitChannels
+            this.options.splitChannels ?? this.waveform?.options.splitChannels
                 ? buffer.numberOfChannels
                 : 1
 
@@ -643,7 +643,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                     oldEnd <= newStart || newEnd <= oldStart
                         ? 0
                         : Math.min(Math.max(oldEnd, newStart), Math.max(newEnd, oldStart)) -
-                          Math.max(Math.min(oldEnd, newStart), Math.min(newEnd, oldStart))
+                        Math.max(Math.min(oldEnd, newStart), Math.min(newEnd, oldStart))
                 let k
                 /* eslint-disable max-depth */
                 if (overlap > 0) {

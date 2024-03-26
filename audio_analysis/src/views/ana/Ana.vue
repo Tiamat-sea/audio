@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import WaveForm from './src/wavesurfer'
-import SpectrogramPlugin from './src/plugins/spectrogram'
-import Minimap from './src/plugins/minimap'
-import HoverPlugin from './src/plugins/hover'
+import WaveForm from './waveform/waveform'
+import SpectrogramPlugin from './waveform/plugins/spectrogram'
+import Minimap from './waveform/plugins/minimap'
+import HoverPlugin from './waveform/plugins/hover'
 
 const audioURL = './example.mp3'
 const audio = new Audio()
@@ -12,15 +12,15 @@ audio.src = audioURL
 onMounted(() => {
     const waveform = WaveForm.create({
         container: document.getElementById('waveform') as HTMLElement,
-        progressColor: 'rgba(0, 0, 0, 0.5)',
+        progressColor: 'rgba(0, 0, 0, 0.7)',
         url: audioURL,
         // media: audio,
         sampleRate: 44100,
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
-        // minPxPerSec: 100,
+        minPxPerSec: 10,
         // autoplay: true,
-        hideScrollbar: true,
+        // hideScrollbar: true,
         plugins: [
             SpectrogramPlugin.create({
                 labels: true,
@@ -60,7 +60,7 @@ onMounted(() => {
             <div id="waveform"></div>
         </lay-split-panel-item>
         <lay-split-panel-item>
-            <label> 缩放: <input type="range" min="10" max="1000" value="100" /> </label>
+            <label> 缩放: <input type="range" min="10" max="500" value="10" /> </label>
             <button id="playPause">播放/暂停</button>
         </lay-split-panel-item>
         <lay-split-panel-item>

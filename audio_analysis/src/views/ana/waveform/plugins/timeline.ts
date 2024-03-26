@@ -2,8 +2,8 @@
  * The Timeline plugin adds timestamps and notches under the waveform.
  */
 
-import BasePlugin, { type BasePluginEvents } from '../base-plugin.js'
-import createElement from '../dom.js'
+import BasePlugin, { type BasePluginEvents } from '../base-plugin'
+import createElement from '../dom'
 
 export type TimelinePluginOptions = {
     /** The height of the timeline in pixels, defaults to 20 */
@@ -12,7 +12,7 @@ export type TimelinePluginOptions = {
     container?: HTMLElement | string
     /** Pass 'beforebegin' to insert the timeline on top of the waveform */
     insertPosition?: InsertPosition
-    /** The duration of the timeline in seconds, defaults to wavesurfer's duration */
+    /** The duration of the timeline in seconds, defaults to waveform's duration */
     duration?: number
     /** Interval between ticks in seconds */
     timeInterval?: number
@@ -66,13 +66,13 @@ class TimelinePlugin extends BasePlugin<TimelinePluginEvents, TimelinePluginOpti
         return new TimelinePlugin(options)
     }
 
-    /** Called by wavesurfer, don't call manually */
+    /** Called by waveform, don't call manually */
     onInit() {
-        if (!this.wavesurfer) {
-            throw Error('WaveSurfer is not initialized')
+        if (!this.waveform) {
+            throw Error('WaveForm is not initialized')
         }
 
-        let container = this.wavesurfer.getWrapper()
+        let container = this.waveform.getWrapper()
         if (this.options.container instanceof HTMLElement) {
             container = this.options.container
         } else if (typeof this.options.container === 'string') {
@@ -82,7 +82,7 @@ class TimelinePlugin extends BasePlugin<TimelinePluginEvents, TimelinePluginOpti
         }
 
         if (this.options.insertPosition) {
-            ;(container.firstElementChild || container).insertAdjacentElement(
+            ; (container.firstElementChild || container).insertAdjacentElement(
                 this.options.insertPosition,
                 this.timelineWrapper
             )
@@ -90,9 +90,9 @@ class TimelinePlugin extends BasePlugin<TimelinePluginEvents, TimelinePluginOpti
             container.appendChild(this.timelineWrapper)
         }
 
-        this.subscriptions.push(this.wavesurfer.on('redraw', () => this.initTimeline()))
+        this.subscriptions.push(this.waveform.on('redraw', () => this.initTimeline()))
 
-        if (this.wavesurfer?.getDuration() || this.options.duration) {
+        if (this.waveform?.getDuration() || this.options.duration) {
             this.initTimeline()
         }
     }
@@ -144,7 +144,7 @@ class TimelinePlugin extends BasePlugin<TimelinePluginEvents, TimelinePluginOpti
     }
 
     private initTimeline() {
-        const duration = this.wavesurfer?.getDuration() ?? this.options.duration ?? 0
+        const duration = this.waveform?.getDuration() ?? this.options.duration ?? 0
         const pxPerSec = this.timelineWrapper.scrollWidth / duration
         const timeInterval = this.options.timeInterval ?? this.defaultTimeInterval(pxPerSec)
         const primaryLabelInterval =
@@ -163,15 +163,15 @@ class TimelinePlugin extends BasePlugin<TimelinePluginEvents, TimelinePluginOpti
                 whiteSpace: 'nowrap',
                 ...(isTop
                     ? {
-                          position: 'absolute',
-                          top: '0',
-                          left: '0',
-                          right: '0',
-                          zIndex: '2'
-                      }
+                        position: 'absolute',
+                        top: '0',
+                        left: '0',
+                        right: '0',
+                        zIndex: '2'
+                    }
                     : {
-                          position: 'relative'
-                      })
+                        position: 'relative'
+                    })
             }
         })
 

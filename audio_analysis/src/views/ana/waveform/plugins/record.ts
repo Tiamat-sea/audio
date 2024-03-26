@@ -2,8 +2,8 @@
  * Record audio from the microphone with a real-time waveform preview
  */
 
-import BasePlugin, { type BasePluginEvents } from '../base-plugin.js'
-import Timer from '../timer.js'
+import BasePlugin, { type BasePluginEvents } from '../base-plugin'
+import Timer from '../timer'
 
 export type RecordPluginOptions = {
     /** The MIME type to use when recording audio */
@@ -125,14 +125,14 @@ class RecordPlugin extends BasePlugin<RecordPluginEvents, RecordPluginOptions> {
 
             const duration = this.options.scrollingWaveformWindow
 
-            if (this.wavesurfer) {
+            if (this.waveform) {
                 this.originalOptions ??= {
-                    cursorWidth: this.wavesurfer.options.cursorWidth,
-                    interact: this.wavesurfer.options.interact
+                    cursorWidth: this.waveform.options.cursorWidth,
+                    interact: this.waveform.options.interact
                 }
-                this.wavesurfer.options.cursorWidth = 0
-                this.wavesurfer.options.interact = false
-                this.wavesurfer.load('', [this.dataWindow], duration)
+                this.waveform.options.cursorWidth = 0
+                this.waveform.options.interact = false
+                this.waveform.load('', [this.dataWindow], duration)
             }
 
             animationId = requestAnimationFrame(drawWaveform)
@@ -207,7 +207,7 @@ class RecordPlugin extends BasePlugin<RecordPluginEvents, RecordPluginOptions> {
             this.emit(ev, blob)
             if (this.options.renderRecordedAudio) {
                 this.applyOriginalOptionsIfNeeded()
-                this.wavesurfer?.load(URL.createObjectURL(blob))
+                this.waveform?.load(URL.createObjectURL(blob))
             }
         }
 
@@ -293,9 +293,9 @@ class RecordPlugin extends BasePlugin<RecordPluginEvents, RecordPluginOptions> {
     }
 
     private applyOriginalOptionsIfNeeded() {
-        if (this.wavesurfer && this.originalOptions) {
-            this.wavesurfer.options.cursorWidth = this.originalOptions.cursorWidth
-            this.wavesurfer.options.interact = this.originalOptions.interact
+        if (this.waveform && this.originalOptions) {
+            this.waveform.options.cursorWidth = this.originalOptions.cursorWidth
+            this.waveform.options.interact = this.originalOptions.interact
             delete this.originalOptions
         }
     }
