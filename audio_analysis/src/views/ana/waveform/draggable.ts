@@ -58,7 +58,7 @@ export function makeDraggable(
         }
 
         const onPointerLeave = (e: PointerEvent) => {
-            // Listen to events only on the document and not on inner elements
+            // 仅在文档上监听事件，而不是内部元素上的事件
             if (!e.relatedTarget || e.relatedTarget === document.documentElement) {
                 onPointerUp(e)
             }

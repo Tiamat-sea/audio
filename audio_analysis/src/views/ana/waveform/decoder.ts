@@ -1,11 +1,11 @@
-/** Decode an array buffer into an audio buffer */
+/** 将数组缓冲解码为音频缓冲区 */
 async function decode(audioData: ArrayBuffer, sampleRate: number): Promise<AudioBuffer> {
     const audioCtx = new AudioContext({ sampleRate })
     const decode = audioCtx.decodeAudioData(audioData)
     return decode.finally(() => audioCtx.close())
 }
 
-/** Normalize peaks to -1..1 */
+/** 将峰值归一化为 -1 到 1 之间 */
 function normalize<T extends Array<Float32Array | number[]>>(channelData: T): T {
     const firstChannel = channelData[0]
     if (firstChannel.some((n) => n > 1 || n < -1)) {
@@ -24,12 +24,12 @@ function normalize<T extends Array<Float32Array | number[]>>(channelData: T): T 
     return channelData
 }
 
-/** Create an audio buffer from pre-decoded audio data */
+/** 从预解码的音频数据创建音频缓冲区 */
 function createBuffer(channelData: Array<Float32Array | number[]>, duration: number): AudioBuffer {
-    // If a single array of numbers is passed, make it an array of arrays
+    // 如果传入的是单个数字数组，则将其转换为数组的数组
     if (typeof channelData[0] === 'number') channelData = [channelData as unknown as number[]]
 
-    // Normalize to -1..1
+    // 归一化为 -1 到 1 之间
     normalize(channelData)
 
     return {

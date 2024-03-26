@@ -73,30 +73,30 @@ class Renderer extends EventEmitter<RendererEvents> {
         const getClickPosition = (e: MouseEvent): [number, number] => {
             const rect = this.wrapper.getBoundingClientRect()
             const x = e.clientX - rect.left
-            const y = e.clientX - rect.left
+            const y = e.clientY - rect.top
             const relativeX = x / rect.width
             const relativeY = y / rect.height
             return [relativeX, relativeY]
         }
 
-        // Add a click listener
+        // 添加点击事件监听器
         this.wrapper.addEventListener('click', (e) => {
             const [x, y] = getClickPosition(e)
             this.emit('click', x, y)
         })
 
-        // Add a double click listener
+        // 添加双击事件监听器
         this.wrapper.addEventListener('dblclick', (e) => {
             const [x, y] = getClickPosition(e)
             this.emit('dblclick', x, y)
         })
 
-        // Drag
+        // 拖动
         if (this.options.dragToSeek === true || typeof this.options.dragToSeek === 'object') {
             this.initDrag()
         }
 
-        // Add a scroll listener
+        // 添加滚动事件监听器
         this.scrollContainer.addEventListener('scroll', () => {
             const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer
             const startX = scrollLeft / scrollWidth
@@ -104,7 +104,7 @@ class Renderer extends EventEmitter<RendererEvents> {
             this.emit('scroll', startX, endX)
         })
 
-        // Re-render the waveform on container resize
+        // 在容器大小改变时重新渲染波形图
         const delay = this.createDelay(100)
         this.resizeObserver = new ResizeObserver(() => {
             delay()
@@ -124,14 +124,14 @@ class Renderer extends EventEmitter<RendererEvents> {
     private initDrag() {
         makeDraggable(
             this.wrapper,
-            // On drag
+            // 拖拽时
             (_, __, x) => {
                 this.emit(
                     'drag',
                     Math.max(0, Math.min(1, x / this.wrapper.getBoundingClientRect().width))
                 )
             },
-            // On start drag
+            // 开始拖拽时
             (x) => {
                 this.isDragging = true
                 this.emit(
@@ -139,7 +139,7 @@ class Renderer extends EventEmitter<RendererEvents> {
                     Math.max(0, Math.min(1, x / this.wrapper.getBoundingClientRect().width))
                 )
             },
-            // On end drag
+            // 结束拖拽时
             (x) => {
                 this.isDragging = false
                 this.emit(
@@ -163,83 +163,83 @@ class Renderer extends EventEmitter<RendererEvents> {
         const shadow = div.attachShadow({ mode: 'open' })
 
         shadow.innerHTML = `
-      <style>
-        :host {
-          user-select: none;
-          min-width: 1px;
-        }
-        :host audio {
-          display: block;
-          width: 100%;
-        }
-        :host .scroll {
-          overflow-x: auto;
-          overflow-y: hidden;
-          width: 100%;
-          position: relative;
-        }
-        :host .noScrollbar {
-          scrollbar-color: transparent;
-          scrollbar-width: none;
-        }
-        :host .noScrollbar::-webkit-scrollbar {
-          display: none;
-          -webkit-appearance: none;
-        }
-        :host .wrapper {
-          position: relative;
-          overflow: visible;
-          z-index: 2;
-        }
-        :host .canvases {
-          min-height: ${this.getHeight(this.options.height)}px;
-        }
-        :host .canvases > div {
-          position: relative;
-        }
-        :host canvas {
-          display: block;
-          position: absolute;
-          top: 0;
-          image-rendering: pixelated;
-        }
-        :host .progress {
-          pointer-events: none;
-          position: absolute;
-          z-index: 2;
-          top: 0;
-          left: 0;
-          width: 0;
-          height: 100%;
-          overflow: hidden;
-        }
-        :host .progress > div {
-          position: relative;
-        }
-        :host .cursor {
-          pointer-events: none;
-          position: absolute;
-          z-index: 5;
-          top: 0;
-          left: 0;
-          height: 100%;
-          border-radius: 2px;
-        }
-      </style>
+            <style>
+                :host {
+                    user-select: none;
+                    min-width: 1px;
+                }
+                :host audio {
+                    display: block;
+                    width: 100%;
+                }
+                :host .scroll {
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    width: 100%;
+                    position: relative;
+                }
+                :host .noScrollbar {
+                    scrollbar-color: transparent;
+                    scrollbar-width: none;
+                }
+                :host .noScrollbar::-webkit-scrollbar {
+                    display: none;
+                    -webkit-appearance: none;
+                }
+                :host .wrapper {
+                    position: relative;
+                    overflow: visible;
+                    z-index: 2;
+                }
+                :host .canvases {
+                    min-height: ${this.getHeight(this.options.height)}px;
+                }
+                :host .canvases > div {
+                    position: relative;
+                }
+                :host canvas {
+                    display: block;
+                    position: absolute;
+                    top: 0;
+                    image-rendering: pixelated;
+                }
+                :host .progress {
+                    pointer-events: none;
+                    position: absolute;
+                    z-index: 2;
+                    top: 0;
+                    left: 0;
+                    width: 0;
+                    height: 100%;
+                    overflow: hidden;
+                }
+                :host .progress > div {
+                    position: relative;
+                }
+                :host .cursor {
+                    pointer-events: none;
+                    position: absolute;
+                    z-index: 5;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    border-radius: 2px;
+                }
+            </style>
 
-      <div class="scroll" part="scroll">
-        <div class="wrapper" part="wrapper">
-          <div class="canvases"></div>
-          <div class="progress" part="progress"></div>
-          <div class="cursor" part="cursor"></div>
-        </div>
-      </div>
-    `
+            <div class="scroll" part="scroll">
+                <div class="wrapper" part="wrapper">
+                    <div class="canvases"></div>
+                    <div class="progress" part="progress"></div>
+                    <div class="cursor" part="cursor"></div>
+                </div>
+            </div>
+        `
 
         return [div, shadow]
     }
 
-    /** Waveform itself calls this method. Do not call it manually. */
+    /** 波形本身调用此方法。请勿手动调用。 */
     setOptions(options: WaveFormOptions) {
         if (this.options.container !== options.container) {
             const newParent = this.parentFromOptionsContainer(options.container)
@@ -254,7 +254,7 @@ class Renderer extends EventEmitter<RendererEvents> {
 
         this.options = options
 
-        // Re-render the waveform
+        // 重新渲染波形
         this.reRender()
     }
 
@@ -305,7 +305,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         }
     }
 
-    // Convert array of color values to linear gradient
+    // 将颜色值数组转换为线性渐变
     private convertColorValues(color?: WaveFormOptions['waveColor']): string | CanvasGradient {
         if (!Array.isArray(color)) return color || ''
         if (color.length < 2) return color[0] || ''
@@ -362,7 +362,7 @@ class Renderer extends EventEmitter<RendererEvents> {
                 const bottomBarHeight = Math.round(maxBottom * halfHeight * vScale)
                 const barHeight = topBarHeight + bottomBarHeight || 1
 
-                // Vertical alignment
+                // 垂直对齐
                 let y = halfHeight - topBarHeight
                 if (options.barAlign === 'top') {
                     y = 0
@@ -438,13 +438,13 @@ class Renderer extends EventEmitter<RendererEvents> {
     ) {
         ctx.fillStyle = this.convertColorValues(options.waveColor)
 
-        // Custom rendering function
+        // 自定义渲染函数
         if (options.renderFunction) {
             options.renderFunction(channelData, ctx)
             return
         }
 
-        // Vertical scaling
+        // 垂直缩放
         let vScale = options.barHeight || 1
         if (options.normalize) {
             const max = Array.from(channelData[0]).reduce(
@@ -454,13 +454,13 @@ class Renderer extends EventEmitter<RendererEvents> {
             vScale = max ? 1 / max : 1
         }
 
-        // Render waveform as bars
+        // 以条形形式渲染波形
         if (options.barWidth || options.barGap || options.barAlign) {
             this.renderBarWaveform(channelData, options, ctx, vScale)
             return
         }
 
-        // Render waveform as a polyline
+        // 将波形渲染为折线
         this.renderLineWaveform(channelData, options, ctx, vScale)
     }
 
@@ -492,15 +492,15 @@ class Renderer extends EventEmitter<RendererEvents> {
             ctx
         )
 
-        // Draw a progress canvas
+        // 绘制进度画布
         if (canvas.width > 0 && canvas.height > 0) {
             const progressCanvas = canvas.cloneNode() as HTMLCanvasElement
             const progressCtx = progressCanvas.getContext('2d') as CanvasRenderingContext2D
             progressCtx.drawImage(canvas, 0, 0)
-            // Set the composition method to draw only where the waveform is drawn
+            // 将组合方法设置为仅在绘制波形的位置绘制
             progressCtx.globalCompositeOperation = 'source-in'
             progressCtx.fillStyle = this.convertColorValues(options.progressColor)
-            // This rectangle acts as a mask thanks to the composition method
+            // 这个矩形作为一个遮罩，得益于合成方法
             progressCtx.fillRect(0, 0, canvas.width, canvas.height)
             progressContainer.appendChild(progressCanvas)
         }
@@ -511,20 +511,20 @@ class Renderer extends EventEmitter<RendererEvents> {
         options: WaveFormOptions,
         width: number
     ): Promise<void> {
-        // A container for canvases
+        // 一个用于画布的容器
         const canvasContainer = document.createElement('div')
         const height = this.getHeight(options.height)
         canvasContainer.style.height = `${height}px`
         this.canvasWrapper.style.minHeight = `${height}px`
         this.canvasWrapper.appendChild(canvasContainer)
 
-        // A container for progress canvases
+        // 一个用于进度画布的容器
         const progressContainer = canvasContainer.cloneNode() as HTMLElement
         this.progressWrapper.appendChild(progressContainer)
 
         const dataLength = channelData[0].length
 
-        // Draw a portion of the waveform from start peak to end peak
+        // 从起始峰值到结束峰值绘制波形的一部分
         const draw = (start: number, end: number) => {
             this.renderSingleCanvas(
                 channelData,
@@ -538,19 +538,19 @@ class Renderer extends EventEmitter<RendererEvents> {
             )
         }
 
-        // Draw the entire waveform
+        // 绘制整个波形
         if (!this.isScrollable) {
             draw(0, dataLength)
             return
         }
 
-        // Determine the currently visible part of the waveform
+        // 确定当前可见的波形部分
         const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer
         const scale = dataLength / scrollWidth
 
         let viewportWidth = Math.min(Renderer.MAX_CANVAS_WIDTH, clientWidth)
 
-        // Adjust width to avoid gaps between canvases when using bars
+        // 调整宽度以避免在使用条形时出现画布之间的间隙
         if (options.barWidth || options.barGap) {
             const barWidth = options.barWidth || 0.5
             const barGap = options.barGap || barWidth / 2
@@ -568,12 +568,12 @@ class Renderer extends EventEmitter<RendererEvents> {
             return
         }
 
-        // Draw the visible part of the waveform
+        // 绘制可见部分的波形
         draw(start, end)
 
-        // Draw the waveform in chunks equal to the size of the viewport, starting from the position of the viewport
+        // 将波形分块绘制，每块大小与视口相同，从视口位置开始绘制波形
         await Promise.all([
-            // Draw the chunks to the left of the viewport
+            // 在视口左侧绘制块
             (async () => {
                 if (start === 0) return
                 const delay = this.createDelay()
@@ -582,7 +582,7 @@ class Renderer extends EventEmitter<RendererEvents> {
                     draw(Math.max(0, i - viewportLen), i)
                 }
             })(),
-            // Draw the chunks to the right of the viewport
+            // 在视口右侧绘制块
             (async () => {
                 if (end === dataLength) return
                 const delay = this.createDelay()
@@ -595,15 +595,15 @@ class Renderer extends EventEmitter<RendererEvents> {
     }
 
     async render(audioData: AudioBuffer) {
-        // Clear previous timeouts
+        // 清除先前的定时器
         this.timeouts.forEach((clear) => clear())
         this.timeouts = []
 
-        // Clear the canvases
+        // 清除画布内容
         this.canvasWrapper.innerHTML = ''
         this.progressWrapper.innerHTML = ''
 
-        // Width
+        // 宽度
         if (this.options.width != null) {
             this.scrollContainer.style.width =
                 typeof this.options.width === 'number'
@@ -611,21 +611,21 @@ class Renderer extends EventEmitter<RendererEvents> {
                     : this.options.width
         }
 
-        // Determine the width of the waveform
+        // 确定波形的宽度
         const pixelRatio = window.devicePixelRatio || 1
         const parentWidth = this.scrollContainer.clientWidth
         const scrollWidth = Math.ceil(audioData.duration * (this.options.minPxPerSec || 0))
 
-        // Whether the container should scroll
+        // 容器是否应该滚动
         this.isScrollable = scrollWidth > parentWidth
         const useParentWidth = this.options.fillParent && !this.isScrollable
-        // Width of the waveform in pixels
+        // 波形的像素宽度
         const width = (useParentWidth ? parentWidth : scrollWidth) * pixelRatio
 
-        // Set the width of the wrapper
+        // 设置包装器的宽度
         this.wrapper.style.width = useParentWidth ? '100%' : `${scrollWidth}px`
 
-        // Set additional styles
+        // 设置额外的样式
         this.scrollContainer.style.overflowX = this.isScrollable ? 'auto' : 'hidden'
         this.scrollContainer.classList.toggle('noScrollbar', !!this.options.hideScrollbar)
         this.cursor.style.backgroundColor = `${this.options.cursorColor || this.options.progressColor}`
@@ -635,10 +635,10 @@ class Renderer extends EventEmitter<RendererEvents> {
 
         this.emit('render')
 
-        // Render the waveform
+        // 渲染波形
         try {
             if (this.options.splitChannels) {
-                // Render a waveform for each channel
+                // 为每个通道渲染波形
                 await Promise.all(
                     Array.from({ length: audioData.numberOfChannels }).map((_, i) => {
                         const options = { ...this.options, ...this.options.splitChannels?.[i] }
@@ -646,13 +646,13 @@ class Renderer extends EventEmitter<RendererEvents> {
                     })
                 )
             } else {
-                // Render a single waveform for the first two channels (left and right)
+                // 渲染第一和第二个通道（左声道和右声道）的单个波形
                 const channels = [audioData.getChannelData(0)]
                 if (audioData.numberOfChannels > 1) channels.push(audioData.getChannelData(1))
                 await this.renderChannel(channels, this.options, width)
             }
         } catch {
-            // Render cancelled due to another render
+            // 另一个渲染导致取消渲染
             return
         }
 
@@ -660,22 +660,22 @@ class Renderer extends EventEmitter<RendererEvents> {
     }
 
     reRender() {
-        // Return if the waveform has not been rendered yet
+        // 如果波形尚未渲染完成，则返回
         if (!this.audioData) return
 
-        // Remember the current cursor position
+        // 记住当前指针位置
         const { scrollWidth } = this.scrollContainer
         const { right: before } = this.progressWrapper.getBoundingClientRect()
 
-        // Re-render the waveform
+        // 重新渲染波形
         this.render(this.audioData)
 
-        // Adjust the scroll position so that the cursor stays in the same place
+        // 调整滚动位置，使光标保持在同一位置
         if (this.isScrollable && scrollWidth !== this.scrollContainer.scrollWidth) {
             const { right: after } = this.progressWrapper.getBoundingClientRect()
             let delta = after - before
-            // to limit compounding floating-point drift
-            // we need to round to the half px furthest from 0
+            // 为了限制浮点数累积误差
+            // 我们需要四舍五入到离0最远的半个像素
             delta *= 2
             delta = delta < 0 ? Math.floor(delta) : Math.ceil(delta)
             delta /= 2
@@ -696,7 +696,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         const middle = clientWidth / 2
 
         if (this.isDragging) {
-            // Scroll when dragging close to the edge of the viewport
+            // 当拖动接近视口边缘时滚动
             const minGap = 30
             if (progressWidth + minGap > endEdge) {
                 this.scrollContainer.scrollLeft += minGap
@@ -709,14 +709,14 @@ class Renderer extends EventEmitter<RendererEvents> {
                     progressWidth - (this.options.autoCenter ? middle : 0)
             }
 
-            // Keep the cursor centered when playing
+            // 在播放时保持光标居中
             const center = progressWidth - scrollLeft - middle
             if (isPlaying && this.options.autoCenter && center > 0) {
                 this.scrollContainer.scrollLeft += Math.min(center, 10)
             }
         }
 
-        // Emit the scroll event
+        // 触发滚动事件
         {
             const newScroll = this.scrollContainer.scrollLeft
             const startX = newScroll / scrollWidth

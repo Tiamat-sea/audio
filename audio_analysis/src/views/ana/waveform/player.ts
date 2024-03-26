@@ -21,15 +21,15 @@ class Player<T extends GeneralEventTypes> extends EventEmitter<T> {
             this.media = document.createElement('audio')
         }
 
-        // Controls
+        // 控件
         if (options.mediaControls) {
             this.media.controls = true
         }
-        // Autoplay
+        // 自动播放
         if (options.autoplay) {
             this.media.autoplay = true
         }
-        // Speed
+        // 速度
         if (options.playbackRate != null) {
             this.onMediaEvent(
                 'canplay',
@@ -83,7 +83,7 @@ class Player<T extends GeneralEventTypes> extends EventEmitter<T> {
         this.media.remove()
         this.revokeSrc()
         this.media.src = ''
-        // Load resets the media element to its initial state
+        // load() 会将媒体元素重置为初始状态
         this.media.load()
     }
 
@@ -91,83 +91,83 @@ class Player<T extends GeneralEventTypes> extends EventEmitter<T> {
         this.media = element
     }
 
-    /** Start playing the audio */
+    /** 开始播放音频 */
     public async play(): Promise<void> {
         return this.media.play()
     }
 
-    /** Pause the audio */
+    /** 暂停音频 */
     public pause(): void {
         this.media.pause()
     }
 
-    /** Check if the audio is playing */
+    /** 检查音频是否正在播放 */
     public isPlaying(): boolean {
         return !this.media.paused && !this.media.ended
     }
 
-    /** Jump to a specific time in the audio (in seconds) */
+    /** 跳转到音频的特定时间（以秒为单位） */
     public setTime(time: number) {
         this.media.currentTime = time
     }
 
-    /** Get the duration of the audio in seconds */
+    /** 获取音频的持续时间（以秒为单位） */
     public getDuration(): number {
         return this.media.duration
     }
 
-    /** Get the current audio position in seconds */
+    /** 获取当前音频的播放位置（以秒为单位） */
     public getCurrentTime(): number {
         return this.media.currentTime
     }
 
-    /** Get the audio volume */
+    /** 获取音频的音量 */
     public getVolume(): number {
         return this.media.volume
     }
 
-    /** Set the audio volume */
+    /** 设置音频的音量 */
     public setVolume(volume: number) {
         this.media.volume = volume
     }
 
-    /** Get the audio muted state */
+    /** 获取音频的静音状态 */
     public getMuted(): boolean {
         return this.media.muted
     }
 
-    /** Mute or unmute the audio */
+    /** 静音或取消静音音频 */
     public setMuted(muted: boolean) {
         this.media.muted = muted
     }
 
-    /** Get the playback speed */
+    /** 获取播放速度 */
     public getPlaybackRate(): number {
         return this.media.playbackRate
     }
 
-    /** Check if the audio is seeking */
+    /** 检查音频是否正在寻找 */
     public isSeeking(): boolean {
         return this.media.seeking
     }
 
-    /** Set the playback speed, pass an optional false to NOT preserve the pitch */
+    /** 设置播放速度，传入可选的 false 以不保持音调 */
     public setPlaybackRate(rate: number, preservePitch?: boolean) {
-        // preservePitch is true by default in most browsers
+        // 在大多数浏览器中，默认情况下 preservePitch 为 true
         if (preservePitch != null) {
             this.media.preservesPitch = preservePitch
         }
         this.media.playbackRate = rate
     }
 
-    /** Get the HTML media element */
+    /** 获取 HTML 媒体元素 */
     public getMediaElement(): HTMLMediaElement {
         return this.media
     }
 
-    /** Set a sink id to change the audio output device */
+    /** 设置 sink id 来更改音频输出设备 */
     public setSinkId(sinkId: string): Promise<void> {
-        // See https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/setSinkId
+        // 参考 https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/setSinkId
         const media = this.media as HTMLAudioElement & {
             setSinkId: (sinkId: string) => Promise<void>
         }

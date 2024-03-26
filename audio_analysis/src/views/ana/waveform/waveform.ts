@@ -5,76 +5,74 @@ import Fetcher from './fetcher'
 import Player from './player'
 import Renderer from './renderer'
 import Timer from './timer'
-import WebAudioPlayer from './webaudio'
+// import WebAudioPlayer from './webaudio'
 
 export type WaveFormOptions = {
-    /** Required: an HTML element or selector where the waveform will be rendered */
+    /** 必填项：渲染波形的 HTML 元素或选择器 */
     container: HTMLElement | string
-    /** The height of the waveform in pixels, or "auto" to fill the container height */
+    /** 波形的高度（以像素为单位），或者使用 "auto" 来填充容器的高度 */
     height?: number | 'auto'
-    /** The width of the waveform in pixels or any CSS value; defaults to 100% */
+    /** 波形的宽度（以像素为单位）或任何 CSS 值；默认为 100% */
     width?: number | string
-    /** The color of the waveform */
+    /** 波形的颜色 */
     waveColor?: string | string[] | CanvasGradient
-    /** The color of the progress mask */
+    /** 进度遮罩的颜色 */
     progressColor?: string | string[] | CanvasGradient
-    /** The color of the playpack cursor */
+    /** 播放光标的颜色 */
     cursorColor?: string
-    /** The cursor width */
+    /** 光标的宽度 */
     cursorWidth?: number
-    /** If set, the waveform will be rendered with bars like this: ▁ ▂ ▇ ▃ ▅ ▂ */
+    /** 如果设置，波形将以这样的形式呈现：▁ ▂ ▇ ▃ ▅ ▂ */
     barWidth?: number
-    /** Spacing between bars in pixels */
+    /** 条形之间的像素间隔 */
     barGap?: number
-    /** Rounded borders for bars */
+    /** 条形的圆角 */
     barRadius?: number
-    /** A vertical scaling factor for the waveform */
+    /** 波形的垂直缩放因子 */
     barHeight?: number
-    /** Vertical bar alignment */
+    /** 条形的垂直对齐方式 */
     barAlign?: 'top' | 'bottom'
-    /** Minimum pixels per second of audio (i.e. the zoom level) */
+    /** 音频的最小像素每秒（即缩放级别） */
     minPxPerSec?: number
-    /** Stretch the waveform to fill the container, true by default */
+    /** 将波形拉伸以填充容器，默认为 true */
     fillParent?: boolean
-    /** Audio URL */
+    /** 音频 URL */
     url?: string
-    /** Pre-computed audio data, arrays of floats for each channel */
+    /** 预先计算的音频数据，每个通道的浮点数组 */
     peaks?: Array<Float32Array | number[]>
-    /** Pre-computed audio duration in seconds */
+    /** 预先计算的音频持续时间（以秒为单位） */
     duration?: number
-    /** Use an existing media element instead of creating one */
+    /** 使用现有的媒体元素而不是创建一个新的 */
     media?: HTMLMediaElement
-    /** Whether to show default audio element controls */
+    /** 是否显示默认的音频元素控件 */
     mediaControls?: boolean
-    /** Play the audio on load */
+    /** 加载时播放音频 */
     autoplay?: boolean
-    /** Pass false to disable clicks on the waveform */
+    /** 是否允许点击波形 */
     interact?: boolean
-    /** Allow to drag the cursor to seek to a new position. If an object with `debounceTime` is provided instead
-     * then `dragToSeek` will also be true. If `true` the default is 200ms
-     */
+    /** 允许拖动光标以寻找新位置。如果提供了一个带有 `debounceTime` 的对象，则 `dragToSeek` 也将为 true。如果为 `true`，默认值为 200ms */
     dragToSeek?: boolean | { debounceTime: number }
-    /** Hide the scrollbar */
+    /** 隐藏滚动条 */
     hideScrollbar?: boolean
-    /** Audio rate, i.e. the playback speed */
+    /** 音频速率，即播放速度 */
     audioRate?: number
-    /** Automatically scroll the container to keep the current position in viewport */
+    /** 自动滚动容器以保持当前位置在视口中可见 */
     autoScroll?: boolean
-    /** If autoScroll is enabled, keep the cursor in the center of the waveform during playback */
+    /** 如果启用了 autoScroll，在播放期间将光标保持在波形的中心 */
     autoCenter?: boolean
-    /** Decoding sample rate. Doesn't affect the playback. Defaults to 8000 */
+    /** 解码采样率。不影响播放。默认为 8000 */
     sampleRate?: number
-    /** Render each audio channel as a separate waveform */
+    /** 将每个音频通道渲染为单独的波形 */
     splitChannels?: Partial<WaveFormOptions>[]
-    /** Stretch the waveform to the full height */
+    /** 将波形拉伸到全高度 */
     normalize?: boolean
-    /** The list of plugins to initialize on start */
+    /** 要在启动时初始化的插件列表 */
     plugins?: GenericPlugin[]
-    /** Custom render function */
+    /** 自定义渲染函数 */
     renderFunction?: (peaks: Array<Float32Array | number[]>, ctx: CanvasRenderingContext2D) => void
-    /** Options to pass to the fetch method */
+    /** 传递给 fetch 方法的选项 */
     fetchParams?: RequestInit
-    /** Playback "backend" to use, defaults to MediaElement */
+    /** 使用的播放 "后端"，默认为 MediaElement */
     backend?: 'WebAudio' | 'MediaElement'
 }
 
@@ -92,51 +90,51 @@ const defaultOptions = {
 }
 
 export type WaveFormEvents = {
-    /** After waveform is created */
+    /** 波形创建完成后 */
     init: []
-    /** When audio starts loading */
+    /** 音频开始加载时 */
     load: [url: string]
-    /** During audio loading */
+    /** 音频加载过程中 */
     loading: [percent: number]
-    /** When the audio has been decoded */
+    /** 音频解码完成时 */
     decode: [duration: number]
-    /** When the audio is both decoded and can play */
+    /** 音频解码并可以播放时 */
     ready: [duration: number]
-    /** When visible waveform is drawn */
+    /** 可见波形绘制时 */
     redraw: []
-    /** When all audio channel chunks of the waveform have drawn */
+    /** 所有音频通道块绘制完成时 */
     redrawcomplete: []
-    /** When the audio starts playing */
+    /** 音频开始播放时 */
     play: []
-    /** When the audio pauses */
+    /** 音频暂停时 */
     pause: []
-    /** When the audio finishes playing */
+    /** 音频播放完成时 */
     finish: []
-    /** On audio position change, fires continuously during playback */
+    /** 音频位置改变时，持续触发 */
     timeupdate: [currentTime: number]
-    /** An alias of timeupdate but only when the audio is playing */
+    /** 与 timeupdate 相同，但仅在音频播放时触发 */
     audioprocess: [currentTime: number]
-    /** When the user seeks to a new position */
+    /** 用户寻找到新位置时 */
     seeking: [currentTime: number]
-    /** When the user interacts with the waveform (i.g. clicks or drags on it) */
+    /** 用户与波形交互时（例如点击或拖动） */
     interaction: [newTime: number]
-    /** When the user clicks on the waveform */
+    /** 用户点击波形时 */
     click: [relativeX: number, relativeY: number]
-    /** When the user double-clicks on the waveform */
+    /** 用户双击波形时 */
     dblclick: [relativeX: number, relativeY: number]
-    /** When the user drags the cursor */
+    /** 用户拖动光标时 */
     drag: [relativeX: number]
-    /** When the user starts dragging the cursor */
+    /** 用户开始拖动光标时 */
     dragstart: [relativeX: number]
-    /** When the user ends dragging the cursor */
+    /** 用户结束拖动光标时 */
     dragend: [relativeX: number]
-    /** When the waveform is scrolled (panned) */
+    /** 波形滚动时 */
     scroll: [visibleStartTime: number, visibleEndTime: number]
-    /** When the zoom level changes */
+    /** 缩放级别改变时 */
     zoom: [minPxPerSec: number]
-    /** Just before the waveform is destroyed so you can clean up your events */
+    /** 波形即将销毁时，用于清理事件 */
     destroy: []
-    /** When source file is unable to be fetched, decoded, or an error is thrown by media element */
+    /** 当源文件无法获取、解码或媒体元素抛出错误时 */
     error: [error: Error]
 }
 
@@ -152,12 +150,12 @@ class WaveForm extends Player<WaveFormEvents> {
     public static readonly BasePlugin = BasePlugin
     public static readonly dom = dom
 
-    /** Create a new WaveForm instance */
+    /** 创建一个新的 WaveForm 实例 */
     public static create(options: WaveFormOptions) {
         return new WaveForm(options)
     }
 
-    /** Create a new WaveForm instance */
+    /** 创建一个新的 WaveForm 实例 */
     constructor(options: WaveFormOptions) {
         const media =
             options.media ||
@@ -183,16 +181,16 @@ class WaveForm extends Player<WaveFormEvents> {
         this.initTimerEvents()
         this.initPlugins()
 
-        // Init and load async to allow external events to be registered
+        // 初始化和异步加载，以允许注册外部事件
         Promise.resolve().then(() => {
             this.emit('init')
 
-            // Load audio if URL or an external media with an src is passed,
-            // of render w/o audio if pre-decoded peaks and duration are provided
+            // 如果传递了 URL 或具有 src 的外部媒体，则加载音频，
+            // 如果提供了预解码的峰值和持续时间，则渲染 w/o 音频
             const url = this.options.url || this.getSrc() || ''
             if (url || (this.options.peaks && this.options.duration)) {
-                // Swallow async errors because they cannot be caught from a constructor call.
-                // Subscribe to the waveform's error event to handle them.
+                // 吞掉异步错误，因为它们无法从构造函数调用中捕获。
+                // 订阅波形的错误事件来处理它们。
                 this.load(url, this.options.peaks, this.options.duration).catch(() => null)
             }
         })
@@ -204,7 +202,7 @@ class WaveForm extends Player<WaveFormEvents> {
     }
 
     private initTimerEvents() {
-        // The timer fires every 16ms for a smooth progress animation
+        // 计时器每16毫秒触发一次，用于平滑的进度动画
         this.subscriptions.push(
             this.timer.on('tick', () => {
                 if (!this.isSeeking()) {
@@ -258,7 +256,7 @@ class WaveForm extends Player<WaveFormEvents> {
 
     private initRendererEvents() {
         this.subscriptions.push(
-            // Seek on click
+            // 单击时进行跳转
             this.renderer.on('click', (relativeX, relativeY) => {
                 if (this.options.interact) {
                     this.seekTo(relativeX)
@@ -267,49 +265,49 @@ class WaveForm extends Player<WaveFormEvents> {
                 }
             }),
 
-            // Double click
+            // 双击
             this.renderer.on('dblclick', (relativeX, relativeY) => {
                 this.emit('dblclick', relativeX, relativeY)
             }),
 
-            // Scroll
+            // 滚动
             this.renderer.on('scroll', (startX, endX) => {
                 const duration = this.getDuration()
                 this.emit('scroll', startX * duration, endX * duration)
             }),
 
-            // Redraw
+            // 重绘
             this.renderer.on('render', () => {
                 this.emit('redraw')
             }),
 
-            // RedrawComplete
+            // 重绘完成
             this.renderer.on('rendered', () => {
                 this.emit('redrawcomplete')
             }),
 
-            // DragStart
+            // 拖动开始
             this.renderer.on('dragstart', (relativeX) => {
                 this.emit('dragstart', relativeX)
             }),
 
-            // DragEnd
+            // 拖动结束
             this.renderer.on('dragend', (relativeX) => {
                 this.emit('dragend', relativeX)
             })
         )
 
-        // Drag
+        // 拖动
         {
             let debounce: ReturnType<typeof setTimeout>
             this.subscriptions.push(
                 this.renderer.on('drag', (relativeX) => {
                     if (!this.options.interact) return
 
-                    // Update the visual position
+                    // 更新可视位置
                     this.renderer.renderProgress(relativeX)
 
-                    // Set the audio position with a debounce
+                    // 使用防抖设置音频位置
                     clearTimeout(debounce)
                     let debounceTime
 
@@ -348,7 +346,7 @@ class WaveForm extends Player<WaveFormEvents> {
         this.mediaSubscriptions = []
     }
 
-    /** Set new waveform options and re-render it */
+    /** 设置新的波形选项并重新渲染 */
     public setOptions(options: Partial<WaveFormOptions>) {
         this.options = Object.assign({}, this.options, options)
         this.renderer.setOptions(this.options)
@@ -361,12 +359,12 @@ class WaveForm extends Player<WaveFormEvents> {
         }
     }
 
-    /** Register a waveform plugin */
+    /** 注册一个 waveform 插件 */
     public registerPlugin<T extends GenericPlugin>(plugin: T): T {
         plugin._init(this)
         this.plugins.push(plugin)
 
-        // Unregister plugin on destroy
+        // 在销毁时取消注册插件
         this.subscriptions.push(
             plugin.once('destroy', () => {
                 this.plugins = this.plugins.filter((p) => p !== plugin)
@@ -376,23 +374,23 @@ class WaveForm extends Player<WaveFormEvents> {
         return plugin
     }
 
-    /** For plugins only: get the waveform wrapper div */
+    /** 仅供插件使用：获取波形包装器 div 元素 */
     public getWrapper(): HTMLElement {
         return this.renderer.getWrapper()
     }
 
-    /** Get the current scroll position in pixels */
+    /** 获取当前滚动位置（以像素为单位） */
     public getScroll(): number {
         return this.renderer.getScroll()
     }
 
-    /** Move the start of the viewing window to a specific time in the audio (in seconds) */
+    /** 将视图窗口的起始位置移动到音频中的特定时间（以秒为单位） */
     public setScrollTime(time: number) {
         const percentage = time / this.getDuration()
         this.renderer.setScrollPercentage(percentage)
     }
 
-    /** Get all registered plugins */
+    /** 获取所有已注册的插件 */
     public getActivePlugins() {
         return this.plugins
     }
@@ -409,16 +407,16 @@ class WaveForm extends Player<WaveFormEvents> {
 
         this.decodedData = null
 
-        // Fetch the entire audio as a blob if pre-decoded data is not provided
+        // 如果没有提供预解码的数据，则将整个音频作为 Blob 进行获取
         if (!blob && !channelData) {
             const onProgress = (percentage: number) => this.emit('loading', percentage)
             blob = await Fetcher.fetchBlob(url, onProgress, this.options.fetchParams)
         }
 
-        // Set the mediaelement source
+        // 设置媒体元素的源
         this.setSrc(url, blob)
 
-        // Wait for the audio duration
+        // 等待音频的持续时间（时长）
         const audioDuration =
             duration ||
             this.getDuration() ||
@@ -428,7 +426,7 @@ class WaveForm extends Player<WaveFormEvents> {
                 })
             }))
 
-        // Set the duration if the player is a WebAudioPlayer without a URL
+        // 如果播放器是没有 URL 的 WebAudioPlayer ，则设置持续时间（时长）
         if (!url && !blob) {
             const media = this.getMediaElement()
             if (media instanceof WebAudioPlayer) {
@@ -436,7 +434,7 @@ class WaveForm extends Player<WaveFormEvents> {
             }
         }
 
-        // Decode the audio data or use user-provided peaks
+        // 解码音频数据或使用用户提供的 peaks
         if (channelData) {
             this.decodedData = Decoder.createBuffer(channelData, audioDuration || 0)
         } else if (blob) {
@@ -452,7 +450,7 @@ class WaveForm extends Player<WaveFormEvents> {
         this.emit('ready', this.getDuration())
     }
 
-    /** Load an audio file by URL, with optional pre-decoded audio data */
+    /** 通过 URL 加载音频文件，可选择使用预解码的音频数据 */
     public async load(url: string, channelData?: WaveFormOptions['peaks'], duration?: number) {
         try {
             return await this.loadAudio(url, undefined, channelData, duration)
@@ -462,7 +460,7 @@ class WaveForm extends Player<WaveFormEvents> {
         }
     }
 
-    /** Load an audio blob */
+    /** 加载音频 Blob */
     public async loadBlob(blob: Blob, channelData?: WaveFormOptions['peaks'], duration?: number) {
         try {
             return await this.loadAudio('blob', blob, channelData, duration)
@@ -472,7 +470,7 @@ class WaveForm extends Player<WaveFormEvents> {
         }
     }
 
-    /** Zoom the waveform by a given pixels-per-second factor */
+    /** 通过给定的每秒像素数因子缩放波形 */
     public zoom(minPxPerSec: number) {
         if (!this.decodedData) {
             throw new Error('No audio loaded')
@@ -481,12 +479,12 @@ class WaveForm extends Player<WaveFormEvents> {
         this.emit('zoom', minPxPerSec)
     }
 
-    /** Get the decoded audio data */
+    /** 获取解码后的音频数据 */
     public getDecodedData(): AudioBuffer | null {
         return this.decodedData
     }
 
-    /** Get decoded peaks */
+    /** 获取解码后的峰值 */
     public exportPeaks({ channels = 2, maxLength = 8000, precision = 10_000 } = {}): Array<
         number[]
     > {
@@ -513,56 +511,56 @@ class WaveForm extends Player<WaveFormEvents> {
         return peaks
     }
 
-    /** Get the duration of the audio in seconds */
+    /** 获取音频的持续时间（以秒为单位） */
     public getDuration(): number {
         let duration = super.getDuration() || 0
-        // Fall back to the decoded data duration if the media duration is incorrect
+        // 如果媒体持续时间不正确，则回退到解码数据的持续时间
         if ((duration === 0 || duration === Infinity) && this.decodedData) {
             duration = this.decodedData.duration
         }
         return duration
     }
 
-    /** Toggle if the waveform should react to clicks */
+    /** 切换波形是否响应点击事件 */
     public toggleInteraction(isInteractive: boolean) {
         this.options.interact = isInteractive
     }
 
-    /** Jump to a specific time in the audio (in seconds) */
+    /** 跳转到音频中的特定时间（以秒为单位） */
     public setTime(time: number) {
         super.setTime(time)
         this.updateProgress(time)
         this.emit('timeupdate', time)
     }
 
-    /** Seek to a percentage of audio as [0..1] (0 = beginning, 1 = end) */
+    /** 将音频跳转到指定百分比位置（0 到 1，0 表示开头，1 表示结尾） */
     public seekTo(progress: number) {
         const time = this.getDuration() * progress
         this.setTime(time)
     }
 
-    /** Play or pause the audio */
+    /** 播放或暂停音频 */
     public async playPause(): Promise<void> {
         return this.isPlaying() ? this.pause() : this.play()
     }
 
-    /** Stop the audio and go to the beginning */
+    /** 停止音频并返回开头 */
     public stop() {
         this.pause()
         this.setTime(0)
     }
 
-    /** Skip N or -N seconds from the current position */
+    /** 从当前位置向前或向后跳过 N 秒 */
     public skip(seconds: number) {
         this.setTime(this.getCurrentTime() + seconds)
     }
 
-    /** Empty the waveform */
+    /** 清空波形 */
     public empty() {
         this.load('', [[0]], 0.001)
     }
 
-    /** Set HTML media element */
+    /** 设置 HTML 媒体元素 */
     public setMediaElement(element: HTMLMediaElement) {
         this.unsubscribePlayerEvents()
         super.setMediaElement(element)
@@ -570,12 +568,12 @@ class WaveForm extends Player<WaveFormEvents> {
     }
 
     /**
-     * Export the waveform image as a data-URI or a blob.
+     * 将波形图像导出为数据URI或Blob。
      *
-     * @param format The format of the exported image, can be `image/png`, `image/jpeg`, `image/webp` or any other format supported by the browser.
-     * @param quality The quality of the exported image, for `image/jpeg` or `image/webp`. Must be between 0 and 1.
-     * @param type The type of the exported image, can be `dataURL` (default) or `blob`.
-     * @returns A promise that resolves with an array of data-URLs or blobs, one for each canvas element.
+     * @param format 导出图像的格式，可以是`image/png`、`image/jpeg`、`image/webp`或浏览器支持的其他格式。
+     * @param quality 导出图像的质量，适用于`image/jpeg`或`image/webp`。必须介于0和1之间。
+     * @param type 导出图像的类型，可以是`dataURL`（默认）或`blob`。
+     * @returns 一个解析为数据URI或Blob数组的Promise，每个canvas元素对应一个。
      */
     public async exportImage(format: string, quality: number, type: 'dataURL'): Promise<string[]>
     public async exportImage(format: string, quality: number, type: 'blob'): Promise<Blob[]>
