@@ -18,12 +18,8 @@ onMounted(() => {
         <lay-split-panel-item>
             <FFTTransfer></FFTTransfer>
         </lay-split-panel-item>
-        <lay-split-panel-item>
-            2
-        </lay-split-panel-item>
-        <lay-split-panel-item>
-            3
-        </lay-split-panel-item>
+        <lay-split-panel-item> 2 </lay-split-panel-item>
+        <lay-split-panel-item> 3 </lay-split-panel-item>
     </lay-split-panel>
 </template>
 

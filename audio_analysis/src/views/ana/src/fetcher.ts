@@ -1,12 +1,13 @@
 async function watchProgress(response: Response, progressCallback: (percentage: number) => void) {
     if (!response.body || !response.headers) return
     const reader = response.body.getReader()
+
     const contentLength = Number(response.headers.get('Content-Length')) || 0
     let receivedLength = 0
 
-    // 数据处理
+    // Process the data
     const processChunk = async (value: Uint8Array | undefined) => {
-        // 加到 receivedLength
+        // Add to the received length
         receivedLength += value?.length || 0
         const percentage = Math.round((receivedLength / contentLength) * 100)
         progressCallback(percentage)
@@ -17,11 +18,11 @@ async function watchProgress(response: Response, progressCallback: (percentage: 
         try {
             data = await reader.read()
         } catch {
-            // 忽视错误，因为我们只处理主要的响应
+            // Ignore errors because we can only handle the main response
             return
         }
 
-        // 继续读取数据直到完成
+        // Continue reading data until done
         if (!data.done) {
             processChunk(data.value)
             await read()
@@ -34,23 +35,23 @@ async function watchProgress(response: Response, progressCallback: (percentage: 
 async function fetchBlob(
     url: string,
     progressCallback: (percentage: number) => void,
-    requestInit?: RequestInit,
+    requestInit?: RequestInit
 ): Promise<Blob> {
-    // 取得资源
+    // Fetch the resource
     const response = await fetch(url, requestInit)
 
-    if (!response.ok) {
+    if (response.status >= 400) {
         throw new Error(`Failed to fetch ${url}: ${response.status} (${response.statusText})`)
     }
 
-    // 读取数据以跟踪进度
+    // Read the data to track progress
     watchProgress(response.clone(), progressCallback)
 
     return response.blob()
 }
 
 const Fetcher = {
-    fetchBlob,
+    fetchBlob
 }
 
 export default Fetcher

@@ -14,7 +14,7 @@ export type MinimapPluginOptions = {
 const defaultOptions = {
     height: 50,
     overlayColor: 'rgba(100, 100, 100, 0.1)',
-    insertPosition: 'afterend',
+    insertPosition: 'afterend'
 }
 
 export type MinimapPluginEvents = BasePluginEvents & {
@@ -66,8 +66,8 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         return createElement('div', {
             part: 'minimap',
             style: {
-                position: 'relative',
-            },
+                position: 'relative'
+            }
         })
     }
 
@@ -84,10 +84,10 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
                     bottom: '0',
                     transition: 'left 100ms ease-out',
                     pointerEvents: 'none',
-                    backgroundColor: this.options.overlayColor,
-                },
+                    backgroundColor: this.options.overlayColor
+                }
             },
-            this.minimapWrapper,
+            this.minimapWrapper
         )
     }
 
@@ -115,7 +115,7 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
             fillParent: true,
             media,
             peaks,
-            duration: data.duration,
+            duration: data.duration
         })
 
         this.subscriptions.push(
@@ -125,7 +125,7 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
 
             this.miniWaveForm.on('interaction', () => {
                 this.emit('interaction')
-            }),
+            })
         )
     }
 
@@ -159,7 +159,7 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
 
             this.waveform.on('redraw', () => {
                 this.onRedraw()
-            }),
+            })
         )
     }
 

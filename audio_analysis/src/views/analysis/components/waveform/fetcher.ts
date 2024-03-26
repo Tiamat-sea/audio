@@ -34,7 +34,7 @@ async function watchProgress(response: Response, progressCallback: (percentage: 
 async function fetchBlob(
     url: string,
     progressCallback: (percentage: number) => void,
-    requestInit?: RequestInit,
+    requestInit?: RequestInit
 ): Promise<Blob> {
     // 取得资源
     const response = await fetch(url, requestInit)
@@ -50,7 +50,7 @@ async function fetchBlob(
 }
 
 const Fetcher = {
-    fetchBlob,
+    fetchBlob
 }
 
 export default Fetcher

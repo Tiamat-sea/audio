@@ -40,13 +40,17 @@ function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: 
     switch (windowFunc) {
         case 'bartlett':
             for (i = 0; i < bufferSize; ++i) {
-                this.windowValues[i] = (2 / (bufferSize - 1)) * ((bufferSize - 1) / 2 - Math.abs(i - (bufferSize - 1) / 2))
+                this.windowValues[i] =
+                    (2 / (bufferSize - 1)) *
+                    ((bufferSize - 1) / 2 - Math.abs(i - (bufferSize - 1) / 2))
             }
             break
         case 'bartlettHann':
             for (i = 0; i < bufferSize; ++i) {
                 this.windowValues[i] =
-                    0.62 - 0.48 * Math.abs(i / (bufferSize - 1) - 0.5) - 0.38 * Math.cos((Math.PI * 2 * i) / (bufferSize - 1))
+                    0.62 -
+                    0.48 * Math.abs(i / (bufferSize - 1) - 0.5) -
+                    0.38 * Math.cos((Math.PI * 2 * i) / (bufferSize - 1))
             }
             break
         case 'blackman':
@@ -68,7 +72,8 @@ function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: 
             for (i = 0; i < bufferSize; ++i) {
                 this.windowValues[i] = Math.pow(
                     Math.E,
-                    -0.5 * Math.pow((i - (bufferSize - 1) / 2) / ((alpha * (bufferSize - 1)) / 2), 2)
+                    -0.5 *
+                        Math.pow((i - (bufferSize - 1) / 2) / ((alpha * (bufferSize - 1)) / 2), 2)
                 )
             }
             break
@@ -86,7 +91,8 @@ function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: 
         case 'lanczoz':
             for (i = 0; i < bufferSize; ++i) {
                 this.windowValues[i] =
-                    Math.sin(Math.PI * ((2 * i) / (bufferSize - 1) - 1)) / (Math.PI * ((2 * i) / (bufferSize - 1) - 1))
+                    Math.sin(Math.PI * ((2 * i) / (bufferSize - 1) - 1)) /
+                    (Math.PI * ((2 * i) / (bufferSize - 1) - 1))
             }
             break
         case 'rectangular':
@@ -96,7 +102,8 @@ function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: 
             break
         case 'triangular':
             for (i = 0; i < bufferSize; ++i) {
-                this.windowValues[i] = (2 / bufferSize) * (bufferSize / 2 - Math.abs(i - (bufferSize - 1) / 2))
+                this.windowValues[i] =
+                    (2 / bufferSize) * (bufferSize / 2 - Math.abs(i - (bufferSize - 1) / 2))
             }
             break
         default:
@@ -189,8 +196,10 @@ function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: 
                 }
 
                 tmpReal = currentPhaseShiftReal
-                currentPhaseShiftReal = tmpReal * phaseShiftStepReal - currentPhaseShiftImag * phaseShiftStepImag
-                currentPhaseShiftImag = tmpReal * phaseShiftStepImag + currentPhaseShiftImag * phaseShiftStepReal
+                currentPhaseShiftReal =
+                    tmpReal * phaseShiftStepReal - currentPhaseShiftImag * phaseShiftStepImag
+                currentPhaseShiftImag =
+                    tmpReal * phaseShiftStepImag + currentPhaseShiftImag * phaseShiftStepReal
             }
 
             halfSize = halfSize << 1
@@ -211,11 +220,11 @@ function FFT(bufferSize: number, sampleRate: number, windowFunc: string, alpha: 
     }
 }
 
-/** 
+/**
  * waveform 的频谱图插件
  */
-import BasePlugin, { type BasePluginEvents } from "../base-plugin"
-import render from "../dom"
+import BasePlugin, { type BasePluginEvents } from '../base-plugin'
+import render from '../dom'
 
 export type SpectrogramPluginOptions = {
     /** HTML 元素或要渲染的元素选择器 */
@@ -233,23 +242,23 @@ export type SpectrogramPluginOptions = {
     noverlap?: number
     /** 要使用的窗口函数 */
     windowFunc?:
-    | 'bartlett'
-    | 'bartlettHann'
-    | 'blackman'
-    | 'cosine'
-    | 'gauss'
-    | 'hamming'
-    | 'hann'
-    | 'lanczoz'
-    | 'rectangular'
-    | 'triangular'
+        | 'bartlett'
+        | 'bartlettHann'
+        | 'blackman'
+        | 'cosine'
+        | 'gauss'
+        | 'hamming'
+        | 'hann'
+        | 'lanczoz'
+        | 'rectangular'
+        | 'triangular'
     /** 部分窗口函数有这个额外的参数（ 0 - 1 之间） */
     alpha?: number
     /** 频谱图刻度的最小频率 */
     frequencyMin?: number
     /** 频谱图刻度的最大频率，将其设置为 samplerate/2 以绘制频谱图的整个范围 */
     frequencyMax?: number
-    /** 
+    /**
      * 一个长为 256 的 4 元素数组
      * 每条都应该包含一个 0 - 1 之间的浮点数，且指定 r、g、b 和 alpha
      */
@@ -263,7 +272,7 @@ export type SpectrogramPluginEvents = BasePluginEvents & {
     click: [relativeX: number]
 }
 
-class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramPluginOptions>{
+class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramPluginOptions> {
     static create(options?: SpectrogramPluginOptions) {
         return new SpectrogramPlugin(options || {})
     }
@@ -274,7 +283,9 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         this.frequenciesDataUrl = options.frequenciesDataUrl
 
         this.container =
-            'string' == typeof options.container ? document.querySelector(options.container) : options.container
+            'string' == typeof options.container
+                ? document.querySelector(options.container)
+                : options.container
 
         if (options.colorMap) {
             if (options.colorMap.length < 256) {
@@ -318,7 +329,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
             Object.assign(this.wrapper.style, {
                 width: '100%',
                 overflowX: 'hidden',
-                overflowY: 'hidden',
+                overflowY: 'hidden'
             })
         }
         this.subscriptions.push(this.waveform.on('redraw', () => this.render()))
@@ -352,8 +363,8 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
             style: {
                 display: 'block',
                 position: 'relative',
-                userSelect: 'none',
-            },
+                userSelect: 'none'
+            }
         })
 
         // 如果显示标签
@@ -366,10 +377,10 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                         position: 'absolute',
                         zIndex: 9,
                         width: '55px',
-                        height: '100%',
-                    },
+                        height: '100%'
+                    }
                 },
-                this.wrapper,
+                this.wrapper
             )
         }
 
@@ -386,10 +397,10 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                     top: 0,
                     width: '100%',
                     height: '100%',
-                    zIndex: 4,
-                },
+                    zIndex: 4
+                }
             },
-            this.wrapper,
+            this.wrapper
         )
         this.spectrCc = this.canvas.getContext('2d')
     }
@@ -451,13 +462,13 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                 spectrCc.drawImage(
                     renderer,
                     0,
-                    height * (1 - freqMax / freqFrom),    // 源 x, y
+                    height * (1 - freqMax / freqFrom), // 源 x, y
                     width,
-                    (height * (freqMax - freqMin)) / freqFrom,    // 源 width, height
+                    (height * (freqMax - freqMin)) / freqFrom, // 源 width, height
                     0,
-                    height * c,   // 目的 x, y
+                    height * c, // 目的 x, y
                     width,
-                    height, //目的 width, height
+                    height //目的 width, height
                 )
             })
         }
@@ -472,7 +483,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                 this.options.labelsHzColor || this.options.labelsColor,
                 'center',
                 '#specLabels',
-                frequenciesData.length,
+                frequenciesData.length
             )
         }
 
@@ -481,7 +492,10 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
 
     private getFrequencies(buffer: AudioBuffer): number {
         const fftSamples = this.fftSamples
-        const channels = this.options.splitChannels ?? this.waveform?.options.splitChannels ? buffer.numberOfChannels : 1
+        const channels =
+            this.options.splitChannels ?? this.waveform?.options.splitChannels
+                ? buffer.numberOfChannels
+                : 1
 
         this.frequencyMax = this.frequencyMax || buffer.sampleRate / 2
 
@@ -543,7 +557,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         textColorUnit,
         textAlign,
         container,
-        channels,
+        channels
     ) {
         const frequenciesHeight = this.height
         bgFill = bgFill || 'rgba(68, 68, 68, 0)'
@@ -630,7 +644,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                     oldEnd <= newStart || newEnd <= oldStart
                         ? 0
                         : Math.min(Math.max(oldEnd, newStart), Math.max(newEnd, oldStart)) -
-                        Math.max(Math.min(oldEnd, newStart), Math.min(newEnd, oldStart))
+                          Math.max(Math.min(oldEnd, newStart), Math.min(newEnd, oldStart))
                 let k
                 /* eslint-disable max-depth */
                 if (overlap > 0) {

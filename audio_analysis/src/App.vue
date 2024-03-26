@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import { layer } from "@layui/layui-vue"
+import { layer } from '@layui/layui-vue'
 
 const openDrawer = function () {
     layer.drawer({
-        title: "选项卡",
-        content: "内容"
+        title: '选项卡',
+        content: '内容'
     })
 }
 </script>
 
 <template>
     <header>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <nav>
             <!-- <h3>音频频谱分析(此部分存放选项卡)</h3> -->
-            <img src="/favicon.ico" alt="LOGO.ico">
+            <img src="/favicon.ico" alt="LOGO.ico" />
             <RouterLink to="/">主页</RouterLink>
             <RouterLink to="/about">了解一下</RouterLink>
 

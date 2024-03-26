@@ -8,12 +8,12 @@ import RegionsPlugin from './waveform/plugins/regions'
 import chroma from 'chroma-js'
 
 onMounted(() => {
-    const sampleRateVal = 44100;
+    const sampleRateVal = 44100
 
     // 生成一个从蓝色到白色，再到黄色的颜色映射
     const colorMapHex = chroma.scale(['blue', 'white', 'yellow']).colors(256)
     // 将颜色从十六进制格式转换为 [r, g, b, alpha] 格式，并将 r, g, b 值转换为 0-1 的范围
-    const colorMap = colorMapHex.map(color => {
+    const colorMap = colorMapHex.map((color) => {
         const [r, g, b] = chroma(color).rgb()
         return [r / 255, g / 255, b / 255, 1]
     })
@@ -33,24 +33,23 @@ onMounted(() => {
         plugins: [
             SpectrogramPlugin.create({
                 labels: true,
-                labelsColor: 'black',
+                labelsColor: 'black'
                 // colorMap: colorMap,
             }),
             Minimap.create({
                 height: 60,
                 insertPosition: 'beforebegin',
                 waveColor: '#ddd',
-                progressColor: '#999',
+                progressColor: '#999'
             }),
-            HoverPlugin.create(),
+            HoverPlugin.create()
         ]
-    });
+    })
     const waveformRegions = waveform.registerPlugin(RegionsPlugin.create())
 
     // 在创建区域时给它们随机颜色
     const random = (min: number, max: number) => Math.random() * (max - min) + min
     const randomColor = () => `rgba(${random(0, 255)}, ${random(0, 255)}, ${random(0, 255)}, 0.5)`
-
 
     waveform.once('decode', () => {
         const slider = document.querySelector('input[type="range"]')
@@ -89,7 +88,6 @@ onMounted(() => {
         //     color: randomColor(),
         //     resize: false,
         // }),
-
         // // 标记 ( 0 长度区域)
         // waveformRegions.addRegion({
         //     start: 19,
@@ -104,20 +102,18 @@ onMounted(() => {
     })
 
     waveformRegions.enableDragSelection({
-        color: 'rgba(255, 0, 0, 0.1)',
+        color: 'rgba(255, 0, 0, 0.1)'
     })
 
     waveformRegions.on('region-updated', (region) => {
         console.log('Updated region', region)
     })
-});
+})
 </script>
 
 <template>
     <div id="waveform"></div>
-    <label>
-        缩放: <input type="range" min="10" max="1000" value="100" />
-    </label>
+    <label> 缩放: <input type="range" min="10" max="1000" value="100" /> </label>
     <button>播放/暂停</button>
 </template>
 

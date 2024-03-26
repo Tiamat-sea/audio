@@ -4,68 +4,68 @@
  * 您可以设置每个区域的颜色和内容，以及他们的 HTML 内容
  */
 
-import BasePlugin, { type BasePluginEvents } from "../base-plugin"
-import { makeDraggable } from "../draggable"
-import EventEmitter from "../event-emitter"
-import createElement from "../dom"
+import BasePlugin, { type BasePluginEvents } from '../base-plugin'
+import { makeDraggable } from '../draggable'
+import EventEmitter from '../event-emitter'
+import createElement from '../dom'
 
 export type RegionsPluginOptions = undefined
 
 export type RegionsPluginEvents = BasePluginEvents & {
-    'region-created': [region: Region],
-    'region-updated': [region: Region],
-    'region-removed': [region: Region],
-    'region-clicked': [region: Region, e: MouseEvent],
-    'region-dblclicked': [region: Region, e: MouseEvent],
-    'region-in': [region: Region],
-    'region-out': [region: Region],
+    'region-created': [region: Region]
+    'region-updated': [region: Region]
+    'region-removed': [region: Region]
+    'region-clicked': [region: Region, e: MouseEvent]
+    'region-dblclicked': [region: Region, e: MouseEvent]
+    'region-in': [region: Region]
+    'region-out': [region: Region]
 }
 
 export type RegionEvents = {
     /** 删除区域之前 */
-    remove: [],
+    remove: []
     /** 更新区域参数时 */
-    update: [side?: 'start' | 'end'],
+    update: [side?: 'start' | 'end']
     /** 完成拖动或调整大小时 */
-    'update-end': [],
+    'update-end': []
     /** 播放中 */
-    play: [],
+    play: []
     /** 鼠标单击时 */
-    click: [event: MouseEvent],
+    click: [event: MouseEvent]
     /** 双击 */
-    dblclick: [event: MouseEvent],
+    dblclick: [event: MouseEvent]
     /** 鼠标悬停 */
-    over: [event: MouseEvent],
+    over: [event: MouseEvent]
     /** 鼠标离开 */
-    leave: [event: MouseEvent],
+    leave: [event: MouseEvent]
 }
 
 export type RegionParams = {
     /** 区域的 id, 任意字符串 */
-    id?: string,
+    id?: string
     /** 区域的开始位置，即时间（单位：秒） */
-    start: number,
+    start: number
     /** 区域的结束位置，即时间（单位：秒） */
-    end?: number,
+    end?: number
     /** 允许/拒绝拖动区域 */
-    drag?: boolean,
+    drag?: boolean
     /** 允许/拒绝调整区域大小 */
-    resize?: boolean,
+    resize?: boolean
     /** 区域的颜色（CSS 颜色） */
-    color?: string,
+    color?: string
     /** 区域的内容或 HTML  */
-    content?: string | HTMLElement,
+    content?: string | HTMLElement
     /** 调整大小时的最小长度（单位：秒） */
-    minLength?: number,
+    minLength?: number
     /** 调整大小时的最大长度（单位：秒） */
-    maxLength?: number,
+    maxLength?: number
     /** 通道的索引 */
-    channelIndex?: number,
+    channelIndex?: number
     /** 允许/拒绝内容的内容可编辑（contenteditable）属性 */
-    contentEditable?: boolean,
+    contentEditable?: boolean
 }
 
-class SingleRegion extends EventEmitter<RegionEvents>{
+class SingleRegion extends EventEmitter<RegionEvents> {
     public element: HTMLElement
     public id: string
     public start: number
@@ -79,7 +79,11 @@ class SingleRegion extends EventEmitter<RegionEvents>{
     public channelIndex: number
     public contentEditable = false
 
-    constructor(params: RegionParams, private totalDuration: number, private numberOfChannels = 0) {
+    constructor(
+        params: RegionParams,
+        private totalDuration: number,
+        private numberOfChannels = 0
+    ) {
         super()
 
         this.id = params.id || `region-${Math.random().toString(36).slice(2)}`
@@ -117,7 +121,7 @@ class SingleRegion extends EventEmitter<RegionEvents>{
             height: '100%',
             top: '0',
             cursor: 'ew-resize',
-            wordBreak: 'keep-all',
+            wordBreak: 'keep-all'
         }
 
         const leftHandle = createElement(
@@ -128,10 +132,10 @@ class SingleRegion extends EventEmitter<RegionEvents>{
                     ...handleStyle,
                     left: '0',
                     borderLeft: '2px solid rgba(0, 0, 0, 0.5)',
-                    borderRadius: '2px 0 0 2px',
-                },
+                    borderRadius: '2px 0 0 2px'
+                }
             },
-            element,
+            element
         )
 
         const rightHandle = createElement(
@@ -142,10 +146,10 @@ class SingleRegion extends EventEmitter<RegionEvents>{
                     ...handleStyle,
                     right: '0',
                     borderRight: '2px solid rgba(0, 0, 0, 0.5)',
-                    borderRadius: '0 2px 2px 0',
-                },
+                    borderRadius: '0 2px 2px 0'
+                }
             },
-            element,
+            element
         )
 
         // 调整大小
@@ -155,14 +159,14 @@ class SingleRegion extends EventEmitter<RegionEvents>{
             (dx) => this.onResize(dx, 'start'),
             () => null,
             () => this.onEndResizing(),
-            resizeThreshold,
+            resizeThreshold
         )
         makeDraggable(
             rightHandle,
             (dx) => this.onResize(dx, 'end'),
             () => null,
             () => this.onEndResizing(),
-            resizeThreshold,
+            resizeThreshold
         )
     }
 
@@ -199,8 +203,8 @@ class SingleRegion extends EventEmitter<RegionEvents>{
                 boxSizing: 'border-box',
                 transition: 'background-color 0.2s ease',
                 cursor: this.drag ? 'grab' : 'default',
-                pointerEvents: 'all',
-            },
+                pointerEvents: 'all'
+            }
         })
 
         // 添加调整大小的控件
@@ -242,7 +246,7 @@ class SingleRegion extends EventEmitter<RegionEvents>{
             () => {
                 this.toggleCursor(false)
                 this.drag && this.emit('update-end')
-            },
+            }
         )
 
         if (this.contentEditable && this.content) {
@@ -322,9 +326,9 @@ class SingleRegion extends EventEmitter<RegionEvents>{
             this.content = createElement('div', {
                 style: {
                     padding: '0.2em ${isMarker ? 0.2 : 0.4}em',
-                    display: 'inline-block',
+                    display: 'inline-block'
                 },
-                textContent: content,
+                textContent: content
             })
         } else {
             this.content = content
@@ -386,7 +390,7 @@ class SingleRegion extends EventEmitter<RegionEvents>{
     }
 }
 
-class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions>{
+class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions> {
     private regions: Region[] = []
     private regionsContainer: HTMLElement
 
@@ -415,7 +419,8 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
                 const playedRegions = this.regions.filter(
                     (region) =>
                         region.start <= currentTime &&
-                        (region.end === region.start ? region.start + 0.05 : region.end) >= currentTime,
+                        (region.end === region.start ? region.start + 0.05 : region.end) >=
+                            currentTime
                 )
 
                 // 当 activeRegions 不包括 playedRegions 时，触发 region-in 事件
@@ -434,7 +439,7 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
 
                 // 仅 playedRegions 更新 activeRegions
                 activeRegions = playedRegions
-            }),
+            })
         )
     }
 
@@ -447,8 +452,8 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
                 width: '100%',
                 height: '100%',
                 zIndex: '3',
-                pointerEvents: 'none',
-            },
+                pointerEvents: 'none'
+            }
         })
     }
 
@@ -532,7 +537,7 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
                 regionSubscriptions.forEach((unsubscribe) => unsubscribe())
                 this.regions = this.regions.filter((reg) => reg !== region)
                 this.emit('region-removed', region)
-            }),
+            })
         ]
 
         this.subscriptions.push(...regionSubscriptions)
@@ -555,7 +560,7 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
                 this.waveform.on('ready', (duration) => {
                     region._setTotalDuration(duration)
                     this.saveRegion(region)
-                }),
+                })
             )
         } else {
             this.saveRegion(region)
@@ -564,11 +569,14 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
         return region
     }
 
-    /** 
+    /**
      * 通过拖动波形上的空白区域，可以创建区域
      * 返回一个函数以禁用拖动选择
      */
-    public enableDragSelection(options: Omit<RegionParams, 'start' | 'end'>, threshold = 3): () => void {
+    public enableDragSelection(
+        options: Omit<RegionParams, 'start' | 'end'>,
+        threshold = 3
+    ): () => void {
         const wrapper = this.waveform?.getWrapper()
         if (!wrapper || !(wrapper instanceof HTMLElement)) return () => undefined
 
@@ -605,10 +613,10 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
                     {
                         ...options,
                         start,
-                        end,
+                        end
                     },
                     duration,
-                    numberOfChannels,
+                    numberOfChannels
                 )
                 // 现在只需将它添加到 DOM 中
                 this.regionsContainer.appendChild(region.element)
@@ -622,7 +630,7 @@ class RegionsPlugin extends BasePlugin<RegionsPluginEvents, RegionsPluginOptions
                 }
             },
 
-            threshold,
+            threshold
         )
     }
 

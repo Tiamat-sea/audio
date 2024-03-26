@@ -1,6 +1,6 @@
 export type GeneralEventTypes = {
-    // 事件的名称及其分派的数据
-    // 例如 'entryCreated': [count: 1]
+    // the name of the event and the data it dispatches with
+    // e.g. 'entryCreated': [count: 1]
     [EventName: string]: unknown[] // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
@@ -12,11 +12,11 @@ type EventMap<EventTypes extends GeneralEventTypes> = {
     [EventName in keyof EventTypes]: Set<EventListener<EventTypes, EventName>>
 }
 
-/** 一个简单的事件发射器，可用于侦听和发射事件 */
+/** A simple event emitter that can be used to listen to and emit events. */
 class EventEmitter<EventTypes extends GeneralEventTypes> {
     private listeners = {} as EventMap<EventTypes>
 
-    /** 发起一个事件，返回一个注销事件的方法 */
+    /** Subscribe to an event. Returns an unsubscribe function. */
     public on<EventName extends keyof EventTypes>(
         event: EventName,
         listener: EventListener<EventTypes, EventName>,
@@ -39,7 +39,7 @@ class EventEmitter<EventTypes extends GeneralEventTypes> {
         return () => this.un(event, listener)
     }
 
-    /** 注销事件 */
+    /** Unsubscribe from an event */
     public un<EventName extends keyof EventTypes>(
         event: EventName,
         listener: EventListener<EventTypes, EventName>
@@ -47,7 +47,7 @@ class EventEmitter<EventTypes extends GeneralEventTypes> {
         this.listeners[event]?.delete(listener)
     }
 
-    /** 只发起一次事件 */
+    /** Subscribe to an event only once */
     public once<EventName extends keyof EventTypes>(
         event: EventName,
         listener: EventListener<EventTypes, EventName>
@@ -55,12 +55,12 @@ class EventEmitter<EventTypes extends GeneralEventTypes> {
         return this.on(event, listener, { once: true })
     }
 
-    /** 清除所有事件 */
+    /** Clear all events */
     public unAll(): void {
         this.listeners = {} as EventMap<EventTypes>
     }
 
-    /** 发射一个事件 */
+    /** Emit an event */
     protected emit<EventName extends keyof EventTypes>(
         eventName: EventName,
         ...args: EventTypes[EventName]
@@ -68,8 +68,6 @@ class EventEmitter<EventTypes extends GeneralEventTypes> {
         if (this.listeners[eventName]) {
             this.listeners[eventName].forEach((listener) => listener(...args))
         }
-
-        // console.log(...args)
     }
 }
 

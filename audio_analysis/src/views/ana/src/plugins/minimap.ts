@@ -1,20 +1,20 @@
 /**
- * Minimap 是主波形的一个微小副本，用作导航工具。
+ * Minimap is a tiny copy of the main waveform serving as a navigation tool.
  */
 
-import BasePlugin, { type BasePluginEvents } from '../base-plugin'
-import WaveForm, { type WaveFormOptions } from '../waveform'
-import createElement from '../dom'
+import BasePlugin, { type BasePluginEvents } from '../base-plugin.js'
+import WaveSurfer, { type WaveSurferOptions } from '../wavesurfer.js'
+import createElement from '../dom.js'
 
 export type MinimapPluginOptions = {
     overlayColor?: string
     insertPosition?: InsertPosition
-} & Partial<WaveFormOptions>
+} & Partial<WaveSurferOptions>
 
 const defaultOptions = {
     height: 50,
     overlayColor: 'rgba(100, 100, 100, 0.1)',
-    insertPosition: 'afterend',
+    insertPosition: 'afterend'
 }
 
 export type MinimapPluginEvents = BasePluginEvents & {
@@ -25,7 +25,7 @@ export type MinimapPluginEvents = BasePluginEvents & {
 class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions> {
     protected options: MinimapPluginOptions & typeof defaultOptions
     private minimapWrapper: HTMLElement
-    private miniWaveForm: WaveForm | null = null
+    private miniWavesurfer: WaveSurfer | null = null
     private overlay: HTMLElement
     private container: HTMLElement | null = null
 
@@ -41,10 +41,10 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         return new MinimapPlugin(options)
     }
 
-    /** 由 waveform 调用，不要手动调用 */
+    /** Called by wavesurfer, don't call manually */
     onInit() {
-        if (!this.waveform) {
-            throw Error('WaveForm is not initialized!')
+        if (!this.wavesurfer) {
+            throw Error('WaveSurfer is not initialized')
         }
 
         if (this.options.container) {
@@ -55,19 +55,19 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
             }
             this.container?.appendChild(this.minimapWrapper)
         } else {
-            this.container = this.waveform.getWrapper().parentElement
+            this.container = this.wavesurfer.getWrapper().parentElement
             this.container?.insertAdjacentElement(this.options.insertPosition, this.minimapWrapper)
         }
 
-        this.initWaveFormEvents()
+        this.initWaveSurferEvents()
     }
 
     private initMinimapWrapper(): HTMLElement {
         return createElement('div', {
             part: 'minimap',
             style: {
-                position: 'relative',
-            },
+                position: 'relative'
+            }
         })
     }
 
@@ -84,53 +84,53 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
                     bottom: '0',
                     transition: 'left 100ms ease-out',
                     pointerEvents: 'none',
-                    backgroundColor: this.options.overlayColor,
-                },
+                    backgroundColor: this.options.overlayColor
+                }
             },
-            this.minimapWrapper,
+            this.minimapWrapper
         )
     }
 
     private initMinimap() {
-        if (this.miniWaveForm) {
-            this.miniWaveForm.destroy()
-            this.miniWaveForm = null
+        if (this.miniWavesurfer) {
+            this.miniWavesurfer.destroy()
+            this.miniWavesurfer = null
         }
 
-        if (!this.waveform) return
+        if (!this.wavesurfer) return
 
-        const data = this.waveform.getDecodedData()
-        const media = this.waveform.getMediaElement()
+        const data = this.wavesurfer.getDecodedData()
+        const media = this.wavesurfer.getMediaElement()
         if (!data || !media) return
 
         const peaks = []
-        for (let i = 0; i < data.numberOfChannels; ++i) {
+        for (let i = 0; i < data.numberOfChannels; i++) {
             peaks.push(data.getChannelData(i))
         }
 
-        this.miniWaveForm = WaveForm.create({
+        this.miniWavesurfer = WaveSurfer.create({
             ...this.options,
             container: this.minimapWrapper,
             minPxPerSec: 0,
             fillParent: true,
             media,
             peaks,
-            duration: data.duration,
+            duration: data.duration
         })
 
         this.subscriptions.push(
-            this.miniWaveForm.on('ready', () => {
+            this.miniWavesurfer.on('ready', () => {
                 this.emit('ready')
             }),
 
-            this.miniWaveForm.on('interaction', () => {
+            this.miniWavesurfer.on('interaction', () => {
                 this.emit('interaction')
-            }),
+            })
         )
     }
 
     private getOverlayWidth(): number {
-        const waveformWidth = this.waveform?.getWrapper().clientWidth || 1
+        const waveformWidth = this.wavesurfer?.getWrapper().clientWidth || 1
         return Math.round((this.minimapWrapper.clientWidth / waveformWidth) * 100)
     }
 
@@ -140,32 +140,32 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
     }
 
     private onScroll(startTime: number) {
-        if (!this.waveform) return
-        const duration = this.waveform.getDuration()
+        if (!this.wavesurfer) return
+        const duration = this.wavesurfer.getDuration()
         this.overlay.style.left = `${(startTime / duration) * 100}%`
     }
 
-    private initWaveFormEvents() {
-        if (!this.waveform) return
+    private initWaveSurferEvents() {
+        if (!this.wavesurfer) return
 
         this.subscriptions.push(
-            this.waveform.on('redraw', () => {
+            this.wavesurfer.on('decode', () => {
                 this.initMinimap()
             }),
 
-            this.waveform.on('scroll', (startTime: number) => {
+            this.wavesurfer.on('scroll', (startTime: number) => {
                 this.onScroll(startTime)
             }),
 
-            this.waveform.on('redraw', () => {
+            this.wavesurfer.on('redraw', () => {
                 this.onRedraw()
-            }),
+            })
         )
     }
 
-    /** 卸载 */
+    /** Unmount */
     public destroy() {
-        this.miniWaveForm?.destroy()
+        this.miniWavesurfer?.destroy()
         this.minimapWrapper.remove()
         super.destroy()
     }

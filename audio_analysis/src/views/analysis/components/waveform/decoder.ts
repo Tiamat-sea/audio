@@ -38,13 +38,13 @@ function createBuffer(channelData: Array<Float32Array | number[]>, duration: num
         numberOfChannels: channelData.length,
         getChannelData: (i: number) => channelData?.[i] as Float32Array,
         copyFromChannel: AudioBuffer.prototype.copyFromChannel,
-        copyToChannel: AudioBuffer.prototype.copyToChannel,
+        copyToChannel: AudioBuffer.prototype.copyToChannel
     }
 }
 
 const Decoder = {
     decode,
-    createBuffer,
+    createBuffer
 }
 
 export default Decoder

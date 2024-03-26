@@ -1,22 +1,22 @@
-/** 将一个 array buffer 解码为一个 aduio buffer */
+/** Decode an array buffer into an audio buffer */
 async function decode(audioData: ArrayBuffer, sampleRate: number): Promise<AudioBuffer> {
     const audioCtx = new AudioContext({ sampleRate })
     const decode = audioCtx.decodeAudioData(audioData)
-    return decode.finally(() => audioCtx.close)
+    return decode.finally(() => audioCtx.close())
 }
 
-/** 峰值归一化到-1···1 */
+/** Normalize peaks to -1..1 */
 function normalize<T extends Array<Float32Array | number[]>>(channelData: T): T {
     const firstChannel = channelData[0]
     if (firstChannel.some((n) => n > 1 || n < -1)) {
         const length = firstChannel.length
         let max = 0
-        for (let i = 0; i < length; ++i) {
+        for (let i = 0; i < length; i++) {
             const absN = Math.abs(firstChannel[i])
             if (absN > max) max = absN
         }
         for (const channel of channelData) {
-            for (let i = 0; i < length; ++i) {
+            for (let i = 0; i < length; i++) {
                 channel[i] /= max
             }
         }
@@ -24,11 +24,12 @@ function normalize<T extends Array<Float32Array | number[]>>(channelData: T): T 
     return channelData
 }
 
-/** 从预解码的音频数据创建一个 audio buffer */
+/** Create an audio buffer from pre-decoded audio data */
 function createBuffer(channelData: Array<Float32Array | number[]>, duration: number): AudioBuffer {
-    // 如果传递了单个数字数组，则使它成为一个数组的子数组
+    // If a single array of numbers is passed, make it an array of arrays
     if (typeof channelData[0] === 'number') channelData = [channelData as unknown as number[]]
-    // 归一化
+
+    // Normalize to -1..1
     normalize(channelData)
 
     return {
@@ -38,13 +39,13 @@ function createBuffer(channelData: Array<Float32Array | number[]>, duration: num
         numberOfChannels: channelData.length,
         getChannelData: (i: number) => channelData?.[i] as Float32Array,
         copyFromChannel: AudioBuffer.prototype.copyFromChannel,
-        copyToChannel: AudioBuffer.prototype.copyToChannel,
+        copyToChannel: AudioBuffer.prototype.copyToChannel
     }
 }
 
 const Decoder = {
     decode,
-    createBuffer,
+    createBuffer
 }
 
 export default Decoder

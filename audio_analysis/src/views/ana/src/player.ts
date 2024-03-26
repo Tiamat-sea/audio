@@ -1,4 +1,4 @@
-import EventEmitter, { type GeneralEventTypes } from './event-emitter'
+import EventEmitter, { type GeneralEventTypes } from './event-emitter.js'
 
 type PlayerOptions = {
     media?: HTMLMediaElement
@@ -21,38 +21,35 @@ class Player<T extends GeneralEventTypes> extends EventEmitter<T> {
             this.media = document.createElement('audio')
         }
 
-        // 控件
+        // Controls
         if (options.mediaControls) {
             this.media.controls = true
         }
-        // 自动播放
+        // Autoplay
         if (options.autoplay) {
             this.media.autoplay = true
         }
-        // 播放速度
+        // Speed
         if (options.playbackRate != null) {
-            this.onceMediaEvent('canplay', () => {
-                if (options.playbackRate != null) {
-                    this.media.playbackRate = options.playbackRate
-                }
-            })
+            this.onMediaEvent(
+                'canplay',
+                () => {
+                    if (options.playbackRate != null) {
+                        this.media.playbackRate = options.playbackRate
+                    }
+                },
+                { once: true }
+            )
         }
     }
 
-    protected onMediaEvent(
-        event: keyof HTMLMediaElementEventMap,
-        callback: () => void,
-        options?: AddEventListenerOptions
+    protected onMediaEvent<K extends keyof HTMLElementEventMap>(
+        event: K,
+        callback: (ev: HTMLElementEventMap[K]) => void,
+        options?: boolean | AddEventListenerOptions
     ): () => void {
         this.media.addEventListener(event, callback, options)
-        return () => this.media.removeEventListener(event, callback)
-    }
-
-    protected onceMediaEvent(
-        event: keyof HTMLMediaElementEventMap,
-        callback: () => void
-    ): () => void {
-        return this.onMediaEvent(event, callback, { once: true })
+        return () => this.media.removeEventListener(event, callback, options)
     }
 
     protected getSrc() {
@@ -66,11 +63,16 @@ class Player<T extends GeneralEventTypes> extends EventEmitter<T> {
         }
     }
 
+    private canPlayType(type: string): boolean {
+        return this.media.canPlayType(type) !== ''
+    }
+
     protected setSrc(url: string, blob?: Blob) {
         const src = this.getSrc()
         if (src === url) return
         this.revokeSrc()
-        const newSrc = blob instanceof Blob ? URL.createObjectURL(blob) : url
+        const newSrc =
+            blob instanceof Blob && this.canPlayType(blob.type) ? URL.createObjectURL(blob) : url
         this.media.src = newSrc
     }
 
@@ -81,7 +83,7 @@ class Player<T extends GeneralEventTypes> extends EventEmitter<T> {
         this.media.remove()
         this.revokeSrc()
         this.media.src = ''
-        // 重新加载将媒体元素重置为初始状态
+        // Load resets the media element to its initial state
         this.media.load()
     }
 
@@ -89,76 +91,81 @@ class Player<T extends GeneralEventTypes> extends EventEmitter<T> {
         this.media = element
     }
 
-    /** 开始播放音频 */
-    public play(): Promise<void> {
+    /** Start playing the audio */
+    public async play(): Promise<void> {
         return this.media.play()
     }
 
-    /** 暂停播放音频 */
+    /** Pause the audio */
     public pause(): void {
         this.media.pause()
     }
 
-    /** 判断音频是否正在播放 */
+    /** Check if the audio is playing */
     public isPlaying(): boolean {
         return !this.media.paused && !this.media.ended
     }
 
-    /** 跳到音频中指定时间的位置（秒） */
+    /** Jump to a specific time in the audio (in seconds) */
     public setTime(time: number) {
         this.media.currentTime = time
     }
 
-    /** 获取音频时长（秒） */
+    /** Get the duration of the audio in seconds */
     public getDuration(): number {
         return this.media.duration
     }
 
-    /** 获取当前音频位置（秒） */
+    /** Get the current audio position in seconds */
     public getCurrentTime(): number {
         return this.media.currentTime
     }
 
-    /** 获取音量 */
+    /** Get the audio volume */
     public getVolume(): number {
         return this.media.volume
     }
 
-    /** 设置音量 */
+    /** Set the audio volume */
     public setVolume(volume: number) {
         this.media.volume = volume
     }
 
-    /** 获取音频静音状态 */
+    /** Get the audio muted state */
     public getMuted(): boolean {
         return this.media.muted
     }
 
-    /** 静音/解除 */
+    /** Mute or unmute the audio */
     public setMuted(muted: boolean) {
         this.media.muted = muted
     }
 
-    /** 获取播放速度 */
+    /** Get the playback speed */
     public getPlaybackRate(): number {
         return this.media.playbackRate
     }
 
-    /** 设置播放速度，通过一个可选参数来不保留音高 */
+    /** Check if the audio is seeking */
+    public isSeeking(): boolean {
+        return this.media.seeking
+    }
+
+    /** Set the playback speed, pass an optional false to NOT preserve the pitch */
     public setPlaybackRate(rate: number, preservePitch?: boolean) {
-        // 在主流浏览器中 preservePitch 默认为 true
+        // preservePitch is true by default in most browsers
         if (preservePitch != null) {
             this.media.preservesPitch = preservePitch
         }
         this.media.playbackRate = rate
     }
 
-    /** 获取 HTML 媒体元素 */
+    /** Get the HTML media element */
     public getMediaElement(): HTMLMediaElement {
         return this.media
     }
 
-    /** 设置接收器 id 以更改音频输出设备 */
+    /** Set a sink id to change the audio output device */
     public setSinkId(sinkId: string): Promise<void> {
         // See https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/setSinkId
         const media = this.media as HTMLAudioElement & {

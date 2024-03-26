@@ -1,4 +1,6 @@
-type TreeNode = { [key: string]: string | number | boolean | CSSStyleDeclaration | TreeNode | Node } & {
+type TreeNode = {
+    [key: string]: string | number | boolean | CSSStyleDeclaration | TreeNode | Node
+} & {
     xmlns?: string
     style?: Partial<CSSStyleDeclaration>
     textContent?: string | Node
@@ -31,7 +33,11 @@ function renderNode(tagName: string, content: TreeNode): HTMLElement | SVGElemen
     return element
 }
 
-function render(tagName: string, content: TreeNode & { xmlns: string }, container?: Node): SVGElement
+function render(
+    tagName: string,
+    content: TreeNode & { xmlns: string },
+    container?: Node
+): SVGElement
 function render(tagName: string, content?: TreeNode, container?: Node): HTMLElement
 function render(tagName: string, content?: TreeNode, container?: Node): HTMLElement | SVGElement {
     const el = renderNode(tagName, content || {})

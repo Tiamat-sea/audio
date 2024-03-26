@@ -1,5 +1,5 @@
-import EventEmitter from './event-emitter'
-import WaveForm from './waveform'
+import EventEmitter from './event-emitter.js'
+import type WaveSurfer from './wavesurfer.js'
 
 export type BasePluginEvents = {
     destroy: []
@@ -7,33 +7,33 @@ export type BasePluginEvents = {
 
 export type GenericPlugin = BasePlugin<BasePluginEvents, unknown>
 
-/** waveform 插件的基类 */
+/** Base class for wavesurfer plugins */
 export class BasePlugin<
     EventTypes extends BasePluginEvents,
     Options
 > extends EventEmitter<EventTypes> {
-    protected waveform?: WaveForm
+    protected wavesurfer?: WaveSurfer
     protected subscriptions: (() => void)[] = []
     protected options: Options
 
-    /** 创建一个插件实例 */
+    /** Create a plugin instance */
     constructor(options: Options) {
         super()
         this.options = options
     }
 
-    /** 在 this.waveform 可用后被调用 */
+    /** Called after this.wavesurfer is available */
     protected onInit() {
         return
     }
 
-    /** 不要直接调用，仅由 waveform 内部调用 */
-    public _init(waveform: WaveForm) {
-        this.waveform = waveform
+    /** Do not call directly, only called by WavesSurfer internally */
+    public _init(wavesurfer: WaveSurfer) {
+        this.wavesurfer = wavesurfer
         this.onInit()
     }
 
-    /** 销毁插件并注销所有事件 */
+    /** Destroy the plugin and unsubscribe from all events */
     public destroy() {
         this.emit('destroy')
         this.subscriptions.forEach((unsubscribe) => unsubscribe())

@@ -1,3 +1,1 @@
-<template>
-    暂时空置
-</template>
+<template>暂时空置</template>

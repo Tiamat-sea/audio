@@ -1,9 +1,9 @@
-/** 
+/**
  * 悬停插件跟随鼠标移动并显示时间戳
  */
 
-import BasePlugin, { type BasePluginEvents } from "../base-plugin"
-import createElement from "../dom"
+import BasePlugin, { type BasePluginEvents } from '../base-plugin'
+import createElement from '../dom'
 
 export type HoverPluginOptions = {
     lineColor?: string
@@ -15,14 +15,14 @@ export type HoverPluginOptions = {
 
 const defaultOptions = {
     lineWidth: 1,
-    labelSize: 11,
+    labelSize: 11
 }
 
 export type HoverPluginEvents = BasePluginEvents & {
     hover: [relX: number]
 }
 
-class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions>{
+class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions> {
     protected options: HoverPluginOptions & typeof defaultOptions
     private wrapper: HTMLElement
     private label: HTMLElement
@@ -53,7 +53,8 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions>{
         }
 
         const waveformOptions = this.waveform.options
-        const lineColor = this.options.lineColor || waveformOptions.cursorColor || waveformOptions.progressColor
+        const lineColor =
+            this.options.lineColor || waveformOptions.cursorColor || waveformOptions.progressColor
 
         // 垂直线
         Object.assign(this.wrapper.style, {
@@ -65,7 +66,7 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions>{
             pointerEvents: 'none',
             borderLeft: `${this.addUnits(this.options.lineWidth)} solid ${lineColor}`,
             opacity: '0',
-            transition: 'opacity .1s ease-in',
+            transition: 'opacity .1s ease-in'
         })
 
         // 时间戳标注
@@ -75,7 +76,7 @@ class HoverPlugin extends BasePlugin<HoverPluginEvents, HoverPluginOptions>{
             color: this.options.labelColor,
             fontSize: `${this.addUnits(this.options.labelSize)}`,
             transition: 'transform .1s ease-in',
-            padding: '2px 3px',
+            padding: '2px 3px'
         })
 
         // 添加包装器

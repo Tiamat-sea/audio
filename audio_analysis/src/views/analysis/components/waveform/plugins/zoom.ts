@@ -34,19 +34,19 @@ export type ZoomPluginOptions = {
     /**
      * 缩放波形之前，轮子或触控板需要移动的量。
      * 将该值设置为 0 可实现完全流畅的缩放（这会导致很高的 CPU 成本）
-     * 
+     *
      * @default 0
      */
     deltaThreshold?: number
 }
 const defaultOptions = {
     scale: 0.5,
-    deltaThreshold: 0,
+    deltaThreshold: 0
 }
 
 export type ZoomPluginEvents = BasePluginEvents
 
-class ZoomPlugin extends BasePlugin<ZoomPluginEvents, ZoomPluginEvents>{
+class ZoomPlugin extends BasePlugin<ZoomPluginEvents, ZoomPluginEvents> {
     protected options: ZoomPluginOptions & typeof defaultOptions
     private wrapper: HTMLElement | undefined = undefined
     private container: HTMLElement | null = null
@@ -81,7 +81,10 @@ class ZoomPlugin extends BasePlugin<ZoomPluginEvents, ZoomPluginEvents>{
         this.accumulatedDelta += -e.deltaY
 
         // ... 只有当我们达到阈值的时候才滚动
-        if (this.options.deltaThreshold === 0 || Math.abs(this.accumulatedDelta) >= this.options.deltaThreshold) {
+        if (
+            this.options.deltaThreshold === 0 ||
+            Math.abs(this.accumulatedDelta) >= this.options.deltaThreshold
+        ) {
             const duration = this.waveform.getDuration()
             const oldMinPxPerSec = this.waveform.options.minPxPerSec
             const x = e.clientX
@@ -106,7 +109,9 @@ class ZoomPlugin extends BasePlugin<ZoomPluginEvents, ZoomPluginEvents>{
 
     private calculateNewZoom = (oldZoom: number, delta: number) => {
         const newZoom = Math.max(0, oldZoom + delta * this.options.scale)
-        return typeof this.options.maxZoom === 'undefined' ? newZoom : Math.min(newZoom, this.options.maxZoom)
+        return typeof this.options.maxZoom === 'undefined'
+            ? newZoom
+            : Math.min(newZoom, this.options.maxZoom)
     }
 
     destroy() {
