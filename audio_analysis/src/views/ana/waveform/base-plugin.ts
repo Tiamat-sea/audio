@@ -8,12 +8,12 @@ export type BasePluginEvents = { // 基础插件事件
 export type GenericPlugin = BasePlugin<BasePluginEvents, unknown> // 通用插件
 
 /** 波形插件的基类 */
-export class BasePlugin< // 基础插件
-    EventTypes extends BasePluginEvents, // 继承基础插件事件
-    Options // 选项
+export class BasePlugin<
+    EventTypes extends BasePluginEvents,
+    Options
 > extends EventEmitter<EventTypes> {
     protected waveform?: WaveForm
-    protected subscriptions: (() => void)[] = []
+    protected subscriptions: (() => void)[] = [] // 订阅
     protected options: Options
 
     /** 创建一个插件实例 */
@@ -36,7 +36,7 @@ export class BasePlugin< // 基础插件
     /** 销毁插件并取消订阅所有事件 */
     public destroy() {
         this.emit('destroy')
-        this.subscriptions.forEach((unsubscribe) => unsubscribe())
+        this.subscriptions.forEach((unsubscribe) => unsubscribe()) // 取消订阅
     }
 }
 
