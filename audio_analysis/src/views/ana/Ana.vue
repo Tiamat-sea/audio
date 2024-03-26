@@ -11,7 +11,7 @@ audio.src = audioURL
 
 onMounted(() => {
     const waveform = WaveForm.create({
-        container: '#waveform',
+        container: document.getElementById('waveform') as HTMLElement,
         progressColor: 'rgba(0, 0, 0, 0.5)',
         url: audioURL,
         // media: audio,

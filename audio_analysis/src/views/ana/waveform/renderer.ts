@@ -24,125 +24,125 @@ class Renderer extends EventEmitter<RendererEvents> { // 渲染器类，继承�
     private isScrollable = false // 是否可滚动
     private audioData: AudioBuffer | null = null // 音频数据
     private resizeObserver: ResizeObserver | null = null // 调整大小观察者
-    private lastContainerWidth = 0 // 上一个容器宽度
+    private lastContainerWidth = 0 // 最后一次（个）容器宽度
     private isDragging = false // 是否拖拽中
 
     constructor(options: WaveFormOptions, audioElement?: HTMLElement) { // 构造函数，传入波形选项和音频元素
-        super()
+        super() // 调用父类构造函数
 
-        this.options = options
+        this.options = options // 波形选项
 
-        const parent = this.parentFromOptionsContainer(options.container)
-        this.parent = parent
+        const parent = this.parentFromOptionsContainer(options.container) // 从选项中获取父元素
+        this.parent = parent // 父元素赋值
 
-        const [div, shadow] = this.initHTML()
-        parent.appendChild(div)
-        this.container = div
-        this.scrollContainer = shadow.querySelector('.scroll') as HTMLElement
-        this.wrapper = shadow.querySelector('.wrapper') as HTMLElement
-        this.canvasWrapper = shadow.querySelector('.canvases') as HTMLElement
-        this.progressWrapper = shadow.querySelector('.progress') as HTMLElement
-        this.cursor = shadow.querySelector('.cursor') as HTMLElement
+        const [div, shadow] = this.initHTML() // 初始化 HTML
+        parent.appendChild(div) // 将 div 附加到父元素
+        this.container = div // 容器赋值
+        this.scrollContainer = shadow.querySelector('.scroll') as HTMLElement // 滚动容器赋值
+        this.wrapper = shadow.querySelector('.wrapper') as HTMLElement // 包装器赋值
+        this.canvasWrapper = shadow.querySelector('.canvases') as HTMLElement // 画布包装器赋值
+        this.progressWrapper = shadow.querySelector('.progress') as HTMLElement // 进度包装器赋值
+        this.cursor = shadow.querySelector('.cursor') as HTMLElement // 光标赋值
 
         if (audioElement) {
-            shadow.appendChild(audioElement)
+            shadow.appendChild(audioElement) // 将音频元素附加到 shadow
         }
 
-        this.initEvents()
+        this.initEvents() // 初始化事件
     }
 
-    private parentFromOptionsContainer(container: WaveFormOptions['container']) {
+    private parentFromOptionsContainer(container: WaveFormOptions['container']) { // 从选项中获取父元素，传入容器
         let parent
-        if (typeof container === 'string') {
-            parent = document.querySelector(container) as HTMLElement | null
-        } else if (container instanceof HTMLElement) {
-            parent = container
+        if (typeof container === 'string') { // 如果容器是字符串
+            parent = document.querySelector(container) as HTMLElement | null // 从文档中获取容器
+        } else if (container instanceof HTMLElement) { // 如果容器是元素
+            parent = container // 直接赋值
         }
 
-        if (!parent) {
-            throw new Error('Container not found!')
+        if (!parent) { // 如果没有父元素
+            throw new Error('Container not found!') // 抛出错误
         }
 
-        return parent
+        return parent // 返回父元素
     }
 
-    private initEvents() {
-        const getClickPosition = (e: MouseEvent): [number, number] => {
-            const rect = this.wrapper.getBoundingClientRect()
-            const x = e.clientX - rect.left
-            const y = e.clientX - rect.left
-            const relativeX = x / rect.width
-            const relativeY = y / rect.height
-            return [relativeX, relativeY]
+    private initEvents() { // 初始化事件
+        const getClickPosition = (e: MouseEvent): [number, number] => { // 获取点击位置
+            const rect = this.wrapper.getBoundingClientRect() // 获取包装器的矩形，方法返回一个 DOMRect 对象，其提供了元素的大小及其相对于视口的位置
+            const x = e.clientX - rect.left // 获取 x 坐标
+            const y = e.clientX - rect.left // 获取 y 坐标
+            const relativeX = x / rect.width // 相对 x 坐标
+            const relativeY = y / rect.height // 相对 y 坐标
+            return [relativeX, relativeY] // 返回相对坐标
         }
 
         // 单击侦听器
-        this.wrapper.addEventListener('click', (e) => {
-            const [x, y] = getClickPosition(e)
-            this.emit('click', x, y)
+        this.wrapper.addEventListener('click', (e) => { // 添加点击事件
+            const [x, y] = getClickPosition(e) // 获取点击位置
+            this.emit('click', x, y) // 发射点击事件
         })
 
         // 双击侦听器
-        this.wrapper.addEventListener('dblclick', (e) => {
-            const [x, y] = getClickPosition(e)
-            this.emit('dblclick', x, y)
+        this.wrapper.addEventListener('dblclick', (e) => { // 添加双击事件
+            const [x, y] = getClickPosition(e) // 获取点击位置
+            this.emit('dblclick', x, y) // 发射双击事件
         })
 
         // 拖拽
-        if (this.options.dragToSeek) {
-            this.initDrag()
+        if (this.options.dragToSeek) { // 如果拖拽到搜索
+            this.initDrag() // 初始化拖拽
         }
 
         // 滚动侦听器
-        this.scrollContainer.addEventListener('scroll', () => {
-            const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer
-            const startX = scrollLeft / scrollWidth
-            const endX = (scrollLeft + clientWidth) / scrollWidth
-            this.emit('scroll', startX, endX)
+        this.scrollContainer.addEventListener('scroll', () => { // 添加滚动事件
+            const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer // 获取滚动左侧、滚动宽度、客户端宽度
+            const startX = scrollLeft / scrollWidth // 开始 X
+            const endX = (scrollLeft + clientWidth) / scrollWidth // 结束 X
+            this.emit('scroll', startX, endX) // 发射滚动事件
         })
 
         // 容器调整大小时重新渲染波形
-        const delay = this.createDelay(100)
-        this.resizeObserver = new ResizeObserver(() => {
-            delay(() => this.onContainerResize())
+        const delay = this.createDelay(200) // 创建延迟，200 毫秒
+        this.resizeObserver = new ResizeObserver(() => { // 创建调整大小观察者
+            delay(() => this.onContainerResize()) // 延迟调整大小
         })
-        this.resizeObserver.observe(this.scrollContainer)
+        this.resizeObserver.observe(this.scrollContainer) // 观察滚动容器
     }
 
-    private onContainerResize() {
-        const width = this.parent.clientWidth
-        if (width === this.lastContainerWidth && this.options.height !== 'auto') return
-        this.lastContainerWidth = width
-        this.reRender()
+    private onContainerResize() { // 容器调整大小
+        const width = this.parent.clientWidth // 获取父元素宽度
+        if (width === this.lastContainerWidth && this.options.height !== 'auto') return // 如果宽度相同且高度不是自动，返回
+        this.lastContainerWidth = width // 最后一次容器宽度赋值
+        this.reRender() // 重新渲染
     }
 
-    private initDrag() {
-        makeDraggable(
-            this.wrapper,
+    private initDrag() { // 初始化拖拽
+        makeDraggable( // 使可拖动
+            this.wrapper, // 包装器
             // 拖拽
             (_, __, x) => {
-                this.emit('drag', Math.max(0, Math.min(1, x / this.wrapper.getBoundingClientRect().width)))
+                this.emit('drag', Math.max(0, Math.min(1, x / this.wrapper.getBoundingClientRect().width))) // 发射拖拽事件，限制在 0 到 1 之间，即相对位置，0 为左边，1 为右边，0.5 为中间
             },
             // 开始拖拽
-            () => (this.isDragging = true),
+            () => (this.isDragging = true), // 设置拖拽为 true，即拖拽中
             // 结束拖拽
-            () => (this.isDragging = false),
+            () => (this.isDragging = false), // 设置拖拽为 false，即拖拽结束
         )
     }
 
-    private getHeight(optionsHeight?: WaveFormOptions['height']): number {
-        const defaultHeight = 128
-        if (optionsHeight == null) return defaultHeight
-        if (!isNaN(Number(optionsHeight))) return Number(optionsHeight)
-        if (optionsHeight === 'auto') return this.parent.clientHeight || defaultHeight
-        return defaultHeight
+    private getHeight(optionsHeight?: WaveFormOptions['height']): number { // 获取高度
+        const defaultHeight = 128 // 默认高度
+        if (optionsHeight == null) return defaultHeight // 如果没有配置高度，返回默认高度
+        if (!isNaN(Number(optionsHeight))) return Number(optionsHeight) // 如果是数字，返回数字
+        if (optionsHeight === 'auto') return this.parent.clientHeight || defaultHeight // 如果是自动，返回父元素高度或默认高度
+        return defaultHeight // 返回默认高度
     }
 
-    private initHTML(): [HTMLElement, ShadowRoot] {
-        const div = document.createElement('div')
-        const shadow = div.attachShadow({ mode: 'open' })
+    private initHTML(): [HTMLElement, ShadowRoot] { // 初始化 HTML
+        const div = document.createElement('div') // 创建 div 元素
+        const shadow = div.attachShadow({ mode: 'open' }) // 创建 shadow 元素，附加到 div 上，模式为 open，定义了 shadow root 的内部实现是否可被 JavaScript 访问及修改 — 也就是说，该实现是否公开。
 
-        shadow.innerHTML = `
+        shadow.innerHTML = ` 
             <style>
             :host {
                 user-select: none;
@@ -214,76 +214,75 @@ class Renderer extends EventEmitter<RendererEvents> { // 渲染器类，继承�
                     <div class="cursor" part="cursor"></div>
                 </div>
             </div>
-        `
+        ` // 设置样式，设置 HTML，包括滚动容器、包装器、画布包装器、进度包装器、光标
 
-        return [div, shadow]
+        return [div, shadow] // 返回 div 和 shadow
     }
 
     /** WaveForm 自己调用此方法，不要手动调用 */
-    setOptions(options: WaveFormOptions) {
-        if (this.options.container !== options.container) {
-            const newParent = this.parentFromOptionsContainer(options.container)
-            newParent.appendChild(this.container)
+    setOptions(options: WaveFormOptions) { // 设置选项
+        if (this.options.container !== options.container) { // 如果容器不同
+            const newParent = this.parentFromOptionsContainer(options.container) // 从选项中获取父元素
+            newParent.appendChild(this.container) // 将容器附加到新父元素
 
-            this.parent = newParent
+            this.parent = newParent // 新父元素赋值
         }
 
-        if (options.dragToSeek && !this.options.dragToSeek) {
-            this.initDrag()
+        if (options.dragToSeek && !this.options.dragToSeek) { // 如果拖拽到搜索并且选项中没有拖拽到搜索
+            this.initDrag() // 初始化拖拽
         }
 
-        this.options = options
+        this.options = options // 选项赋值
 
-        // 重新渲染波形
-        this.reRender()
+        this.reRender() // 重新渲染波形
     }
 
-    getWrapper(): HTMLElement {
-        return this.wrapper
+    getWrapper(): HTMLElement { // 获取包装器
+        return this.wrapper // 返回包装器
     }
 
-    getScroll(): number {
-        return this.scrollContainer.scrollLeft
+    getScroll(): number { // 获取滚动
+        return this.scrollContainer.scrollLeft // 返回滚动左侧
     }
 
-    destroy() {
-        this.container.remove()
-        this.resizeObserver?.disconnect()
+    destroy() { // 销毁
+        this.container.remove() // 移除容器
+        this.resizeObserver?.disconnect() // 断开调整大小观察者
     }
 
-    private createDelay(delayMs = 10): (fn: () => void) => void {
-        const context: { timeout?: ReturnType<typeof setTimeout> } = {}
-        this.timeouts.push(context)
-        return (callback: () => void) => {
-            context.timeout && clearTimeout(context.timeout)
-            context.timeout = setTimeout(callback, delayMs)
+    private createDelay(delayMs = 10): (fn: () => void) => void { // 创建延迟，传入延迟时间，默认 10 毫秒，返回一个函数，传入一个函数
+        const context: { timeout?: ReturnType<typeof setTimeout> } = {} // 上下文，超时，延迟，设置为一个空对象
+        this.timeouts.push(context) // 超时数组添加上下文
+        return (callback: () => void) => { // 返回一个函数，传入一个回调函数
+            context.timeout && clearTimeout(context.timeout) // 如果超时存在，清除超时
+            context.timeout = setTimeout(callback, delayMs) // 超时设置为延迟时间
         }
     }
 
     // 将颜色值数组转换为线性渐变
-    private convertColorValues(color?: WaveFormOptions['waveColor']): string | CanvasGradient {
-        if (!Array.isArray(color)) return color || ''
-        if (color.length < 2) return color[0] || ''
+    private convertColorValues(color?: WaveFormOptions['waveColor']): string | CanvasGradient { // 将颜色值转换为线性渐变
+        if (!Array.isArray(color)) return color || '' // 如果不是数组，返回颜色或空字符串
+        if (color.length < 2) return color[0] || '' // 如果长度小于 2，返回第 0 个颜色或空字符串
 
-        const canvasElement = document.createElement('canvas')
-        const ctx = canvasElement.getContext('2d') as CanvasRenderingContext2D
-        const gradientHeight = canvasElement.height * (window.devicePixelRatio || 1)
-        const gradient = ctx.createLinearGradient(0, 0, 0, gradientHeight)
+        const canvasElement = document.createElement('canvas') // 创建画布元素
+        const ctx = canvasElement.getContext('2d') as CanvasRenderingContext2D // 获取 2d 上下文
+        const gradientHeight = canvasElement.height * (window.devicePixelRatio || 1) // 渐变高度
+        const gradient = ctx.createLinearGradient(0, 0, 0, gradientHeight) // 创建线性渐变
 
-        const colorStopPercentage = 1 / (color.length - 1)
-        color.forEach((color, index) => {
-            const offset = index * colorStopPercentage
-            gradient.addColorStop(offset, color)
+        const colorStopPercentage = 1 / (color.length - 1) // 颜色停止百分比
+        color.forEach((color, index) => { // 遍历颜色
+            const offset = index * colorStopPercentage // 偏移，颜色停止百分比，即每个颜色的偏移
+            gradient.addColorStop(offset, color) // 添加颜色停止
         })
 
-        return gradient
+        return gradient // 返回线性渐变颜色
     }
 
-    private renderLineWaveForm(
-        channelData: Array<Float32Array | number[]>,
-        _options: WaveFormOptions,
-        ctx: CanvasRenderingContext2D,
-        vScale: number,
+    private renderLineWaveForm( // 渲染多段线样式的波形
+        channelData: Array<Float32Array | number[]>, // 通道数据
+        _options: WaveFormOptions, // 选项
+        ctx: CanvasRenderingContext2D, // canvas 2d 上下文
+        vScale: number, // 垂直缩放
     ) {
         const drawChannel = (index: number) => {
             const channel = channelData[index] || channelData[0]
