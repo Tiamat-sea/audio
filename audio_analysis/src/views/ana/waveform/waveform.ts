@@ -22,26 +22,12 @@ export type WaveFormOptions = {
     cursorColor?: string
     /** 光标的宽度 */
     cursorWidth?: number
-    /** 如果设置，波形将以这样的形式呈现：▁ ▂ ▇ ▃ ▅ ▂ */
-    barWidth?: number
-    /** 条形之间的像素间隔 */
-    barGap?: number
-    /** 条形的圆角 */
-    barRadius?: number
-    /** 波形的垂直缩放因子 */
-    barHeight?: number
-    /** 条形的垂直对齐方式 */
-    barAlign?: 'top' | 'bottom'
     /** 音频的最小像素每秒（即缩放级别） */
     minPxPerSec?: number
     /** 将波形拉伸以填充容器，默认为 true */
     fillParent?: boolean
     /** 音频 URL */
     url?: string
-    /** 预先计算的音频数据，每个通道的浮点数组 */
-    peaks?: Array<Float32Array | number[]>
-    /** 预先计算的音频持续时间（以秒为单位） */
-    duration?: number
     /** 使用现有的媒体元素而不是创建一个新的 */
     media?: HTMLMediaElement
     /** 是否显示默认的音频元素控件 */
@@ -138,7 +124,7 @@ export type WaveFormEvents = {
     error: [error: Error]
 }
 
-class WaveForm extends Player<WaveFormEvents> {
+class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
     public options: WaveFormOptions & typeof defaultOptions
     private renderer: Renderer
     private timer: Timer
@@ -157,11 +143,7 @@ class WaveForm extends Player<WaveFormEvents> {
 
     /** 创建一个新的 WaveForm 实例 */
     constructor(options: WaveFormOptions) {
-        const media =
-            options.media ||
-            (options.backend === 'WebAudio'
-                ? (new WebAudioPlayer() as unknown as HTMLAudioElement)
-                : undefined)
+        const media = options.media
 
         super({
             media,
@@ -170,39 +152,38 @@ class WaveForm extends Player<WaveFormEvents> {
             playbackRate: options.audioRate
         })
 
-        this.options = Object.assign({}, defaultOptions, options)
+        this.options = Object.assign({}, defaultOptions, options) // assign 将所有可枚举自身属性的值从一个或多个源对象复制到目标对象
         this.timer = new Timer()
 
         const audioElement = media ? undefined : this.getMediaElement()
-        this.renderer = new Renderer(this.options, audioElement)
+        this.renderer = new Renderer(this.options, audioElement) // 创建渲染器，传入配置和媒体元素
 
-        this.initPlayerEvents()
-        this.initRendererEvents()
-        this.initTimerEvents()
-        this.initPlugins()
+        this.initPlayerEvents() // 初始化播放器事件
+        this.initRendererEvents() // 初始化渲染器事件
+        this.initTimerEvents() // 初始化计时器事件
+        this.initPlugins() // 初始化插件
 
         // 初始化和异步加载，以允许注册外部事件
         Promise.resolve().then(() => {
             this.emit('init')
 
             // 如果传递了 URL 或具有 src 的外部媒体，则加载音频，
-            // 如果提供了预解码的峰值和持续时间，则渲染 w/o 音频
             const url = this.options.url || this.getSrc() || ''
-            if (url || (this.options.peaks && this.options.duration)) {
-                // 吞掉异步错误，因为它们无法从构造函数调用中捕获。
+            if (url) {
+                // 忽视异步错误，因为它们无法从构造函数调用中捕获。
                 // 订阅波形的错误事件来处理它们。
-                this.load(url, this.options.peaks, this.options.duration).catch(() => null)
+                this.load(url).catch(() => null)
             }
         })
     }
 
-    private updateProgress(currentTime = this.getCurrentTime()): number {
-        this.renderer.renderProgress(currentTime / this.getDuration(), this.isPlaying())
+    private updateProgress(currentTime = this.getCurrentTime()): number { // 更新进度
+        this.renderer.renderProgress(currentTime / this.getDuration(), this.isPlaying()) // 渲染进度，传入进度百分比和是否正在播放
         return currentTime
     }
 
     private initTimerEvents() {
-        // 计时器每16毫秒触发一次，用于平滑的进度动画
+        // 计时器每16毫秒触发一次，用于平滑流畅的进度动画
         this.subscriptions.push(
             this.timer.on('tick', () => {
                 if (!this.isSeeking()) {
@@ -299,10 +280,10 @@ class WaveForm extends Player<WaveFormEvents> {
 
         // 拖动
         {
-            let debounce: ReturnType<typeof setTimeout>
+            let debounce: ReturnType<typeof setTimeout> // 防抖，用于拖动时设置音频位置，避免频繁调用
             this.subscriptions.push(
                 this.renderer.on('drag', (relativeX) => {
-                    if (!this.options.interact) return
+                    if (!this.options.interact) return // 如果不允许交互，则直接返回
 
                     // 更新可视位置
                     this.renderer.renderProgress(relativeX)
@@ -334,20 +315,20 @@ class WaveForm extends Player<WaveFormEvents> {
     }
 
     private initPlugins() {
-        if (!this.options.plugins?.length) return
+        if (!this.options.plugins?.length) return // 如果没有插件，则直接返回
 
         this.options.plugins.forEach((plugin) => {
-            this.registerPlugin(plugin)
+            this.registerPlugin(plugin) // 遍历注册插件
         })
     }
 
-    private unsubscribePlayerEvents() {
-        this.mediaSubscriptions.forEach((unsubscribe) => unsubscribe())
-        this.mediaSubscriptions = []
+    private unsubscribePlayerEvents() { // 取消订阅播放器事件
+        this.mediaSubscriptions.forEach((unsubscribe) => unsubscribe()) // 遍历取消
+        this.mediaSubscriptions = [] // 重置
     }
 
     /** 设置新的波形选项并重新渲染 */
-    public setOptions(options: Partial<WaveFormOptions>) {
+    public setOptions(options: Partial<WaveFormOptions>) { // Partial<T> 将给定类型 T 的所有属性转换为可选属性
         this.options = Object.assign({}, this.options, options)
         this.renderer.setOptions(this.options)
 
@@ -450,7 +431,7 @@ class WaveForm extends Player<WaveFormEvents> {
         this.emit('ready', this.getDuration())
     }
 
-    /** 通过 URL 加载音频文件，可选择使用预解码的音频数据 */
+    /** 通过 URL 加载音频文件 */
     public async load(url: string, channelData?: WaveFormOptions['peaks'], duration?: number) {
         try {
             return await this.loadAudio(url, undefined, channelData, duration)
