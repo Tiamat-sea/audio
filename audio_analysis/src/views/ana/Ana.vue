@@ -19,6 +19,7 @@ onMounted(() => {
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
         minPxPerSec: 10,
+        // height: '',
         // autoplay: true,
         // hideScrollbar: true,
         plugins: [

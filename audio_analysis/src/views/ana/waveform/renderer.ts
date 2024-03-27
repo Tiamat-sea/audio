@@ -324,74 +324,11 @@ class Renderer extends EventEmitter<RendererEvents> {
         return gradient
     }
 
-    private renderBarWaveform(
-        channelData: Array<Float32Array | number[]>,
-        options: WaveFormOptions,
-        ctx: CanvasRenderingContext2D,
-        vScale: number
-    ) {
-        const topChannel = channelData[0]
-        const bottomChannel = channelData[1] || channelData[0]
-        const length = topChannel.length
-
-        const { width, height } = ctx.canvas
-        const halfHeight = height / 2
-        const pixelRatio = window.devicePixelRatio || 1
-
-        const barWidth = options.barWidth ? options.barWidth * pixelRatio : 1
-        const barGap = options.barGap
-            ? options.barGap * pixelRatio
-            : options.barWidth
-                ? barWidth / 2
-                : 0
-        const barRadius = options.barRadius || 0
-        const barIndexScale = width / (barWidth + barGap) / length
-
-        const rectFn = barRadius && 'roundRect' in ctx ? 'roundRect' : 'rect'
-
-        ctx.beginPath()
-
-        let prevX = 0
-        let maxTop = 0
-        let maxBottom = 0
-        for (let i = 0; i <= length; i++) {
-            const x = Math.round(i * barIndexScale)
-
-            if (x > prevX) {
-                const topBarHeight = Math.round(maxTop * halfHeight * vScale)
-                const bottomBarHeight = Math.round(maxBottom * halfHeight * vScale)
-                const barHeight = topBarHeight + bottomBarHeight || 1
-
-                // 垂直对齐
-                let y = halfHeight - topBarHeight
-                if (options.barAlign === 'top') {
-                    y = 0
-                } else if (options.barAlign === 'bottom') {
-                    y = height - barHeight
-                }
-
-                ctx[rectFn](prevX * (barWidth + barGap), y, barWidth, barHeight, barRadius)
-
-                prevX = x
-                maxTop = 0
-                maxBottom = 0
-            }
-
-            const magnitudeTop = Math.abs(topChannel[i] || 0)
-            const magnitudeBottom = Math.abs(bottomChannel[i] || 0)
-            if (magnitudeTop > maxTop) maxTop = magnitudeTop
-            if (magnitudeBottom > maxBottom) maxBottom = magnitudeBottom
-        }
-
-        ctx.fill()
-        ctx.closePath()
-    }
-
     private renderLineWaveform(
         channelData: Array<Float32Array | number[]>,
         _options: WaveFormOptions,
         ctx: CanvasRenderingContext2D,
-        vScale: number
+        vScale: number // 垂直缩放
     ) {
         const drawChannel = (index: number) => {
             const channel = channelData[index] || channelData[0]
@@ -427,7 +364,8 @@ class Renderer extends EventEmitter<RendererEvents> {
         drawChannel(0)
         drawChannel(1)
 
-        ctx.fill()
+        ctx.stroke()
+        // ctx.fill()
         ctx.closePath()
     }
 
@@ -437,6 +375,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         ctx: CanvasRenderingContext2D
     ) {
         ctx.fillStyle = this.convertColorValues(options.waveColor)
+        ctx.strokeStyle = this.convertColorValues(options.waveColor)
 
         // 自定义渲染函数
         if (options.renderFunction) {
@@ -445,19 +384,13 @@ class Renderer extends EventEmitter<RendererEvents> {
         }
 
         // 垂直缩放
-        let vScale = options.barHeight || 1
+        let vScale = 1
         if (options.normalize) {
-            const max = Array.from(channelData[0]).reduce(
+            const max = Array.from(channelData[0]).reduce( // reduce() 方法对数组中的每个元素执行一个由您提供的reducer函数(升序执行)，将其结果汇总为单个返回值。
                 (max, value) => Math.max(max, Math.abs(value)),
                 0
             )
             vScale = max ? 1 / max : 1
-        }
-
-        // 以条形形式渲染波形
-        if (options.barWidth || options.barGap || options.barAlign) {
-            this.renderBarWaveform(channelData, options, ctx, vScale)
-            return
         }
 
         // 将波形渲染为折线
@@ -487,7 +420,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 
         this.renderWaveform(
-            channelData.map((channel) => channel.slice(start, end)),
+            channelData.map((channel) => channel.slice(start, end)), // 截取波形数据，返回数组的一个部分的副本。对于开始和结束，可以使用负索引来指示距数组结束的偏移量。
             options,
             ctx
         )
@@ -498,7 +431,7 @@ class Renderer extends EventEmitter<RendererEvents> {
             const progressCtx = progressCanvas.getContext('2d') as CanvasRenderingContext2D
             progressCtx.drawImage(canvas, 0, 0)
             // 将组合方法设置为仅在绘制波形的位置绘制
-            progressCtx.globalCompositeOperation = 'source-in'
+            progressCtx.globalCompositeOperation = 'source-in' // source-in: 只在源图像和目标图像重叠的地方绘制源图像。目标图像保留。
             progressCtx.fillStyle = this.convertColorValues(options.progressColor)
             // 这个矩形作为一个遮罩，得益于合成方法
             progressCtx.fillRect(0, 0, canvas.width, canvas.height)
@@ -549,16 +482,6 @@ class Renderer extends EventEmitter<RendererEvents> {
         const scale = dataLength / scrollWidth
 
         let viewportWidth = Math.min(Renderer.MAX_CANVAS_WIDTH, clientWidth)
-
-        // 调整宽度以避免在使用条形时出现画布之间的间隙
-        if (options.barWidth || options.barGap) {
-            const barWidth = options.barWidth || 0.5
-            const barGap = options.barGap || barWidth / 2
-            const totalBarWidth = barWidth + barGap
-            if (viewportWidth % totalBarWidth !== 0) {
-                viewportWidth = Math.floor(viewportWidth / totalBarWidth) * totalBarWidth
-            }
-        }
 
         const start = Math.floor(Math.abs(scrollLeft) * scale)
         const end = Math.floor(start + viewportWidth * scale)
