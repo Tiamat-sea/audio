@@ -24,13 +24,14 @@ onMounted(() => {
         // hideScrollbar: true,
         plugins: [
             SpectrogramPlugin.create({
+                // container: document.getElementById('waveform') as HTMLElement,
                 labels: true,
                 labelsColor: 'black'
             }),
             Minimap.create({
                 height: 60,
                 insertPosition: 'beforebegin',
-                waveColor: '#ddd',
+                waveColor: ['black', 'yellow', 'red'],
                 progressColor: '#999'
             }),
             HoverPlugin.create()
@@ -61,11 +62,11 @@ onMounted(() => {
             <div id="waveform"></div>
         </lay-split-panel-item>
         <lay-split-panel-item>
-            <label> 缩放: <input type="range" min="10" max="500" value="10" /> </label>
-            <button id="playPause">播放/暂停</button>
+            <div id="spectrogram"></div>
         </lay-split-panel-item>
         <lay-split-panel-item>
-            <div id="spectrogram"></div>
+            <label> 缩放: <input type="range" min="10" max="500" value="10" /> </label>
+            <button id="playPause">播放/暂停</button>
         </lay-split-panel-item>
     </lay-split-panel>
 </template>

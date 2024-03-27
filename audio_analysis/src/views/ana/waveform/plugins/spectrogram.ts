@@ -227,20 +227,20 @@ import BasePlugin, { type BasePluginEvents } from '../base-plugin'
 import createElement from '../dom'
 
 export type SpectrogramPluginOptions = {
-    /** Selector of element or element in which to render */
+    /** 渲染的元素选择器或元素 */
     container?: string | HTMLElement
-    /** Number of samples to fetch to FFT. Must be a power of 2. */
+    /** 获取用于FFT的样本数。必须是2的幂。 */
     fftSamples?: number
-    /** Height of the spectrogram view in CSS pixels */
+    /** CSS像素中的频谱图视图高度 */
     height?: number
-    /** Set to true to display frequency labels. */
+    /** 设置为true以显示频率标签。 */
     labels?: boolean
     labelsBackground?: string
     labelsColor?: string
     labelsHzColor?: string
-    /** Size of the overlapping window. Must be < fftSamples. Auto deduced from canvas size by default. */
+    /** 重叠窗口的大小。必须小于fftSamples。默认情况下，根据画布大小自动推断。 */
     noverlap?: number
-    /** The window function to be used. */
+    /** 要使用的窗口函数。 */
     windowFunc?:
     | 'bartlett'
     | 'bartlettHann'
@@ -252,18 +252,18 @@ export type SpectrogramPluginOptions = {
     | 'lanczoz'
     | 'rectangular'
     | 'triangular'
-    /** Some window functions have this extra value. (Between 0 and 1) */
+    /** 某些窗口函数具有此额外值。（介于0和1之间） */
     alpha?: number
-    /** Min frequency to scale spectrogram. */
+    /** 缩放频谱图的最小频率。 */
     frequencyMin?: number
-    /** Max frequency to scale spectrogram. Set this to samplerate/2 to draw whole range of spectrogram. */
+    /** 缩放频谱图的最大频率。将其设置为采样率的一半以绘制整个频谱图范围。 */
     frequencyMax?: number
     /**
-     * A 256 long array of 4-element arrays. Each entry should contain a float between 0 and 1 and specify r, g, b, and alpha.
-     * Each entry should contain a float between 0 and 1 and specify r, g, b, and alpha.
+     * 一个256个长度的4元素数组的数组。每个条目应包含0到1之间的浮点数，并指定r、g、b和alpha。
+     * 每个条目应包含0到1之间的浮点数，并指定r、g、b和alpha。
      */
     colorMap?: number[][]
-    /** Render a spectrogram for each channel independently when true. */
+    /** 当为true时，独立地为每个通道渲染频谱图。 */
     splitChannels?: boolean
 }
 

@@ -42,6 +42,7 @@ const openDrawer = function () {
     min-height: calc(100vh-header);
     /* width: 100vw; */
     background-color: rgba(41, 196, 111, 0.306);
+    /* background-color: rgb(0, 0, 0, 0.5); */
 }
 
 header {

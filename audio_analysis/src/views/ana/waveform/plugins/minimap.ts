@@ -1,5 +1,5 @@
 /**
- * Minimap is a tiny copy of the main waveform serving as a navigation tool.
+ * Minimap是主波形的一个小型副本，用作导航工具。
  */
 
 import BasePlugin, { type BasePluginEvents } from '../base-plugin'
@@ -7,8 +7,8 @@ import WaveForm, { type WaveFormOptions } from '../waveform'
 import createElement from '../dom'
 
 export type MinimapPluginOptions = {
-    overlayColor?: string
-    insertPosition?: InsertPosition
+    overlayColor?: string // 遮罩层颜色
+    insertPosition?: InsertPosition // 插入位置
 } & Partial<WaveFormOptions>
 
 const defaultOptions = {
@@ -41,7 +41,7 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         return new MinimapPlugin(options)
     }
 
-    /** Called by waveform, don't call manually */
+    /** 由波形调用，不要手动调用 */
     onInit() {
         if (!this.waveform) {
             throw Error('WaveForm is not initialized')
@@ -114,8 +114,6 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
             minPxPerSec: 0,
             fillParent: true,
             media,
-            peaks,
-            duration: data.duration
         })
 
         this.subscriptions.push(
@@ -163,7 +161,7 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         )
     }
 
-    /** Unmount */
+    /** 卸载 */
     public destroy() {
         this.miniWaveform?.destroy()
         this.minimapWrapper.remove()
