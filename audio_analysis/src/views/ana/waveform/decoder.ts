@@ -6,23 +6,23 @@ async function decode(audioData: ArrayBuffer, sampleRate: number): Promise<Audio
 }
 
 /** 将峰值归一化为 -1 到 1 之间 */
-function normalize<T extends Array<Float32Array | number[]>>(channelData: T): T {
-    const firstChannel = channelData[0]
-    if (firstChannel.some((n) => n > 1 || n < -1)) {
-        const length = firstChannel.length
-        let max = 0
-        for (let i = 0; i < length; i++) {
-            const absN = Math.abs(firstChannel[i])
-            if (absN > max) max = absN
-        }
-        for (const channel of channelData) {
-            for (let i = 0; i < length; i++) {
-                channel[i] /= max
-            }
-        }
-    }
-    return channelData
-}
+// function normalize<T extends Array<Float32Array | number[]>>(channelData: T): T {
+//     const firstChannel = channelData[0]
+//     if (firstChannel.some((n) => n > 1 || n < -1)) {
+//         const length = firstChannel.length
+//         let max = 0
+//         for (let i = 0; i < length; i++) {
+//             const absN = Math.abs(firstChannel[i])
+//             if (absN > max) max = absN
+//         }
+//         for (const channel of channelData) {
+//             for (let i = 0; i < length; i++) {
+//                 channel[i] /= max
+//             }
+//         }
+//     }
+//     return channelData
+// }
 
 /** 从预解码的音频数据创建音频缓冲区 */
 // function createBuffer(channelData: Array<Float32Array | number[]>, duration: number): AudioBuffer {

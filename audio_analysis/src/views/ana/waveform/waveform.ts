@@ -376,12 +376,7 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
         return this.plugins
     }
 
-    private async loadAudio(
-        url: string,
-        blob?: Blob,
-        // channelData?: WaveFormOptions['peaks'],
-        // duration?: number
-    ) {
+    private async loadAudio(url: string, blob?: Blob) {
         this.emit('load', url)
 
         if (!this.options.media && this.isPlaying()) this.pause()
@@ -405,14 +400,6 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
                 })
             }))
 
-        // // 如果播放器是没有 URL 的 WebAudioPlayer ，则设置持续时间（时长）
-        // if (!url && !blob) {
-        //     const media = this.getMediaElement()
-        //     if (media instanceof WebAudioPlayer) {
-        //         media.duration = audioDuration
-        //     }
-        // }
-
         // 解码音频数据
         if (blob) {
             const arrayBuffer = await blob.arrayBuffer()
@@ -421,7 +408,7 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
 
         if (this.decodedData) {
             this.emit('decode', this.getDuration())
-            this.renderer.render(this.decodedData)
+            this.renderer.render(this.decodedData) // 渲染波形
         }
 
         this.emit('ready', this.getDuration())
@@ -438,14 +425,14 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
     }
 
     /** 加载音频 Blob */
-    public async loadBlob(blob: Blob, channelData?: WaveFormOptions['peaks'], duration?: number) {
-        try {
-            return await this.loadAudio('blob', blob, channelData, duration)
-        } catch (err) {
-            this.emit('error', err as Error)
-            throw err
-        }
-    }
+    // public async loadBlob(blob: Blob) {
+    //     try {
+    //         return await this.loadAudio('blob', blob)
+    //     } catch (err) {
+    //         this.emit('error', err as Error)
+    //         throw err
+    //     }
+    // }
 
     /** 通过给定的每秒像素数因子缩放波形 */
     public zoom(minPxPerSec: number) {
@@ -462,31 +449,29 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
     }
 
     /** 获取解码后的峰值 */
-    public exportPeaks({ channels = 2, maxLength = 8000, precision = 10_000 } = {}): Array<
-        number[]
-    > {
-        if (!this.decodedData) {
-            throw new Error('The audio has not been decoded yet')
-        }
-        const maxChannels = Math.min(channels, this.decodedData.numberOfChannels)
-        const peaks = []
-        for (let i = 0; i < maxChannels; i++) {
-            const channel = this.decodedData.getChannelData(i)
-            const data = []
-            const sampleSize = Math.round(channel.length / maxLength)
-            for (let i = 0; i < maxLength; i++) {
-                const sample = channel.slice(i * sampleSize, (i + 1) * sampleSize)
-                let max = 0
-                for (let x = 0; x < sample.length; x++) {
-                    const n = sample[x]
-                    if (Math.abs(n) > Math.abs(max)) max = n
-                }
-                data.push(Math.round(max * precision) / precision)
-            }
-            peaks.push(data)
-        }
-        return peaks
-    }
+    // public exportPeaks({ channels = 2, maxLength = 8000, precision = 10_000 } = {}): Array<number[]> {
+    //     if (!this.decodedData) {
+    //         throw new Error('The audio has not been decoded yet')
+    //     }
+    //     const maxChannels = Math.min(channels, this.decodedData.numberOfChannels)
+    //     const peaks = []
+    //     for (let i = 0; i < maxChannels; i++) {
+    //         const channel = this.decodedData.getChannelData(i)
+    //         const data = []
+    //         const sampleSize = Math.round(channel.length / maxLength)
+    //         for (let i = 0; i < maxLength; i++) {
+    //             const sample = channel.slice(i * sampleSize, (i + 1) * sampleSize)
+    //             let max = 0
+    //             for (let x = 0; x < sample.length; x++) {
+    //                 const n = sample[x]
+    //                 if (Math.abs(n) > Math.abs(max)) max = n
+    //             }
+    //             data.push(Math.round(max * precision) / precision)
+    //         }
+    //         peaks.push(data)
+    //     }
+    //     return peaks
+    // }
 
     /** 获取音频的持续时间（以秒为单位） */
     public getDuration(): number {
@@ -534,7 +519,7 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
 
     /** 清空波形 */
     public empty() {
-        this.load('', [[0]], 0.001)
+        this.load('')
     }
 
     /** 设置 HTML 媒体元素 */
@@ -562,7 +547,7 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
         return this.renderer.exportImage(format, quality, type)
     }
 
-    /** Unmount waveform */
+    /** 卸载波形图 */
     public destroy() {
         this.emit('destroy')
         this.plugins.forEach((plugin) => plugin.destroy())
