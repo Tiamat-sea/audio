@@ -25,27 +25,27 @@ function normalize<T extends Array<Float32Array | number[]>>(channelData: T): T 
 }
 
 /** 从预解码的音频数据创建音频缓冲区 */
-function createBuffer(channelData: Array<Float32Array | number[]>, duration: number): AudioBuffer {
-    // 如果传入的是单个数字数组，则将其转换为数组的数组
-    if (typeof channelData[0] === 'number') channelData = [channelData as unknown as number[]]
+// function createBuffer(channelData: Array<Float32Array | number[]>, duration: number): AudioBuffer {
+//     // 如果传入的是单个数字数组，则将其转换为数组的数组
+//     if (typeof channelData[0] === 'number') channelData = [channelData as unknown as number[]]
 
-    // 归一化为 -1 到 1 之间
-    normalize(channelData)
+//     // 归一化为 -1 到 1 之间
+//     normalize(channelData)
 
-    return {
-        duration,
-        length: channelData[0].length,
-        sampleRate: channelData[0].length / duration,
-        numberOfChannels: channelData.length,
-        getChannelData: (i: number) => channelData?.[i] as Float32Array,
-        copyFromChannel: AudioBuffer.prototype.copyFromChannel,
-        copyToChannel: AudioBuffer.prototype.copyToChannel
-    }
-}
+//     return {
+//         duration,
+//         length: channelData[0].length,
+//         sampleRate: channelData[0].length / duration,
+//         numberOfChannels: channelData.length,
+//         getChannelData: (i: number) => channelData?.[i] as Float32Array,
+//         copyFromChannel: AudioBuffer.prototype.copyFromChannel,
+//         copyToChannel: AudioBuffer.prototype.copyToChannel
+//     }
+// }
 
 const Decoder = {
     decode,
-    createBuffer
+    // createBuffer
 }
 
 export default Decoder

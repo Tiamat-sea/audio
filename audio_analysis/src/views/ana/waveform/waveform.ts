@@ -379,8 +379,8 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
     private async loadAudio(
         url: string,
         blob?: Blob,
-        channelData?: WaveFormOptions['peaks'],
-        duration?: number
+        // channelData?: WaveFormOptions['peaks'],
+        // duration?: number
     ) {
         this.emit('load', url)
 
@@ -388,8 +388,8 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
 
         this.decodedData = null
 
-        // 如果没有提供预解码的数据，则将整个音频作为 Blob 进行获取
-        if (!blob && !channelData) {
+        // 将整个音频作为 Blob 进行获取
+        if (!blob) {
             const onProgress = (percentage: number) => this.emit('loading', percentage)
             blob = await Fetcher.fetchBlob(url, onProgress, this.options.fetchParams)
         }
@@ -398,27 +398,23 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
         this.setSrc(url, blob)
 
         // 等待音频的持续时间（时长）
-        const audioDuration =
-            duration ||
-            this.getDuration() ||
+        const audioDuration = this.getDuration() ||
             (await new Promise((resolve) => {
                 this.onMediaEvent('loadedmetadata', () => resolve(this.getDuration()), {
                     once: true
                 })
             }))
 
-        // 如果播放器是没有 URL 的 WebAudioPlayer ，则设置持续时间（时长）
-        if (!url && !blob) {
-            const media = this.getMediaElement()
-            if (media instanceof WebAudioPlayer) {
-                media.duration = audioDuration
-            }
-        }
+        // // 如果播放器是没有 URL 的 WebAudioPlayer ，则设置持续时间（时长）
+        // if (!url && !blob) {
+        //     const media = this.getMediaElement()
+        //     if (media instanceof WebAudioPlayer) {
+        //         media.duration = audioDuration
+        //     }
+        // }
 
-        // 解码音频数据或使用用户提供的 peaks
-        if (channelData) {
-            this.decodedData = Decoder.createBuffer(channelData, audioDuration || 0)
-        } else if (blob) {
+        // 解码音频数据
+        if (blob) {
             const arrayBuffer = await blob.arrayBuffer()
             this.decodedData = await Decoder.decode(arrayBuffer, this.options.sampleRate)
         }
@@ -432,9 +428,9 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
     }
 
     /** 通过 URL 加载音频文件 */
-    public async load(url: string, channelData?: WaveFormOptions['peaks'], duration?: number) {
+    public async load(url: string) {
         try {
-            return await this.loadAudio(url, undefined, channelData, duration)
+            return await this.loadAudio(url, undefined)
         } catch (err) {
             this.emit('error', err as Error)
             throw err
