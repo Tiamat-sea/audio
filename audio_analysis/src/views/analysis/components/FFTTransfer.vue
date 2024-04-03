@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import WaveForm from './waveform/waveform'
 import SpectrogramPlugin from './waveform/plugins/spectrogram'
@@ -109,7 +109,7 @@ onMounted(() => {
         console.log('Updated region', region)
     })
 })
-</script>
+</script> -->
 
 <template>
     <div id="waveform"></div>

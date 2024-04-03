@@ -14,6 +14,7 @@ onMounted(() => {
         container: document.getElementById('waveform') as HTMLElement,
         progressColor: 'rgba(0, 0, 0, 0.7)',
         url: audioURL,
+        // fillParent: false,
         // media: audio,
         sampleRate: 44100,
         normalize: true,

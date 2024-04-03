@@ -365,7 +365,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         drawChannel(1)
 
         ctx.stroke()
-        // ctx.fill()
+        ctx.fill()
         ctx.closePath()
     }
 
