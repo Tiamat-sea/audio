@@ -46,7 +46,7 @@ import { RouterLink, RouterView } from 'vue-router'
 }
 
 .global-container .layui-body {
-    display: flex;
+    display: block;
     background: #5FB878;
     align-items: none;
     justify-content: center;
