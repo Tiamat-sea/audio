@@ -11,7 +11,7 @@ import { RouterLink, RouterView } from 'vue-router'
             <RouterLink to="/about">了解一下</RouterLink>
 
             <RouterLink to="">文档与社区</RouterLink>
-            <RouterLink to="/test">测试</RouterLink>
+            <RouterLink to="/test">WebGL测试</RouterLink>
             <RouterLink to="/analysis1">Ana1 - 辅助</RouterLink>
             <RouterLink to="/analysis2">Ana2 - 测试开发</RouterLink>
             <RouterLink to="/ana3">Ana3 - 现在使用的</RouterLink>

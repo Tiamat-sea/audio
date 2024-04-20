@@ -1,15 +1,4 @@
-<template>
-    <!-- HTML 结构 -->
-    <div id="container" ref="container" style="width: 100vw">
-        <canvas id="audioWaveform" ref="canvas" height="400px"></canvas>
-    </div>
-
-</template>
-
-<script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-const container = ref(document.getElementById('container') as HTMLElement);
-const canvas = ref(document.getElementById('audioWaveform') as HTMLCanvasElement)
+import exp from "constants";
 
 // 顶点着色器代码
 const vertexShaderSource: string = `
@@ -19,24 +8,10 @@ void main() {
 }`;
 
 // 片元着色器代码
-const fragmentShaderSource = `
-precision mediump float;
-
+const fragmentShaderSource: string = `
 void main() {
-  // 使用 Heaven 配色中的颜色
-  vec3 icterineColor = vec3(0.96, 0.96, 0.36);
-  vec3 robinEggBlueColor = vec3(0.05, 0.84, 0.74);
-  vec3 waterColor = vec3(0.81, 0.94, 0.98);
-  vec3 pacificBlueColor = vec3(0.05, 0.65, 0.81);
-  vec3 blueSapphireColor = vec3(0.02, 0.36, 0.45);
-
-  // 根据波形值设置颜色
-  vec3 finalColor = icterineColor; // 假设默认颜色为 icterineColor
-
-  // 设置片元颜色
-  gl_FragColor = vec4(finalColor, 1.0);
-}
-`;
+    gl_FragColor = vec4(0.0, 0.5, 0.0, 1.0); // 设置波形图颜色
+}`;
 
 // 创建着色器函数
 function createShader(
@@ -82,7 +57,7 @@ function createProgram(
     return program;
 }
 
-function drawWaveformByWebGL(webgl: WebGLRenderingContext, audioData: Float32Array) {
+export function drawWaveformByWebGL(webgl: WebGLRenderingContext, audioData: Float32Array) {
     // 创建顶点着色器 & 片元着色器
     const vertexShader: WebGLShader | null = createShader(webgl, webgl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader: WebGLShader | null = createShader(webgl, webgl.FRAGMENT_SHADER, fragmentShaderSource);
@@ -110,31 +85,3 @@ function drawWaveformByWebGL(webgl: WebGLRenderingContext, audioData: Float32Arr
     webgl.useProgram(program);
     webgl.drawArrays(webgl.LINE_STRIP, 0, audioData.length / 2);
 }
-
-
-const resizeHandler = () => {
-    if (canvas.value && container.value) {
-        canvas.value.width = container.value.offsetWidth;
-        const glCtx = canvas.value.getContext('webgl', { antialias: false }) as WebGLRenderingContext;
-
-        if (glCtx) {
-            // 设置视口大小
-            glCtx.viewport(0, 0, glCtx.canvas.width, glCtx.canvas.height);
-        }
-    }
-};
-
-onMounted(() => {
-    window.addEventListener('resize', resizeHandler);
-    resizeHandler();
-
-    const glCtx = canvas.value.getContext('webgl', { antialias: false }) as WebGLRenderingContext;
-    canvas.value.width = container.value.offsetWidth;
-    glCtx.viewport(0, 0, glCtx.canvas.width, glCtx.canvas.height);
-    drawWaveformByWebGL(glCtx, new Float32Array([1, 1, -1, -1, 1, -1, -1, 1]));
-})
-
-onUnmounted(() => {
-    window.removeEventListener('resize', resizeHandler);
-});
-</script>

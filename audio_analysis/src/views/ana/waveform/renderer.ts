@@ -1,6 +1,7 @@
 import { makeDraggable } from './draggable'
 import EventEmitter from './event-emitter'
 import type { WaveFormOptions } from './waveform'
+import { drawWaveformByWebGL } from './webgl'
 
 type RendererEvents = {
     click: [relativeX: number, relativeY: number]
@@ -327,7 +328,7 @@ class Renderer extends EventEmitter<RendererEvents> {
     private renderLineWaveform(
         channelData: Array<Float32Array | number[]>,
         _options: WaveFormOptions,
-        ctx: CanvasRenderingContext2D,
+        ctx: WebGLRenderingContext,
         vScale: number // 垂直缩放
     ) {
         const drawChannel = (index: number) => {
@@ -358,6 +359,7 @@ class Renderer extends EventEmitter<RendererEvents> {
 
             ctx.lineTo(prevX, halfHeight)
         }
+        console.log('channelData', channelData)
 
         ctx.beginPath()
 
@@ -372,14 +374,20 @@ class Renderer extends EventEmitter<RendererEvents> {
     private renderWaveform(
         channelData: Array<Float32Array | number[]>,
         options: WaveFormOptions,
-        ctx: CanvasRenderingContext2D
+        glCtx: WebGLRenderingContext
     ) {
-        ctx.fillStyle = this.convertColorValues(options.waveColor)
-        ctx.strokeStyle = this.convertColorValues(options.waveColor)
+        // 检查 WebGL 支持
+        if (!glCtx) {
+            alert('您的浏览器不支持 WebGL');
+        }
+
+        // 原来的 canvas 渲染波形颜色配置
+        // glCtx.fillStyle = this.convertColorValues(options.waveColor)
+        // glCtx.strokeStyle = this.convertColorValues(options.waveColor)
 
         // 自定义渲染函数
         if (options.renderFunction) {
-            options.renderFunction(channelData, ctx)
+            options.renderFunction(channelData, glCtx)
             return
         }
 
@@ -394,7 +402,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         }
 
         // 将波形渲染为折线
-        this.renderLineWaveform(channelData, options, ctx, vScale)
+        this.renderLineWaveform(channelData, options, glCtx, vScale)
     }
 
     private renderSingleCanvas(
@@ -417,12 +425,12 @@ class Renderer extends EventEmitter<RendererEvents> {
         canvas.style.left = `${Math.floor((start * width) / pixelRatio / length)}px`
         canvasContainer.appendChild(canvas)
 
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+        const glCtx = canvas.getContext('webgl') as WebGLRenderingContext
 
         this.renderWaveform(
             channelData.map((channel) => channel.slice(start, end)), // 截取波形数据，返回数组的一个部分的副本。
             options,
-            ctx
+            glCtx
         )
 
         // 绘制进度画布

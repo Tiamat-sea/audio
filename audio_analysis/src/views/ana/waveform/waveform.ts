@@ -55,7 +55,7 @@ export type WaveFormOptions = {
     /** 要在启动时初始化的插件列表 */
     plugins?: GenericPlugin[]
     /** 自定义渲染函数 */
-    renderFunction?: (peaks: Array<Float32Array | number[]>, ctx: CanvasRenderingContext2D) => void
+    renderFunction?: (peaks: Array<Float32Array | number[]>, ctx: WebGLRenderingContext) => void
     /** 传递给 fetch 方法的选项 */
     fetchParams?: RequestInit
     /** 使用的播放 "后端"，默认为 MediaElement */
