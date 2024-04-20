@@ -22,7 +22,7 @@ onMounted(() => {
         minPxPerSec: 10,
         // height: '',
         // autoplay: true,
-        // hideScrollbar: true,
+        hideScrollbar: true,
         plugins: [
             SpectrogramPlugin.create({
                 // container: document.getElementById('waveform') as HTMLElement,

@@ -12,9 +12,9 @@ const router = createRouter({
         {
             path: '/about',
             name: 'about',
-            //路由级代码拆分
-            //这将为此路由生成一个单独的chunk（About.[hash].js）
-            //当访问该路线时，其是惰性加载的。
+            // 路由级代码拆分
+            // 这将为此路由生成一个单独的chunk（About.[hash].js）
+            // 当访问该路线时，其是惰性加载的。
             component: () => import('@/views/AboutView.vue')
         },
         {
@@ -31,6 +31,11 @@ const router = createRouter({
             path: '/test',
             name: 'test',
             component: () => import('@/views/Test.vue')
+        },
+        {
+            path: '/ana3',
+            name: 'ana3',
+            component: () => import('@/views/ana/Ana-test.vue')
         }
     ]
 })

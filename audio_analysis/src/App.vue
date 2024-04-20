@@ -1,75 +1,68 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import { layer } from '@layui/layui-vue'
-
-const openDrawer = function () {
-    layer.drawer({
-        title: '选项卡',
-        content: '内容'
-    })
-}
 </script>
 
 <template>
-    <header>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <nav>
+    <lay-layout class="global-container">
+        <lay-header>
             <!-- <h3>音频频谱分析(此部分存放选项卡)</h3> -->
-            <img src="/favicon.ico" alt="LOGO.ico" />
+            <img src="/favicon.ico" alt="LOGO.ico" style="width: 40px; height: 40px;" />
             <RouterLink to="/">主页</RouterLink>
             <RouterLink to="/about">了解一下</RouterLink>
 
             <RouterLink to="">文档与社区</RouterLink>
             <RouterLink to="/test">测试</RouterLink>
-            <RouterLink to="/analysis1">Ana1</RouterLink>
-            <RouterLink to="/analysis2">Ana2</RouterLink>
-            <!-- <lay-button type="primary" @click="openDrawer">抽屉</lay-button> -->
-            <!-- search 右对齐 -->
-            <!-- 用户个人标识 -->
-            <!-- layui 弹层 - 抽屉 -->
-            <!-- 加载 -->
-        </nav>
-    </header>
+            <RouterLink to="/analysis1">Ana1 - 辅助</RouterLink>
+            <RouterLink to="/analysis2">Ana2 - 测试开发</RouterLink>
+            <RouterLink to="/ana3">Ana3 - 现在使用的</RouterLink>
+            <!-- <lay-button type="primary" @click="openDrawer">抽屉</lay-button>
+                search 右对齐
+                用户个人标识
+                layui 弹层 - 抽屉
+                加载 -->
+        </lay-header>
 
-    <div class="router-container">
-        <RouterView />
-    </div>
+        <lay-body>
+            <RouterView />
+        </lay-body>
+
+        <!-- <lay-footer>
+            footer
+        </lay-footer> -->
+    </lay-layout>
 </template>
 
 <style scoped>
-.router-container {
-    padding: 1px;
-    min-height: calc(100vh-header);
-    /* width: 100vw; */
-    background-color: rgba(41, 196, 111, 0.306);
-    /* background-color: rgb(0, 0, 0, 0.5); */
+/* 全局高度 */
+.global-container {
+    height: 100vh;
 }
 
-header {
-    /* max-height: 30px; */
-    line-height: 4;
-    max-height: 100vh;
+.global-container .layui-footer,
+.global-container .layui-header {
+    line-height: 60px;
+    background: #87ca9a;
+    color: white;
 }
 
-nav {
-    width: 100%;
-    font-size: 18px;
-    /* text-align: center; */
-    margin-top: 0;
+.global-container .layui-body {
+    display: flex;
+    background: #5FB878;
+    align-items: none;
+    justify-content: center;
+    color: white;
 }
 
-nav a {
-    display: inline-block;
-    padding: 0 1rem;
-    border-left: 1px solid var(--color-border);
+/* RouterLink style */
+.global-container .layui-header a {
+    text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: rgb(0, 0, 254);
+    text-decoration: none;
 }
 
-nav a:first-of-type {
-    border: 0;
-}
-
-img {
-    width: 50px;
-    height: 50px;
+.global-container .layui-header a:hover {
+    color: yellow;
 }
 </style>
