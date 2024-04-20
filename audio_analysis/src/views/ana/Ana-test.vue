@@ -3,7 +3,7 @@
         <div class="container">
             <div id="waveform"></div>
             <button id="playPause">Play/Pause</button>
-            <input type="range" min="1" max="100" value="50" />
+            <input type="range" min="10" max="300" value="50" />
         </div>
     </lay-container>
 </template>
@@ -23,8 +23,8 @@ onMounted(() => {
         sampleRate: 44100,
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
-        minPxPerSec: 10,
-        hideScrollbar: true,
+        minPxPerSec: 200,
+        hideScrollbar: false,
         plugins: [
             SpectrogramPlugin.create({
                 labels: true,
@@ -61,7 +61,7 @@ onMounted(() => {
 <style scoped>
 .container {
     width: 100%;
-    height: 300px;
+    height: auto;
     padding: 0px;
     background: #79c48c;
 }

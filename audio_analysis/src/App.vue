@@ -6,7 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <lay-layout class="global-container">
         <lay-header>
             <!-- <h3>音频频谱分析(此部分存放选项卡)</h3> -->
-            <img src="/favicon.ico" alt="LOGO.ico" style="width: 40px; height: 40px;" />
+            <img src="/favicon.ico" alt="LOGO.ico" style="margin-left:20px; width: 40px; height: 40px;" />
             <RouterLink to="/">主页</RouterLink>
             <RouterLink to="/about">了解一下</RouterLink>
 
@@ -56,6 +56,7 @@ import { RouterLink, RouterView } from 'vue-router'
 /* RouterLink style */
 .global-container .layui-header a {
     text-align: left;
+    font-size: 20px;
     margin-left: 10px;
     margin-right: 10px;
     color: rgb(0, 0, 254);

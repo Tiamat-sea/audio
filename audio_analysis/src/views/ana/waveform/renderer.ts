@@ -364,7 +364,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         drawChannel(0)
         drawChannel(1)
 
-        ctx.stroke()
+        // ctx.stroke()
         ctx.fill()
         ctx.closePath()
     }
@@ -420,7 +420,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 
         this.renderWaveform(
-            channelData.map((channel) => channel.slice(start, end)), // 截取波形数据，返回数组的一个部分的副本。对于开始和结束，可以使用负索引来指示距数组结束的偏移量。
+            channelData.map((channel) => channel.slice(start, end)), // 截取波形数据，返回数组的一个部分的副本。
             options,
             ctx
         )
@@ -491,30 +491,30 @@ class Renderer extends EventEmitter<RendererEvents> {
             return
         }
 
-        // 绘制可见部分的波形
-        draw(start, end)
+        // 绘制可见部分的波形，修正：传入 0 及 dataLength 直接绘制整个波形
+        draw(0, dataLength)
 
         // 将波形分块绘制，每块大小与视口相同，从视口位置开始绘制波形
-        await Promise.all([
-            // 在视口左侧绘制块
-            (async () => {
-                if (start === 0) return
-                const delay = this.createDelay()
-                for (let i = start; i >= 0; i -= viewportLen) {
-                    await delay()
-                    draw(Math.max(0, i - viewportLen), i)
-                }
-            })(),
-            // 在视口右侧绘制块
-            (async () => {
-                if (end === dataLength) return
-                const delay = this.createDelay()
-                for (let i = end; i < dataLength; i += viewportLen) {
-                    await delay()
-                    draw(i, Math.min(dataLength, i + viewportLen))
-                }
-            })()
-        ])
+        // await Promise.all([
+        //     // 在视口左侧绘制块
+        //     (async () => {
+        //         if (start === 0) return
+        //         const delay = this.createDelay()
+        //         for (let i = start; i >= 0; i -= viewportLen) {
+        //             await delay()
+        //             draw(Math.max(0, i - viewportLen), i)
+        //         }
+        //     })(),
+        //     // 在视口右侧绘制块
+        //     (async () => {
+        //         if (end === dataLength) return
+        //         const delay = this.createDelay()
+        //         for (let i = end; i < dataLength; i += viewportLen) {
+        //             await delay()
+        //             draw(i, Math.min(dataLength, i + viewportLen))
+        //         }
+        //     })()
+        // ])
     }
 
     async render(audioData: AudioBuffer) {
@@ -560,15 +560,15 @@ class Renderer extends EventEmitter<RendererEvents> {
 
         // 渲染波形
         try {
-            if (this.options.splitChannels) {
-                // 为每个通道渲染波形
+            if (this.options.splitChannels) {   // 分通道绘制
+                // 为每个通道渲染单独的波形
                 await Promise.all(
                     Array.from({ length: audioData.numberOfChannels }).map((_, i) => {
                         const options = { ...this.options, ...this.options.splitChannels?.[i] }
                         return this.renderChannel([audioData.getChannelData(i)], options, width)
                     })
                 )
-            } else {
+            } else {    // 单图像走 else 分支，正常情况下只会走这个分支
                 // 渲染第一和第二个通道（左声道和右声道）的单个波形
                 const channels = [audioData.getChannelData(0)]
                 if (audioData.numberOfChannels > 1) channels.push(audioData.getChannelData(1))
