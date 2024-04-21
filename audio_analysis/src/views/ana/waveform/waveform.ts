@@ -64,7 +64,7 @@ export type WaveFormOptions = {
 
 const defaultOptions = {
     waveColor: '#999',
-    progressColor: '#555',
+    progressColor: 'transparent',
     cursorWidth: 1,
     minPxPerSec: 0,
     fillParent: true,
@@ -72,7 +72,7 @@ const defaultOptions = {
     dragToSeek: false,
     autoScroll: true,
     autoCenter: true,
-    sampleRate: 8000
+    sampleRate: 44100
 }
 
 export type WaveFormEvents = {
@@ -153,6 +153,7 @@ class WaveForm extends Player<WaveFormEvents> { // 继承 Player 播放器类
         })
 
         this.options = Object.assign({}, defaultOptions, options) // assign 将所有可枚举自身属性的值从一个或多个源对象复制到目标对象
+        console.log('this.options:', this.options)
         this.timer = new Timer()
 
         const audioElement = media ? undefined : this.getMediaElement()

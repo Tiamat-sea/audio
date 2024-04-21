@@ -1,7 +1,7 @@
 import { makeDraggable } from './draggable'
 import EventEmitter from './event-emitter'
 import type { WaveFormOptions } from './waveform'
-import { drawWaveformByWebGL } from './webgl'
+import WebGL from './webgl'
 
 type RendererEvents = {
     click: [relativeX: number, relativeY: number]
@@ -328,47 +328,55 @@ class Renderer extends EventEmitter<RendererEvents> {
     private renderLineWaveform(
         channelData: Array<Float32Array | number[]>,
         _options: WaveFormOptions,
-        ctx: WebGLRenderingContext,
+        glCtx: WebGLRenderingContext,
         vScale: number // 垂直缩放
     ) {
-        const drawChannel = (index: number) => {
-            const channel = channelData[index] || channelData[0]
-            const length = channel.length
-            const { height } = ctx.canvas
-            const halfHeight = height / 2
-            const hScale = ctx.canvas.width / length
+        // const drawChannel = (index: number) => {
+        //     const channel = channelData[index] || channelData[0]
+        //     const length = channel.length
+        //     const { height } = glCtx.canvas
+        //     const halfHeight = height / 2
+        //     const hScale = glCtx.canvas.width / length
 
-            ctx.moveTo(0, halfHeight)
+        //     glCtx.moveTo(0, halfHeight)
 
-            let prevX = 0
-            let max = 0
-            for (let i = 0; i <= length; i++) {
-                const x = Math.round(i * hScale)
+        //     let prevX = 0
+        //     let max = 0
+        //     for (let i = 0; i <= length; i++) {
+        //         const x = Math.round(i * hScale)
 
-                if (x > prevX) {
-                    const h = Math.round(max * halfHeight * vScale) || 1
-                    const y = halfHeight + h * (index === 0 ? -1 : 1)
-                    ctx.lineTo(prevX, y)
-                    prevX = x
-                    max = 0
-                }
+        //         if (x > prevX) {
+        //             const h = Math.round(max * halfHeight * vScale) || 1
+        //             const y = halfHeight + h * (index === 0 ? -1 : 1)
+        //             glCtx.lineTo(prevX, y)
+        //             prevX = x
+        //             max = 0
+        //         }
 
-                const value = Math.abs(channel[i] || 0)
-                if (value > max) max = value
-            }
+        //         const value = Math.abs(channel[i] || 0)
+        //         if (value > max) max = value
+        //     }
 
-            ctx.lineTo(prevX, halfHeight)
-        }
-        console.log('channelData', channelData)
+        //     glCtx.lineTo(prevX, halfHeight)
+        // }
+        // console.log('channelData', channelData)
 
-        ctx.beginPath()
+        // glCtx.beginPath()
 
-        drawChannel(0)
-        drawChannel(1)
+        // drawChannel(0)
+        // drawChannel(1)
 
-        // ctx.stroke()
-        ctx.fill()
-        ctx.closePath()
+        // glCtx.fill()
+        // glCtx.closePath()
+
+        // 从channeldata中获取前1000个数据用于测试
+        // const testData = [channelData[0].slice(0, 30), channelData[1].slice(0, 30)]
+
+        // 分通道转换、绘制
+        const webGLData0 = WebGL.convertToWebGLData(channelData[0])
+        WebGL.drawWaveformByWebGL(glCtx, webGLData0)
+        const webGLData1 = WebGL.convertToWebGLData(channelData[1])
+        WebGL.drawWaveformByWebGL(glCtx, webGLData1)
     }
 
     private renderWaveform(
@@ -425,7 +433,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         canvas.style.left = `${Math.floor((start * width) / pixelRatio / length)}px`
         canvasContainer.appendChild(canvas)
 
-        const glCtx = canvas.getContext('webgl') as WebGLRenderingContext
+        const glCtx = canvas.getContext('webgl', { antialias: false }) as WebGLRenderingContext
 
         this.renderWaveform(
             channelData.map((channel) => channel.slice(start, end)), // 截取波形数据，返回数组的一个部分的副本。

@@ -1,10 +1,8 @@
 <template>
     <lay-container fluid style="padding: 0;">
-        <div class="container">
-            <div id="waveform"></div>
-            <button id="playPause">Play/Pause</button>
-            <input type="range" min="10" max="300" value="50" />
-        </div>
+        <div id="waveform" ref="waveform"></div>
+        <button id="playPause">Play/Pause</button>
+        <input type="range" min="10" max="800" value="100" />
     </lay-container>
 </template>
 
@@ -21,15 +19,16 @@ onMounted(() => {
         progressColor: 'rgba(0, 0, 0, 0.7)',
         url: '/example.mp3',
         sampleRate: 44100,
+        height: 256,
         normalize: true,
         waveColor: ['black', 'yellow', 'red'],
         minPxPerSec: 200,
         hideScrollbar: false,
         plugins: [
-            SpectrogramPlugin.create({
-                labels: true,
-                labelsColor: 'black'
-            }),
+            // SpectrogramPlugin.create({
+            //     labels: true,
+            //     labelsColor: 'black'
+            // }),
             Minimap.create({
                 height: 60,
                 insertPosition: 'beforebegin',

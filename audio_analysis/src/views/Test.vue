@@ -131,7 +131,7 @@ onMounted(() => {
     const glCtx = canvas.value.getContext('webgl', { antialias: false }) as WebGLRenderingContext;
     canvas.value.width = container.value.offsetWidth;
     glCtx.viewport(0, 0, glCtx.canvas.width, glCtx.canvas.height);
-    drawWaveformByWebGL(glCtx, new Float32Array([1, 1, -1, -1, 1, -1, -1, 1]));
+    drawWaveformByWebGL(glCtx, new Float32Array([0, -1, 0, 0]));
 })
 
 onUnmounted(() => {
