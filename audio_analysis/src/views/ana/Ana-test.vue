@@ -25,10 +25,10 @@ onMounted(() => {
         minPxPerSec: 200,
         hideScrollbar: false,
         plugins: [
-            // SpectrogramPlugin.create({
-            //     labels: true,
-            //     labelsColor: 'black'
-            // }),
+            SpectrogramPlugin.create({
+                labels: true,
+                labelsColor: 'black'
+            }),
             Minimap.create({
                 height: 60,
                 insertPosition: 'beforebegin',

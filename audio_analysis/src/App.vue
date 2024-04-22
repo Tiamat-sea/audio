@@ -13,7 +13,6 @@ import { RouterLink, RouterView } from 'vue-router'
             <RouterLink to="">文档与社区</RouterLink>
             <RouterLink to="/test">WebGL测试</RouterLink>
             <RouterLink to="/analysis1">Ana1 - 辅助</RouterLink>
-            <RouterLink to="/analysis2">Ana2 - 测试开发</RouterLink>
             <RouterLink to="/ana3">Ana3 - 现在使用的</RouterLink>
             <!-- <lay-button type="primary" @click="openDrawer">抽屉</lay-button>
                 search 右对齐
