@@ -13,7 +13,7 @@ export type MinimapPluginOptions = {
 
 const defaultOptions = {
     height: 50,
-    overlayColor: 'rgba(100, 100, 100, 0.1)',
+    overlayColor: 'rgba(255, 255, 255, 0.4)',
     insertPosition: 'afterend'
 }
 
@@ -66,7 +66,8 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
         return createElement('div', {
             part: 'minimap',
             style: {
-                position: 'relative'
+                position: 'relative',
+                marginBottom: '7px'
             }
         })
     }
@@ -78,7 +79,7 @@ class MinimapPlugin extends BasePlugin<MinimapPluginEvents, MinimapPluginOptions
                 part: 'minimap-overlay',
                 style: {
                     position: 'absolute',
-                    zIndex: '2',
+                    zIndex: '3',
                     left: '0',
                     top: '0',
                     bottom: '0',

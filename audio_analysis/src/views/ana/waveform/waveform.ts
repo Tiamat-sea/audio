@@ -64,7 +64,7 @@ export type WaveFormOptions = {
 
 const defaultOptions = {
     waveColor: '#999',
-    progressColor: 'transparent',
+    progressColor: '#333',
     cursorWidth: 1,
     minPxPerSec: 0,
     fillParent: true,

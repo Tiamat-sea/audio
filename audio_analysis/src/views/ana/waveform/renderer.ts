@@ -329,7 +329,7 @@ class Renderer extends EventEmitter<RendererEvents> {
         channelData: Array<Float32Array | number[]>,
         _options: WaveFormOptions,
         glCtx: WebGLRenderingContext,
-        vScale: number // 垂直缩放
+        vScale: number, // 垂直缩放
     ) {
         // const drawChannel = (index: number) => {
         //     const channel = channelData[index] || channelData[0]
@@ -447,10 +447,13 @@ class Renderer extends EventEmitter<RendererEvents> {
             const progressCtx = progressCanvas.getContext('2d') as CanvasRenderingContext2D
             progressCtx.drawImage(canvas, 0, 0)
             // 将组合方法设置为仅在绘制波形的位置绘制
-            progressCtx.globalCompositeOperation = 'source-in' // source-in: 只在源图像和目标图像重叠的地方绘制源图像。目标图像保留。
+            progressCtx.globalCompositeOperation = 'overlay' // source-in: 只在源图像和目标图像重叠的地方绘制源图像。目标图像保留。
             progressCtx.fillStyle = this.convertColorValues(options.progressColor)
             // 这个矩形作为一个遮罩，得益于合成方法
-            progressCtx.fillRect(0, 0, canvas.width, canvas.height)
+            console.log(this.options.insertPosition)
+            if (this.options.insertPosition === "beforebegin") {
+                progressCtx.fillRect(0, 0, canvas.width, canvas.height)
+            }
             progressContainer.appendChild(progressCanvas)
         }
     }

@@ -301,9 +301,60 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
         } else {
             this.colorMap = []
             for (let i = 0; i < 256; i++) {
-                const val = (255 - i) / 256
-                this.colorMap.push([val, val, val, 1])
+                const val1 = (255 - i)
+                const val2 = (255 - i * 0.75)
+                const val3 = (255 - i * 0.5)
+                if (i < 10) {
+                    const alpha = 1 - i / 10
+                    this.colorMap.push([val1 / 256, val2 / 256, val3 / 256, 1])
+                }
+                this.colorMap.push([val1 / 256, val2 / 256, val3 / 256, 1])
             }
+            // const aaa = 31 / 255;
+            // this.colorMap[0] = [aaa, aaa, aaa, 1]
+            // this.colorMap[1] = [aaa, aaa, aaa, 1]
+            // this.colorMap[2] = [aaa, aaa, aaa, 1]
+
+            // this.colorMap = [];
+            // const colors = [
+            //     [255, 0, 0],    // 红色
+            //     [255, 165, 0],  // 橙色
+            //     [255, 255, 0],  // 黄色
+            //     [0, 128, 0],    // 绿色
+            //     [0, 255, 255],  // 青色
+            //     [0, 0, 255],    // 蓝色
+            //     [128, 0, 128]   // 紫色
+            // ].reverse();
+
+            // const segments = colors.length - 1;
+            // const segmentSize = Math.floor(256 / segments);
+
+            // for (let segment = 0; segment < segments; segment++) {
+            //     for (let i = 0; i < segmentSize; i++) {
+            //         const t = i / segmentSize;
+            //         const color = [];
+            //         for (let j = 0; j < 3; j++) {
+            //             const startColor = colors[segment][j];
+            //             const endColor = colors[segment + 1][j];
+            //             const interpolatedColor = startColor + t * (endColor - startColor);
+            //             color.push(interpolatedColor / 255);
+            //         }
+            //         color.push(1); // alpha
+            //         this.colorMap.unshift(color);
+            //     }
+            // }
+
+            // // Fill the rest of the colorMap if it doesn't reach 256
+            // console.log(this.colorMap.length);
+            // while (this.colorMap.length < 256) {
+            //     this.colorMap.unshift([31, 31, 31, 0].map(val => val / 255));
+            // }
+
+            // this.colorMap[253] = ([31, 31, 31, 0].map(val => val / 255));
+            // this.colorMap[254] = ([31, 31, 31, 0].map(val => val / 255));
+            // this.colorMap[255] = ([31, 31, 31, 0].map(val => val / 255));
+
+            // this.colorMap.reverse()
         }
         this.fftSamples = options.fftSamples || 512
         this.height = options.height || this.fftSamples / 2
@@ -360,6 +411,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
     private createWrapper() {
         this.wrapper = createElement('div', {
             style: {
+                marginTop: '8px',
                 display: 'block',
                 position: 'relative',
                 userSelect: 'none'
