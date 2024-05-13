@@ -1,6 +1,8 @@
 {
     "extends": "./tsconfig.app.json", // 继承自 "./tsconfig.app.json"，表示当前配置文件继承了另一个配置文件的设置
-    "exclude": [], // 排除指定的文件或目录，这里为空数组，表示不排除任何文件或目录
+    "exclude": [
+        ""
+    ], // 排除指定的文件或目录，这里为空数组，表示不排除任何文件或目录
     "compilerOptions": { // 编译器选项
         "composite": true, // 开启项目的组合编译（composite），用于加快增量编译速度
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo", // 指定保存编译信息的文件路径

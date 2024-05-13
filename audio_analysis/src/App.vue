@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-
+const username = 'JohnDoe';
 </script>
 
 <template>
@@ -9,32 +9,29 @@ import { RouterLink, RouterView } from 'vue-router'
             class="js-warp-hide position-absolute overflow-hidden events-none"
             style="top: 50%; left: 50%; width: 200%; transform: translate(-50%, -50%); z-index: 0;">
 
-    <lay-layout class="global-container">
-        <lay-header>
-            <!-- <h3>音频频谱分析(此部分存放选项卡)</h3> -->
-            <img src="/favicon.ico" alt="LOGO.ico" style="width: 40px; height: 40px;" />
-            <RouterLink to="/">主页</RouterLink>
-            <RouterLink to="/about">了解一下</RouterLink>
+        <lay-layout class="global-container">
+            <lay-header>
+                <!-- <h3>音频频谱分析(此部分存放选项卡)</h3> -->
+                <img src="/favicon.ico" alt="LOGO.ico" style="width: 40px; height: 40px;" />
+                <RouterLink to="/">主页</RouterLink>
+                <RouterLink to="/public">公共记录</RouterLink>
+                <RouterLink to="/private">个人记录</RouterLink>
+                <RouterLink to="">文档与社区</RouterLink>
+                <RouterLink to="/test">WebGL测试</RouterLink>
+                <RouterLink to="/ana3">Ana3 - 现在使用的</RouterLink>
+                <!-- <lay-button type="primary" @click="">抽屉</lay-button> -->
+                <!-- search 右对齐 -->
+                <span>
+                    <RouterLink to="/login">{{ username }}</RouterLink>
+                </span>
+                <!-- layui 弹层 - 抽屉 -->
+                <!-- 加载 -->
+            </lay-header>
 
-            <RouterLink to="">文档与社区</RouterLink>
-            <RouterLink to="/test">WebGL测试</RouterLink>
-            <RouterLink to="/analysis1">Ana1 - 辅助</RouterLink>
-            <RouterLink to="/ana3">Ana3 - 现在使用的</RouterLink>
-            <!-- <lay-button type="primary" @click="openDrawer">抽屉</lay-button>
-                search 右对齐
-                用户个人标识
-                layui 弹层 - 抽屉
-                加载 -->
-        </lay-header>
-
-        <lay-body>
-            <RouterView />
-        </lay-body>
-
-        <!-- <lay-footer>
-            footer
-        </lay-footer> -->
-    </lay-layout>
+            <lay-body>
+                <RouterView />
+            </lay-body>
+        </lay-layout>
     </div>
 </template>
 
@@ -50,11 +47,11 @@ import { RouterLink, RouterView } from 'vue-router'
     line-height: 60px;
     background: none;
     color: white;
-    z-index: 1;
+    z-index: 0;
 }
 
 .global-container .layui-body {
-    z-index: 1;
+    z-index: 0;
     padding: 0 5px;
     display: block;
     background: none;
@@ -77,7 +74,12 @@ import { RouterLink, RouterView } from 'vue-router'
     color: yellow;
 }
 
+.global-container .layui-header span {
+    float: right;
+}
+
 .bg-gray-dark-mktg {
+    z-index: 0;
     height: 100vh;
     background-color: #040d21
 }
@@ -118,5 +120,5 @@ import { RouterLink, RouterView } from 'vue-router'
     bottom: 0;
     left: 0;
     overflow: hidden
-} 
+}
 </style>

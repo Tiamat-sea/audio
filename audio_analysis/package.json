@@ -14,7 +14,9 @@
         "format": "prettier --write src/"
     },
     "dependencies": {
+        "@layui/json-schema-form": "^1.0.6",
         "@layui/layui-vue": "^2.15.2",
+        "axios": "^1.6.8",
         "chroma-js": "^2.4.2",
         "pinia": "^2.1.7",
         "vue": "^3.4.15",

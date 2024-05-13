@@ -325,8 +325,9 @@ class SingleRegion extends EventEmitter<RegionEvents> {
             const isMarker = this.start === this.end
             this.content = createElement('div', {
                 style: {
-                    padding: `0.2em ${isMarker ? 0.2 : 0.4}em`,
-                    display: 'inline-block'
+                    // padding: `0.2em ${isMarker ? 0.2 : 0.4}em`,
+                    display: 'inline-block',
+                    width: '21px',
                 },
                 textContent: content
             })

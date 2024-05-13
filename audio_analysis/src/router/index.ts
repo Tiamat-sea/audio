@@ -10,17 +10,17 @@ const router = createRouter({
             component: HomeView
         },
         {
-            path: '/about',
-            name: 'about',
+            path: '/public',
+            name: 'public',
             // 路由级代码拆分
             // 这将为此路由生成一个单独的chunk（About.[hash].js）
             // 当访问该路线时，其是惰性加载的。
-            component: () => import('@/views/AboutView.vue')
+            component: () => import('@/views/Public.vue')
         },
         {
-            path: '/analysis1',
-            name: 'analysis1',
-            component: () => import('@/views/analysis/Analysis.vue')
+            path: '/private',
+            name: 'private',
+            component: () => import('@/views/Private.vue')
         },
         {
             path: '/test',
@@ -31,6 +31,16 @@ const router = createRouter({
             path: '/ana3',
             name: 'ana3',
             component: () => import('@/views/ana/Ana-test.vue')
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: () => import('@/views/Login.vue')
+        },
+        {
+            path: '/register',
+            name: 'register',
+            component: () => import('@/views/Register.vue')
         }
     ]
 })

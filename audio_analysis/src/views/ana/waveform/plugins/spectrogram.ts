@@ -413,6 +413,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
             style: {
                 marginTop: '8px',
                 display: 'block',
+                zIndex: 0,
                 position: 'relative',
                 userSelect: 'none'
             }
@@ -426,7 +427,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                     part: 'spec-labels',
                     style: {
                         position: 'absolute',
-                        zIndex: 9,
+                        zIndex: 6,
                         width: '55px',
                         height: '100%'
                     }
@@ -448,7 +449,7 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
                     top: 0,
                     width: '100%',
                     height: '100%',
-                    zIndex: 4
+                    zIndex: 5,
                 }
             },
             this.wrapper
