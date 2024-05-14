@@ -17,20 +17,20 @@ const router = createRouter({
             // 当访问该路线时，其是惰性加载的。
             component: () => import('@/views/Public.vue')
         },
+        // {
+        //     path: '/private',
+        //     name: 'private',
+        //     component: () => import('@/views/Private.vue')
+        // },
+        // {
+        //     path: '/test',
+        //     name: 'test',
+        //     component: () => import('@/views/Test.vue')
+        // },
         {
-            path: '/private',
-            name: 'private',
-            component: () => import('@/views/Private.vue')
-        },
-        {
-            path: '/test',
-            name: 'test',
-            component: () => import('@/views/Test.vue')
-        },
-        {
-            path: '/ana3',
-            name: 'ana3',
-            component: () => import('@/views/ana/Ana-test.vue')
+            path: '/analysis',
+            name: 'analysis',
+            component: () => import('@/views/analysis/Analysis.vue')
         },
         {
             path: '/login',

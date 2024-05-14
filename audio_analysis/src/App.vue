@@ -19,10 +19,10 @@ function quit(): any {
             <lay-header>
                 <img src="/favicon.ico" alt="LOGO.ico" style="width: 40px; height: 40px;" />
                 <RouterLink to="/">主页</RouterLink>
-                <RouterLink to="/public">公共记录</RouterLink>
+                <RouterLink to="/public">所有记录</RouterLink>
                 <!-- <RouterLink to="/private">我的记录</RouterLink> -->
                 <!-- <RouterLink to="/test">WebGL测试</RouterLink> -->
-                <RouterLink to="/ana3">Ana3 - 现在使用的</RouterLink>
+                <RouterLink to="/analysis">分析</RouterLink>
                 <span>
                     <RouterLink to="/" @click="quit()">{{ status }}</RouterLink>
                 </span>

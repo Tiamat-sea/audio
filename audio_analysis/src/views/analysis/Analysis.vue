@@ -28,11 +28,11 @@
 <script setup lang="ts">
 import { layer } from '@layui/layer-vue'
 import { onMounted, ref, onUnmounted } from 'vue';
-import WaveForm from '@/views/ana/waveform/waveform';
-import SpectrogramPlugin from '@/views/ana/waveform/plugins/spectrogram';
-import Minimap from '@/views/ana/waveform/plugins/minimap';
-import HoverPlugin from '@/views/ana/waveform/plugins/hover';
-import RegionsPlugin from '@/views/ana/waveform/plugins/regions';
+import WaveForm from '@/views/analysis/waveform/waveform';
+import SpectrogramPlugin from '@/views/analysis/waveform/plugins/spectrogram';
+import Minimap from '@/views/analysis/waveform/plugins/minimap';
+import HoverPlugin from '@/views/analysis/waveform/plugins/hover';
+import RegionsPlugin from '@/views/analysis/waveform/plugins/regions';
 import Options from './components/Options.vue';
 import Result from './components/Result.vue';
 
