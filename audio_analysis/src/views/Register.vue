@@ -29,6 +29,7 @@ const register = async () => {
         console.log(response);
         if (response === "添加OK") {
             layer.msg('注册成功', { time: 2000 });
+            location.href = '/login';
         } else {
             layer.msg(`注册失败`, { time: 2000 });
         }

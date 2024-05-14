@@ -60,14 +60,16 @@ const get = async (url: string, data?: any): Promise<any> => {
     let newurl = generateUrl(url);
     if (data) {
         newurl += '/'
-        for (let i in data) {
-            if (data[i] !== '' && data[i] !== null) {
-                newurl += i + '=' + data[i] + '&'
-            }
-        }
-        newurl = newurl.toString().substring(0, newurl.length - 1)
+        newurl += data
+        // for (let i in data) {
+        //     if (data[i] !== '' && data[i] !== null) {
+        //         newurl += i + '=' + data[i] + '&'
+        //     }
+        // }
+        // newurl = newurl.toString().substring(0, newurl.length - 1)
     }
     try {
+        console.log('newurl', newurl);
         return await instance.get(newurl);
     } catch (error) {
         return handleError(error);

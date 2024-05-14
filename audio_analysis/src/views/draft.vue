@@ -1,33 +1,26 @@
 <template>
-    <div ref="container" style="width: 100vw;">
-        <canvas id="audioWaveform" ref="canvas" height="400px"></canvas>
+    <div style="height: 800px;">
+        <lay-table :page="page" :resize="true" :height="'100%'" :columns="columns" :loading="loading"
+            :default-toolbar="true" :data-source="dataSource" v-model:selected-keys="selectedKeys" @change="change"
+            @sortChange="sortChange">
+            <template #status="{ row }">
+                <lay-switch :model-value="row.status" @change="changeStatus($event, row)"></lay-switch>
+            </template>
+            <template v-slot:toolbar>
+                <lay-button size="sm" type="primary">新增</lay-button>
+                <lay-button size="sm" @click="remove">删除</lay-button>
+            </template>
+            <template v-slot:operator="{ row }">
+                <lay-button size="xs" type="primary">编辑</lay-button>
+                <lay-button size="xs">查看</lay-button>
+            </template>
+        </lay-table>
     </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+<script>
+import { ref, watch, reactive } from 'vue';
+import { layer } from '@layui/layui-vue';
 
-const container = ref(null);
-const canvas = ref(null);
 
-const resizeHandler = () => {
-    if (canvas.value && container.value) {
-        canvas.value.width = container.value.offsetWidth;
-        const gl = canvas.value.getContext('webgl');
-
-        if (gl) {
-            // 设置视口大小
-            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        }
-    }
-};
-
-onMounted(() => {
-    window.addEventListener('resize', resizeHandler);
-    resizeHandler();
-});
-
-onUnmounted(() => {
-    window.removeEventListener('resize', resizeHandler);
-});
 </script>

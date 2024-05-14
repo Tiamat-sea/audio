@@ -20,9 +20,11 @@ const login = async () => {
             layer.msg('登录失败', { time: 2000 });
         } else if (response.name !== null) {
             layer.msg(`登录成功`, { time: 2000 });
+            localStorage.setItem('user', JSON.stringify(response));
+            setTimeout(() => {
+                location.href = '/';
+            }, 2000);
         }
-
-
     } catch (error) {
         console.error(error);
     }
