@@ -1,0 +1,115 @@
+<svg class="main-svg" width="1000" height="400" xmlns="http://www.w3.org/2000/svg"
+    style="background: rgb(255, 255, 255);">
+
+    <g class="cartesianlayer">
+        <g class="subplot xy">
+            <g class="gridlayer">
+                <g class="x">
+                    <path class="xgrid crisp" transform="translate(72.43,0)" d="M0,30v217"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="xgrid crisp" transform="translate(94.85,0)" d="M0,30v217"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="xgrid crisp" transform="translate(117.28,0)" d="M0,30v217"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="xgrid crisp" transform="translate(139.7,0)" d="M0,30v217"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="xgrid crisp" transform="translate(162.13,0)" d="M0,30v217"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="xgrid crisp" transform="translate(184.55,0)" d="M0,30v217"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="xgrid crisp" transform="translate(206.98,0)" d="M0,30v217"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="xgrid crisp" transform="translate(229.4,0)" d="M0,30v217"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                </g>
+                <g class="y">
+                    <path class="ygrid crisp" transform="translate(0,195.99)" d="M50,0h527"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="ygrid crisp" transform="translate(0,144.98000000000002)" d="M50,0h527"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="ygrid crisp" transform="translate(0,93.97999999999999)" d="M50,0h527"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                    <path class="ygrid crisp" transform="translate(0,42.97)" d="M50,0h527"
+                        style="stroke: rgb(238, 238, 238); stroke-opacity: 1; stroke-width: 1px;"></path>
+                </g>
+            </g>
+            <g class="zerolinelayer">
+                <path class="yzl zl crisp" transform="translate(0,247)" d="M50,0h527"
+                    style="stroke: rgb(68, 68, 68); stroke-opacity: 1; stroke-width: 1px;"></path>
+            </g>
+            
+            
+            
+            
+            
+            <g class="xaxislayer-above">
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="1" data-math="N"
+                        transform="translate(50,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">1</text>
+                </g>
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="2" data-math="N"
+                        transform="translate(72.43,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">2</text>
+                </g>
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="3" data-math="N"
+                        transform="translate(94.85,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">3</text>
+                </g>
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="4" data-math="N"
+                        transform="translate(117.28,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">4</text>
+                </g>
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="5" data-math="N"
+                        transform="translate(139.7,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">5</text>
+                </g>
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="6" data-math="N"
+                        transform="translate(162.13,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">6</text>
+                </g>
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="7" data-math="N"
+                        transform="translate(184.55,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">7</text>
+                </g>
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="8" data-math="N"
+                        transform="translate(206.98,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">8</text>
+                </g>
+                <g class="xtick"><text text-anchor="middle" x="0" y="260" data-unformatted="9" data-math="N"
+                        transform="translate(229.4,0)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">9</text>
+                </g>
+            </g>
+            <g class="yaxislayer-above">
+                <g class="ytick"><text text-anchor="end" x="49" y="4.199999999999999" data-unformatted="0" data-math="N"
+                        transform="translate(0,247)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">0</text>
+                </g>
+                <g class="ytick"><text text-anchor="end" x="49" y="4.199999999999999" data-unformatted="50"
+                        data-math="N" transform="translate(0,195.99)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">50</text>
+                </g>
+                <g class="ytick"><text text-anchor="end" x="49" y="4.199999999999999" data-unformatted="100"
+                        data-math="N" transform="translate(0,144.98000000000002)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">100</text>
+                </g>
+                <g class="ytick"><text text-anchor="end" x="49" y="4.199999999999999" data-unformatted="150"
+                        data-math="N" transform="translate(0,93.97999999999999)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">150</text>
+                </g>
+                <g class="ytick"><text text-anchor="end" x="49" y="4.199999999999999" data-unformatted="200"
+                        data-math="N" transform="translate(0,42.97)"
+                        style="font-family: &quot;Open Sans&quot;, verdana, arial, sans-serif; font-size: 12px; fill: rgb(68, 68, 68); fill-opacity: 1; white-space: pre;">200</text>
+                </g>
+            </g>
+            <!-- <g class="overaxes-above">
+                <g class="xy2-x"></g>
+                <g class="xy2-y"></g>
+                <g class="x2y-x"></g>
+                <g class="x2y-y"></g>
+            </g> -->
+        </g>
+        <g class="subplot xy2"></g>
+        <g class="subplot x2y"></g>
+    </g>
+</svg>

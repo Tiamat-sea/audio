@@ -6,7 +6,7 @@
     <lay-layout class="example">
         <lay-body>
             <lay-container fluid style="padding: 10px 0px 0px 0px;">
-                <Result></Result>
+                <Result :speedArray="speedArray"></Result>
             </lay-container>
         </lay-body>
 
@@ -44,7 +44,7 @@ import Result from './components/Result.vue';
 const route = useRoute();
 let musicFileName = route.params.filename;
 let bitCount
-let speedArray = []
+let speedArray: number[] = []
 
 let myOptions = reactive({
     color: "1",
@@ -66,7 +66,7 @@ function getStartTimeInRegions(wfRegion: any): number[] {
     return startTime;
 }
 
-function caculateSpeed(startTime: number[], endTime: number): number[] {
+function caculateSpeed(startTime: number, endTime: number): number {
     const speed = 60.0 / (endTime - startTime)
     return speed
 }
@@ -102,7 +102,7 @@ onMounted(() => {
         const playPause = document.getElementById('playPause')
         playPause?.addEventListener('click', () => {
             waveform.playPause()
-            console.log(getStartTimeInRegions(wfRegion))
+            // console.log(getStartTimeInRegions(wfRegion))
         })
         const slider = document.querySelector('input[type="range"]')
         slider?.addEventListener('input', (e) => {
@@ -128,15 +128,15 @@ onMounted(() => {
             const currentTime = waveform.getCurrentTime();
             const speed = caculateSpeed(lastBitPosition, currentTime)
             speedArray.push(speed)
-            console.log(speedArray)
+            // console.log(speedArray)
             lastBitPosition = currentTime
             if (bitCount < myOptions.beatsPerBeat) {
                 bitCount = myOptions.beatsPerBeat
             }
-            console.log('bit', bitCount)
+            // console.log('bit', bitCount)
             const bit = Math.floor(bitCount / myOptions.beatsPerBeat)
             const beat = Math.floor(bitCount % myOptions.beatsPerBeat) + 1
-            console.log(bit, beat)
+            // console.log(bit, beat)
             wfRegion.addRegion({
                 start: currentTime,
                 content: bit.toString() + '-' + beat.toString() + '\n' + waveform.getCurrentTime().toPrecision(3) + '\n' + speed.toPrecision(3),
