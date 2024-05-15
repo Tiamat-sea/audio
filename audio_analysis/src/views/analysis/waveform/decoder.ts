@@ -1,9 +1,9 @@
 /** 将数组缓冲解码为音频缓冲区 */
 async function decode(audioData: ArrayBuffer, sampleRate: number): Promise<AudioBuffer> {
     const audioCtx = new AudioContext({ sampleRate })
-    console.log('audioCtx:', audioCtx, 'sampleRate:', sampleRate)
+    // console.log('audioCtx:', audioCtx, 'sampleRate:', sampleRate)
     const decode = audioCtx.decodeAudioData(audioData)
-    console.log('decode:', decode)
+    // console.log('decode:', decode)
     return decode.finally(() => audioCtx.close())
 }
 

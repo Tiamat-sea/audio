@@ -302,9 +302,9 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
             this.colorMap = []
             for (let i = 0; i < 256; i++) {
                 const val1 = (255 - i)
-                const val2 = (255 - i * 0.75)
-                const val3 = (255 - i * 0.5)
-                if (i < 10) {
+                const val2 = (255 - i)
+                const val3 = (255 - i)
+                if (i < 5) {
                     const alpha = 1 - i / 10
                     this.colorMap.push([val1 / 256, val2 / 256, val3 / 256, 1])
                 }
@@ -344,17 +344,17 @@ class SpectrogramPlugin extends BasePlugin<SpectrogramPluginEvents, SpectrogramP
             //     }
             // }
 
-            // // Fill the rest of the colorMap if it doesn't reach 256
+            // Fill the rest of the colorMap if it doesn't reach 256
             // console.log(this.colorMap.length);
-            // while (this.colorMap.length < 256) {
-            //     this.colorMap.unshift([31, 31, 31, 0].map(val => val / 255));
-            // }
+            while (this.colorMap.length < 256) {
+                this.colorMap.unshift([31, 31, 31, 0].map(val => val / 255));
+            }
 
-            // this.colorMap[253] = ([31, 31, 31, 0].map(val => val / 255));
-            // this.colorMap[254] = ([31, 31, 31, 0].map(val => val / 255));
-            // this.colorMap[255] = ([31, 31, 31, 0].map(val => val / 255));
+            this.colorMap[253] = ([31, 31, 31, 1].map(val => val / 255));
+            this.colorMap[254] = ([31, 31, 31, 1].map(val => val / 255));
+            this.colorMap[255] = ([31, 31, 31, 1].map(val => val / 255));
 
-            // this.colorMap.reverse()
+            this.colorMap.reverse()
         }
         this.fftSamples = options.fftSamples || 512
         this.height = options.height || this.fftSamples / 2

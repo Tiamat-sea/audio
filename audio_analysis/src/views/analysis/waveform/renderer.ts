@@ -450,7 +450,7 @@ class Renderer extends EventEmitter<RendererEvents> {
             progressCtx.globalCompositeOperation = 'overlay' // source-in: 只在源图像和目标图像重叠的地方绘制源图像。目标图像保留。
             progressCtx.fillStyle = this.convertColorValues(options.progressColor)
             // 这个矩形作为一个遮罩，得益于合成方法
-            console.log(this.options.insertPosition)
+            // console.log(this.options.insertPosition)
             if (this.options.insertPosition === "beforebegin") {
                 progressCtx.fillRect(0, 0, canvas.width, canvas.height)
             }

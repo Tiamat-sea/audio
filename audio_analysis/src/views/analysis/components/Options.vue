@@ -1,5 +1,5 @@
 <template>
-    <lay-form :model="options" :pane="pane" :size="size" :label-width="xs">
+    <lay-form :model="options" :pane="pane" :size="size">
         <lay-form-item label="颜色主题" mode="inline">
             <lay-select v-model="options.color">
                 <lay-select-option value="1" label="彩虹 rainbow"></lay-select-option>
@@ -48,23 +48,26 @@
         </lay-form-item>
 
         <lay-form-item label="每节拍数" prop="beatsPerBeat" mode="inline">
-            <lay-slider :showDots="false" :step="1" :max="10" v-model="options.beatsPerBeat"
+            <lay-slider :showDots="false" :step="1" :min="1" :max="10" v-model="options.beatsPerBeat"
                 :disabled="false"></lay-slider>
         </lay-form-item>
 
         <lay-form-item>
-            <lay-button type="primary" @click="submit">提交</lay-button>
-            <lay-button type="default" @click="reset">重置</lay-button>
+            <!-- <lay-button type="primary" @click="">提交</lay-button>
+            <lay-button type="default" @click="">重置</lay-button> -->
         </lay-form-item>
     </lay-form>
 </template>
 
-<script setup>
-import { ref, reactive, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, reactive, onMounted, watchEffect } from 'vue'
 import { layer } from '@layui/layer-vue'
 import { defineEmits } from 'vue';
+// import { watchEffect }
 
-const emit = defineEmits(['update']);
+const size = ref("xs");
+const pane = ref(false);
+const emit = defineEmits(['update:options']);
 
 const options = reactive({
     color: "1",
@@ -76,24 +79,19 @@ const options = reactive({
     endSection: 100,
     beatsPerBeat: 4
 })
-const size = ref("xs");
-const pane = ref(false);
 
-const submit = function () {
-    // layer.msg(`${JSON.stringify(options)}`, { time: 2000 });
-    emit('update', options);
-};
-
-const reset = function () {
-    layer.msg('重置', { time: 2000 });
-};
-
-onMounted(() => {
-    submit();
+watchEffect(() => {
+    // console.log(options);
+    emit('update:options', options);
 })
+
+const handleChange = (newOptions) => {
+    options = newOptions;
+    emit('update:options', options);
+}
 </script>
 
-<style scoped>
+<style>
 /* .layui-form-pane .layui-form-label {
     background-color: rgb(196, 3, 3);
 } */

@@ -18,11 +18,11 @@ function quit(): any {
         <lay-layout class="global-container">
             <lay-header>
                 <img src="/favicon.ico" alt="LOGO.ico" style="width: 40px; height: 40px;" />
-                <RouterLink to="/">主页</RouterLink>
-                <RouterLink to="/public">所有记录</RouterLink>
+                <RouterLink to="/">首页</RouterLink>
+                <RouterLink to="/public">记录</RouterLink>
                 <!-- <RouterLink to="/private">我的记录</RouterLink> -->
                 <!-- <RouterLink to="/test">WebGL测试</RouterLink> -->
-                <RouterLink to="/analysis">分析</RouterLink>
+                <RouterLink to="/upload">上传</RouterLink>
                 <span>
                     <RouterLink to="/" @click="quit()">{{ status }}</RouterLink>
                 </span>
@@ -34,14 +34,14 @@ function quit(): any {
                 </span>
             </lay-header>
 
-            <lay-body>
+            <lay-body style="margin-top: 10px;">
                 <RouterView />
             </lay-body>
         </lay-layout>
     </div>
 </template>
 
-<style scoped>
+<style>
 /* 全局高度 */
 .global-container {
     height: 100vh;
@@ -54,6 +54,11 @@ function quit(): any {
     background: none;
     color: white;
     z-index: 0;
+}
+
+.global-container .layui-header {
+    background-color: rgba(6, 37, 90, 1);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .global-container .layui-body {

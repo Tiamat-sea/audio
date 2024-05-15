@@ -28,7 +28,7 @@ const router = createRouter({
         //     component: () => import('@/views/Test.vue')
         // },
         {
-            path: '/analysis',
+            path: '/analysis/:filename',
             name: 'analysis',
             component: () => import('@/views/analysis/Analysis.vue')
         },
@@ -41,6 +41,11 @@ const router = createRouter({
             path: '/register',
             name: 'register',
             component: () => import('@/views/Register.vue')
+        },
+        {
+            path: '/upload',
+            name: 'upload',
+            component: () => import('@/views/Upload.vue')
         }
     ]
 })

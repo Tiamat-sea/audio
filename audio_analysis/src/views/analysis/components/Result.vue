@@ -61,9 +61,9 @@ function calculateBezierPath(vertices: number[]): string {
     /* background-color: black; */
 }
 
-svg {
+/* svg {
     border: 1px solid black;
-}
+} */
 
 .legend {
     display: flex;
