@@ -1,26 +1,25 @@
 <template>
-    <lay-carousel v-model="active3" indicator="outside">
-        <lay-carousel-item id="1">
-            <div
-                style="color: white;text-align: center;width:100%;height:300px;line-height:300px;background-color:#009688;">
-                条目一</div>
-        </lay-carousel-item>
-        <lay-carousel-item id="2">
-            <div
-                style="color: white;text-align: center;width:100%;height:300px;line-height:300px;background-color:#5FB878;">
-                条目二</div>
-        </lay-carousel-item>
-        <lay-carousel-item id="3">
-            <div
-                style="color: white;text-align: center;width:100%;height:300px;line-height:300px;background-color:#FFB800;">
-                条目三</div>
-        </lay-carousel-item>
-        <lay-carousel-item id="4">
-            <div
-                style="color: white;text-align: center;width:100%;height:300px;line-height:300px;background-color:#FF5722;">
-                条目四</div>
-        </lay-carousel-item>
-    </lay-carousel>
+    <h2>音乐信号可视化分析平台 - 功能展示</h2>
+    <br />
+    <h3>波形图绘制</h3>
+    <img src="/img/img-waveform.jpg" />
+    <br />
+
+    <h3>波形缩略图绘制</h3>
+    <img src="/img/img-mini.jpg" />
+    <br />
+
+    <h3>频谱图绘制</h3>
+    <img src="/img/img-spectrum.jpg" />
+    <br />
+
+    <h3>手动标记</h3>
+    <img src="/img/img-marker.jpg" />
+    <br />
+
+    <h3>速度 - 力度曲线生成</h3>
+    <img src="/img/img-result.jpg" />
+    <br />
 </template>
 
 <script>
@@ -37,3 +36,11 @@ export default {
     }
 }
 </script>
+
+<style>
+img {
+    margin-left: 50px;
+    width: 70%;
+    height: auto;
+}
+</style>

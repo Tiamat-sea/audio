@@ -6,7 +6,7 @@
     <lay-layout class="example">
         <lay-body>
             <lay-container fluid style="padding: 10px 0px 0px 0px;">
-                <Result :speedArray="speedArray"></Result>
+                <Result ref="RefResult" :speedArray="speedArray"></Result>
             </lay-container>
         </lay-body>
 
@@ -16,13 +16,13 @@
             <lay-radio-button name="action" value="3" @change="">撤销</lay-radio-button> -->
 
             <button id="playPause">Play/Pause</button>
-            <button id="getRegions">getRegions</button>
-            <button id="clearRegions">clearRegions</button>
-            <LayButton></LayButton>
+            <!-- <button id="getRegions">getRegions</button>
+            <button id="clearRegions">clearRegions</button> -->
+            <button @click="callRedraw()">draw</button>
 
             <div>
                 缩放：
-                <input type="range" min="10" max="800" value="100"></input>
+                <input type="range" min="10" max="400" value="120"></input>
             </div>
             <Options v-model:options="myOptions"></Options>
         </lay-side>
@@ -41,10 +41,15 @@ import RegionsPlugin from '@/views/analysis/waveform/plugins/regions';
 import Options from './components/Options.vue';
 import Result from './components/Result.vue';
 
+const RefResult = ref(null)
+function callRedraw() {
+    RefResult.value.redraw()
+}
+
 const route = useRoute();
 let musicFileName = route.params.filename;
 let bitCount
-let speedArray: number[] = []
+let speedArray: number[][] = []
 
 let myOptions = reactive({
     color: "1",
@@ -57,14 +62,14 @@ let myOptions = reactive({
     beatsPerBeat: 4
 })
 
-function getStartTimeInRegions(wfRegion: any): number[] {
-    const regions = wfRegion.getRegions();
-    let startTime = [];
-    for (let i = 0; i < regions.length; i++) {
-        startTime.push(regions[i].start)
-    }
-    return startTime;
-}
+// function getStartTimeInRegions(wfRegion: any): number[] {
+//     const regions = wfRegion.getRegions();
+//     let startTime = [];
+//     for (let i = 0; i < regions.length; i++) {
+//         startTime.push(regions[i].start)
+//     }
+//     return startTime;
+// }
 
 function caculateSpeed(startTime: number, endTime: number): number {
     const speed = 60.0 / (endTime - startTime)
@@ -75,22 +80,24 @@ onMounted(() => {
     const waveform = WaveForm.create({
         container: document.getElementById('waveform') as HTMLElement,
         progressColor: 'rgba(255, 255, 255, 1)',
-        // url: `http://localhost:8081/files/${musicFileName}`,
-        url: '/example.wav',
+        url: `http://localhost:8081/files/${musicFileName}`,
+        // url: '/example.wav',
         sampleRate: 44100,
         cursorWidth: 1.2,
         cursorColor: 'red',
-        height: 128,
+        height: 180,
         normalize: true,
-        minPxPerSec: 100,
+        minPxPerSec: 120,
         hideScrollbar: true,
         plugins: [
             SpectrogramPlugin.create({
                 labels: true,
-                labelsColor: 'white'
+                labelsColor: 'white',
+                windowFunc: 'triangular',
+                // frequencyMax: 10000,
             }),
             Minimap.create({
-                height: 50,
+                height: 60,
                 insertPosition: 'beforebegin',
             }),
             HoverPlugin.create()
@@ -102,7 +109,6 @@ onMounted(() => {
         const playPause = document.getElementById('playPause')
         playPause?.addEventListener('click', () => {
             waveform.playPause()
-            // console.log(getStartTimeInRegions(wfRegion))
         })
         const slider = document.querySelector('input[type="range"]')
         slider?.addEventListener('input', (e) => {
@@ -127,13 +133,15 @@ onMounted(() => {
         if (e.key === 'a' || e.key === 's' || e.key === 'd' || e.key === 'f') {
             const currentTime = waveform.getCurrentTime();
             const speed = caculateSpeed(lastBitPosition, currentTime)
-            speedArray.push(speed)
             // console.log(speedArray)
             lastBitPosition = currentTime
             if (bitCount < myOptions.beatsPerBeat) {
                 bitCount = myOptions.beatsPerBeat
             }
-            // console.log('bit', bitCount)
+            if (bitCount != myOptions.beatsPerBeat) {
+                speedArray.push([bitCount - myOptions.beatsPerBeat, speed])
+            }
+            // console.log('bitCount', bitCount)
             const bit = Math.floor(bitCount / myOptions.beatsPerBeat)
             const beat = Math.floor(bitCount % myOptions.beatsPerBeat) + 1
             // console.log(bit, beat)
@@ -147,6 +155,8 @@ onMounted(() => {
         }
     }
     document.addEventListener('keydown', keydownHandler)
+
+
 
     // Cleanup the event listener when the component is unmounted
     onUnmounted(() => {

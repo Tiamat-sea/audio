@@ -42,18 +42,17 @@ const register = async () => {
 <template>
     <div class="login">
         <lay-field title="用户注册">
-            <!-- <h1 style="text-align: center;">登录</h1> -->
             <lay-form :model="model" style="margin: 50px;">
-                <lay-form-item label="账号" prop="username" tips="账户是您的登录凭据，可以在注册电子邮件中找到">
+                <lay-form-item label="账号" prop="username" tips="">
                     <lay-input v-model="model.username"></lay-input>
                 </lay-form-item>
-                <lay-form-item label="邮箱" prop="email" tips="账户是您的登录凭据，可以在注册电子邮件中找到">
+                <lay-form-item label="邮箱" prop="email" tips="">
                     <lay-input v-model="model.email"></lay-input>
                 </lay-form-item>
-                <lay-form-item label="密码" prop="password" tips="密码应当包含字母、数字和特殊符号中的任意两种">
+                <lay-form-item label="密码" prop="password" tips="">
                     <lay-input v-model="model.password" type="password"></lay-input>
                 </lay-form-item>
-                <lay-form-item label="确认密码" prop="password2" tips="密码应当包含字母、数字和特殊符号中的任意两种">
+                <lay-form-item label="确认密码" prop="password2" tips="">
                     <lay-input v-model="model.password2" type="password"></lay-input>
                 </lay-form-item>
                 <lay-form-item style="text-align: center;">

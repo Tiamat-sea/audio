@@ -17,7 +17,7 @@ function quit(): any {
 
         <lay-layout class="global-container">
             <lay-header>
-                <img src="/favicon.ico" alt="LOGO.ico" style="width: 40px; height: 40px;" />
+                <!-- <img src="/favicon.ico" alt="LOGO.ico" style="width: 40px; height: 40px;" /> -->
                 <RouterLink to="/">首页</RouterLink>
                 <RouterLink to="/public">记录</RouterLink>
                 <!-- <RouterLink to="/private">我的记录</RouterLink> -->
@@ -41,7 +41,7 @@ function quit(): any {
     </div>
 </template>
 
-<style>
+<style scoped>
 /* 全局高度 */
 .global-container {
     height: 100vh;
